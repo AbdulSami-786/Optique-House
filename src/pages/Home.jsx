@@ -10,7 +10,303 @@ const SectionHeading = ({ title, subtitle }) => (
   </div>
 );
 
+// Horizontal scrollable product section component with side buttons
+const ScrollableProductSection = ({ title, products, bgColor = "bg-white", icon = "👁️" }) => {
+  const scrollRef = useRef(null);
+
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const scrollAmount = direction === 'left' ? -400 : 400;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  if (!products || products.length === 0) {
+    return null;
+  }
+
+  return (
+    <div className={`py-16 ${bgColor}`}>
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+              {icon} {title}
+            </h2>
+            <p className="text-gray-500 mt-2">Scroll to explore our collection →</p>
+          </div>
+          <div className="flex gap-3">
+            <button
+              onClick={() => scroll('left')}
+              className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-all shadow-md hover:shadow-lg transform hover:scale-105"
+              aria-label="Scroll left"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button
+              onClick={() => scroll('right')}
+              className="p-3 rounded-full bg-gray-100 hover:bg-gray-200 transition-all shadow-md hover:shadow-lg transform hover:scale-105"
+              aria-label="Scroll right"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+        
+        <div
+          ref={scrollRef}
+          className="flex overflow-x-auto gap-6 pb-8 scrollbar-hide"
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch',
+          }}
+        >
+          {products.map((product, idx) => (
+            <div
+              key={product.id}
+              className="min-w-[280px] md:min-w-[320px] flex-shrink-0 animate-fade-in"
+              style={{ animationDelay: `${idx * 50}ms` }}
+            >
+              <ProductCard product={product} />
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <style jsx>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
+    </div>
+  );
+};
+
 const Home = () => {
+  // Assuming your products have categories in the JSON data
+  // If not, you can add a category field to each product in your data.json
+  const contactLensProducts = data.products.filter(p => p.category === 'contact-lenses');
+  const menProducts = data.products.filter(p => p.category === 'men');
+  const womenProducts = data.products.filter(p => p.category === 'women');
+  const kidsProducts = data.products.filter(p => p.category === 'kids');
+
+  // Sample fallback data if your JSON doesn't have categories yet
+  // You can remove this once you add categories to your actual data
+  const sampleProducts = {
+    contactLenses: [
+      {
+        id: 101,
+        name: "Premium Daily Contact Lenses",
+        discount: "20%",
+        madeInTaiwan: true,
+        originalPrice: 4999,
+        discountPrice: 3999,
+        reviews: 128,
+        variants: [
+          { colorName: "Clear", hex: "#E8F4F8", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" },
+          { colorName: "Blue", hex: "#4A90E2", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" },
+          { colorName: "Green", hex: "#50E3C2", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" }
+        ]
+      },
+      {
+        id: 102,
+        name: "Monthly Bio-Compatibility Lenses",
+        discount: "15%",
+        madeInTaiwan: true,
+        originalPrice: 5999,
+        discountPrice: 5099,
+        reviews: 94,
+        variants: [
+          { colorName: "Clear", hex: "#E8F4F8", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" }
+        ]
+      },
+      {
+        id: 103,
+        name: "ColorVue - Hazel Brown",
+        discount: "25%",
+        madeInTaiwan: false,
+        originalPrice: 4499,
+        discountPrice: 3374,
+        reviews: 256,
+        variants: [
+          { colorName: "Hazel", hex: "#8B7355", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" },
+          { colorName: "Gray", hex: "#708090", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" }
+        ]
+      },
+      {
+        id: 104,
+        name: "Astigmatism Pro Lenses",
+        discount: "10%",
+        madeInTaiwan: true,
+        originalPrice: 6999,
+        discountPrice: 6299,
+        reviews: 67,
+        variants: [
+          { colorName: "Clear", hex: "#E8F4F8", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" }
+        ]
+      },
+      {
+        id: 105,
+        name: "Daily Disposable Aqua",
+        discount: "30%",
+        madeInTaiwan: false,
+        originalPrice: 3999,
+        discountPrice: 2799,
+        reviews: 312,
+        variants: [
+          { colorName: "Clear", hex: "#E8F4F8", image: "https://images.unsplash.com/photo-1581579186913-45ac3e6a2c2e?w=400" }
+        ]
+      }
+    ],
+    men: [
+      {
+        id: 201,
+        name: "Aviator Classic Gold",
+        discount: "20%",
+        madeInTaiwan: true,
+        originalPrice: 12999,
+        discountPrice: 10399,
+        reviews: 89,
+        variants: [
+          { colorName: "Gold", hex: "#FFD700", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" },
+          { colorName: "Silver", hex: "#C0C0C0", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" }
+        ]
+      },
+      {
+        id: 202,
+        name: "Wayfarer Classic Black",
+        discount: "15%",
+        madeInTaiwan: false,
+        originalPrice: 9999,
+        discountPrice: 8499,
+        reviews: 156,
+        variants: [
+          { colorName: "Black", hex: "#000000", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" },
+          { colorName: "Tortoise", hex: "#8B5A2B", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" }
+        ]
+      },
+      {
+        id: 203,
+        name: "Round Metal Frame",
+        discount: "25%",
+        madeInTaiwan: true,
+        originalPrice: 11999,
+        discountPrice: 8999,
+        reviews: 234,
+        variants: [
+          { colorName: "Silver", hex: "#C0C0C0", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" },
+          { colorName: "Gold", hex: "#FFD700", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" }
+        ]
+      },
+      {
+        id: 204,
+        name: "Sport Performance",
+        discount: "10%",
+        madeInTaiwan: true,
+        originalPrice: 14999,
+        discountPrice: 13499,
+        reviews: 45,
+        variants: [
+          { colorName: "Matte Black", hex: "#1a1a1a", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" },
+          { colorName: "Blue", hex: "#0066CC", image: "https://images.unsplash.com/photo-1502767089025-6572583495f9?w=400" }
+        ]
+      }
+    ],
+    women: [
+      {
+        id: 301,
+        name: "Cat Eye Elegance",
+        discount: "20%",
+        madeInTaiwan: true,
+        originalPrice: 13999,
+        discountPrice: 11199,
+        reviews: 178,
+        variants: [
+          { colorName: "Rose Gold", hex: "#B76E79", image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400" },
+          { colorName: "Black", hex: "#000000", image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400" }
+        ]
+      },
+      {
+        id: 302,
+        name: "Oversized Round Frame",
+        discount: "15%",
+        madeInTaiwan: false,
+        originalPrice: 15999,
+        discountPrice: 13599,
+        reviews: 267,
+        variants: [
+          { colorName: "Tortoise", hex: "#8B5A2B", image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400" },
+          { colorName: "Transparent", hex: "#E0E0E0", image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400" }
+        ]
+      },
+      {
+        id: 303,
+        name: "Geometric Chic",
+        discount: "25%",
+        madeInTaiwan: true,
+        originalPrice: 12999,
+        discountPrice: 9749,
+        reviews: 143,
+        variants: [
+          { colorName: "Gold", hex: "#FFD700", image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400" },
+          { colorName: "Silver", hex: "#C0C0C0", image: "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=400" }
+        ]
+      }
+    ],
+    kids: [
+      {
+        id: 401,
+        name: "Blue Light Shield Kids",
+        discount: "20%",
+        madeInTaiwan: true,
+        originalPrice: 6999,
+        discountPrice: 5599,
+        reviews: 89,
+        variants: [
+          { colorName: "Blue", hex: "#4A90E2", image: "https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=400" },
+          { colorName: "Pink", hex: "#FF69B4", image: "https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=400" }
+        ]
+      },
+      {
+        id: 402,
+        name: "Flexible Silicone Frames",
+        discount: "15%",
+        madeInTaiwan: false,
+        originalPrice: 5999,
+        discountPrice: 5099,
+        reviews: 156,
+        variants: [
+          { colorName: "Red", hex: "#FF4444", image: "https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=400" },
+          { colorName: "Green", hex: "#44FF44", image: "https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=400" }
+        ]
+      },
+      {
+        id: 403,
+        name: "Impact-Resistant Sports",
+        discount: "25%",
+        madeInTaiwan: true,
+        originalPrice: 7999,
+        discountPrice: 5999,
+        reviews: 67,
+        variants: [
+          { colorName: "Yellow", hex: "#FFD700", image: "https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=400" },
+          { colorName: "Orange", hex: "#FFA500", image: "https://images.unsplash.com/photo-1513333420772-7b64ad15ca96?w=400" }
+        ]
+      }
+    ]
+  };
+
+  // Use filtered data from JSON if available, otherwise use sample data
+  const contactLenses = contactLensProducts.length > 0 ? contactLensProducts : sampleProducts.contactLenses;
+  const men = menProducts.length > 0 ? menProducts : sampleProducts.men;
+  const women = womenProducts.length > 0 ? womenProducts : sampleProducts.women;
+  const kids = kidsProducts.length > 0 ? kidsProducts : sampleProducts.kids;
+
   // Intersection Observer for scroll animations
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -73,10 +369,45 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Product Categories */}
+      {/* 1. Contact Lenses */}
+      <ScrollableProductSection 
+        title="Contact Lenses" 
+        products={contactLenses}
+        bgColor="bg-gradient-to-r from-blue-50/50 to-transparent"
+        icon="👁️"
+      />
+
+      {/* 2. Men's Collection */}
+      <ScrollableProductSection 
+        title="Men's Collection" 
+        products={men}
+        bgColor="bg-white"
+        icon="👔"
+      />
+
+      {/* 3. Women's Collection */}
+      <ScrollableProductSection 
+        title="Women's Collection" 
+        products={women}
+        bgColor="bg-gradient-to-r from-pink-50/50 to-transparent"
+        icon="💃"
+      />
+
+      {/* 4. Kids' Collection */}
+      <ScrollableProductSection 
+        title="Kids' Collection" 
+        products={kids}
+        bgColor="bg-white"
+        icon="🧸"
+      />
+
+      {/* Product Categories Grid */}
       <section className="py-24 px-6 max-w-7xl mx-auto animate-on-scroll">
-        <SectionHeading title="Browse by Style" subtitle="From vintage classics to modern minimalism, find the perfect shape for your face." />
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <SectionHeading 
+          title="Browse by Style" 
+          subtitle="From vintage classics to modern minimalism, find the perfect shape for your face." 
+        />
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-12">
           {[
             { name: 'Men', img: 'https://images.unsplash.com/photo-1502767089025-6572583495f9?w=500' },
             { name: 'Women', img: 'https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500' },
@@ -85,7 +416,7 @@ const Home = () => {
           ].map((item, idx) => (
             <div 
               key={item.name} 
-              className="group relative h-80 overflow-hidden rounded-3xl cursor-pointer animate-fade-in"
+              className="group relative h-80 overflow-hidden rounded-3xl cursor-pointer animate-fade-in shadow-sm"
               style={{ animationDelay: `${idx * 100}ms` }}
             >
               <img src={item.img} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={item.name} />
@@ -97,8 +428,13 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Featured Products */}
-     {data.products.map(p => <ProductCard key={p.id} product={p} />)}
+      {/* Featured Products Section (Original) */}
+      <div className="max-w-7xl mx-auto px-6">
+        <SectionHeading title="Featured Products" subtitle="Our most loved styles this season" />
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {data.products.slice(0, 4).map(p => <ProductCard key={p.id} product={p} />)}
+        </div>
+      </div>
 
       {/* Virtual Try-On & Store Locator */}
       <section className="py-24 px-6 max-w-7xl mx-auto grid md:grid-cols-2 gap-10 animate-on-scroll">

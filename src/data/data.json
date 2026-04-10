@@ -8,12 +8,244 @@
       "reviews": 12,
       "madeInTaiwan": true,
       "discount": "15%",
+      "category": "men",
+      "gender": "Men",
+      "shape": "Aviator",
       "variants": [
         { "colorName": "White", "hex": "#ffffff", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" },
         { "colorName": "Black", "hex": "#000000", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" },
         { "colorName": "Brown", "hex": "#b68a35", "image": "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?w=500&q=80" },
         { "colorName": "Matt Black", "hex": "#333333", "image": "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=500&q=80" },
         { "colorName": "Grey", "hex": "#808080", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Eleganza Diva - Cat Eye Glasses",
+      "originalPrice": "3,500.00",
+      "discountPrice": "2,800.00",
+      "reviews": 24,
+      "madeInTaiwan": false,
+      "discount": "20%",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Cat-eye",
+      "variants": [
+        { "colorName": "Rose Gold", "hex": "#b76e79", "image": "https://images.unsplash.com/photo-1591076482166-ae1ec9c5d8ea?w=500&q=80" },
+        { "colorName": "Black", "hex": "#000000", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" },
+        { "colorName": "Tortoise", "hex": "#8b5a2b", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Urban Youth - Rectangle Frame",
+      "originalPrice": "2,200.00",
+      "discountPrice": "1,870.00",
+      "reviews": 8,
+      "madeInTaiwan": true,
+      "discount": "15%",
+      "category": "kids",
+      "gender": "Unisex",
+      "shape": "Rectangle",
+      "variants": [
+        { "colorName": "Blue", "hex": "#3498db", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" },
+        { "colorName": "Red", "hex": "#e74c3c", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" },
+        { "colorName": "Green", "hex": "#2ecc71", "image": "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "ClearVision Monthly - Contact Lenses",
+      "originalPrice": "1,500.00",
+      "discountPrice": "1,200.00",
+      "reviews": 45,
+      "madeInTaiwan": false,
+      "discount": "20%",
+      "category": "contactlens",
+      "gender": "Unisex",
+      "shape": "Circle",
+      "variants": [
+        { "colorName": "Clear", "hex": "#e0e0e0", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Executive Pro - Square Frame",
+      "originalPrice": "6,800.00",
+      "discountPrice": "5,780.00",
+      "reviews": 31,
+      "madeInTaiwan": true,
+      "discount": "15%",
+      "category": "men",
+      "gender": "Men",
+      "shape": "Square",
+      "variants": [
+        { "colorName": "Black", "hex": "#000000", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" },
+        { "colorName": "Silver", "hex": "#c0c0c0", "image": "https://images.unsplash.com/photo-1591076482166-ae1ec9c5d8ea?w=500&q=80" },
+        { "colorName": "Gold", "hex": "#ffd700", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Chic Round - Vintage Style",
+      "originalPrice": "3,200.00",
+      "discountPrice": "2,720.00",
+      "reviews": 18,
+      "madeInTaiwan": false,
+      "discount": "15%",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Round",
+      "variants": [
+        { "colorName": "Gold", "hex": "#ffd700", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" },
+        { "colorName": "Silver", "hex": "#c0c0c0", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" },
+        { "colorName": "Rose Gold", "hex": "#b76e79", "image": "https://images.unsplash.com/photo-1473496169904-658ba7c44d8a?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Kids Play - Oval Frame",
+      "originalPrice": "1,800.00",
+      "discountPrice": "1,530.00",
+      "reviews": 6,
+      "madeInTaiwan": true,
+      "discount": "15%",
+      "category": "kids",
+      "gender": "Unisex",
+      "shape": "Oval",
+      "variants": [
+        { "colorName": "Yellow", "hex": "#f1c40f", "image": "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=500&q=80" },
+        { "colorName": "Pink", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" },
+        { "colorName": "Purple", "hex": "#9b59b6", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Daily Fresh - Contact Lenses",
+      "originalPrice": "2,000.00",
+      "discountPrice": "1,600.00",
+      "reviews": 52,
+      "madeInTaiwan": false,
+      "discount": "20%",
+      "category": "contactlens",
+      "gender": "Unisex",
+      "shape": "Circle",
+      "variants": [
+        { "colorName": "Clear", "hex": "#e0e0e0", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Bold Wayfarer - Classic",
+      "originalPrice": "5,500.00",
+      "discountPrice": "4,675.00",
+      "reviews": 27,
+      "madeInTaiwan": true,
+      "discount": "15%",
+      "category": "men",
+      "gender": "Men",
+      "shape": "Wayfarer",
+      "variants": [
+        { "colorName": "Black", "hex": "#000000", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" },
+        { "colorName": "Tortoise", "hex": "#8b5a2b", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Glamour Queen - Oversized Square",
+      "originalPrice": "4,200.00",
+      "discountPrice": "3,570.00",
+      "reviews": 33,
+      "madeInTaiwan": false,
+      "discount": "15%",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Square",
+      "variants": [
+        { "colorName": "Black", "hex": "#000000", "image": "https://images.unsplash.com/photo-1591076482166-ae1ec9c5d8ea?w=500&q=80" },
+        { "colorName": "White", "hex": "#ffffff", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" },
+        { "colorName": "Leopard", "hex": "#d4a373", "image": "https://images.unsplash.com/photo-1577803645773-f96470509666?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Tiny Explorer - Kids Rectangle",
+      "originalPrice": "1,500.00",
+      "discountPrice": "1,275.00",
+      "reviews": 4,
+      "madeInTaiwan": true,
+      "discount": "15%",
+      "category": "kids",
+      "gender": "Unisex",
+      "shape": "Rectangle",
+      "variants": [
+        { "colorName": "Orange", "hex": "#e67e22", "image": "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=500&q=80" },
+        { "colorName": "Teal", "hex": "#008080", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Color Fusion - Colored Contact Lenses",
+      "originalPrice": "2,500.00",
+      "discountPrice": "2,000.00",
+      "reviews": 67,
+      "madeInTaiwan": false,
+      "discount": "20%",
+      "category": "contactlens",
+      "gender": "Women",
+      "shape": "Circle",
+      "variants": [
+        { "colorName": "Blue", "hex": "#3498db", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" },
+        { "colorName": "Green", "hex": "#2ecc71", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" },
+        { "colorName": "Gray", "hex": "#808080", "image": "https://images.unsplash.com/photo-1581091870625-569f3f4c65a6?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Aviator Pro - Metal Frame",
+      "originalPrice": "7,200.00",
+      "discountPrice": "6,120.00",
+      "reviews": 41,
+      "madeInTaiwan": true,
+      "discount": "15%",
+      "category": "men",
+      "gender": "Men",
+      "shape": "Aviator",
+      "variants": [
+        { "colorName": "Gold", "hex": "#ffd700", "image": "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=500&q=80" },
+        { "colorName": "Silver", "hex": "#c0c0c0", "image": "https://images.unsplash.com/photo-1511499767350-a1590fdb2ca8?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 14,
+      "name": "Floral Chic - Cat Eye",
+      "originalPrice": "3,800.00",
+      "discountPrice": "3,230.00",
+      "reviews": 22,
+      "madeInTaiwan": false,
+      "discount": "15%",
+      "category": "women",
+      "gender": "Women",
+      "shape": "Cat-eye",
+      "variants": [
+        { "colorName": "Pink", "hex": "#ff69b4", "image": "https://images.unsplash.com/photo-1574258495973-f010dfbb5371?w=500&q=80" },
+        { "colorName": "Purple", "hex": "#9b59b6", "image": "https://images.unsplash.com/photo-1591076482166-ae1ec9c5d8ea?w=500&q=80" }
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Geometric Edge - Hexagon Frame",
+      "originalPrice": "4,500.00",
+      "discountPrice": "3,825.00",
+      "reviews": 15,
+      "madeInTaiwan": true,
+      "discount": "15%",
+      "category": "men",
+      "gender": "Men",
+      "shape": "Geometric",
+      "variants": [
+        { "colorName": "Matt Black", "hex": "#333333", "image": "https://images.unsplash.com/photo-1572635196237-14b3f281503f?w=500&q=80" },
+        { "colorName": "Blue", "hex": "#3498db", "image": "https://images.unsplash.com/photo-1508296695146-257a814070b4?w=500&q=80" }
       ]
     }
   ]

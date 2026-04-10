@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+.products-flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.products-flex-container > * {
+  flex: 1 1 280px;
+  max-width: calc(25% - 21px);
+  min-width: 250px;
+}
