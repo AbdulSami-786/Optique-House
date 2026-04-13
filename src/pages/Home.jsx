@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import ProductCard from '../components/ProductCard';
 import data from '../data/data.json';
 import { Gem, Box, Headset, RotateCcw } from 'lucide-react';
+import FullWidthVideo from '../components/FullWidthVideo';
 
 /* ─────────────────────────────────────────────
    GLOBAL STYLES - Light Theme with Gradient & Glass
@@ -455,12 +456,11 @@ const Features = () => {
 /* ─────────────────────────────────────────────
    PRODUCT SECTION with Horizontal Scroll
 ───────────────────────────────────────────── */
-const ProductSection = ({ title, products }) => {
+const ProductSection = ({ title, subtitle, products, tag }) => {
   const trackRef = useRef(null);
 
   const scroll = (direction) => {
     if (trackRef.current) {
-      // Logic to scroll by roughly one card width
       const scrollAmount = direction === 'left' ? -340 : 340;
       trackRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
     }
@@ -468,86 +468,140 @@ const ProductSection = ({ title, products }) => {
 
   if (!products?.length) return null;
 
+  // Map category titles to video sources and optional overlay text
+  const videoConfig = {
+    "Contact Lenses": {
+      src: "/videos/contact-lens.mp4",
+      title: "See clearly, live fully"
+    },
+    "Men's Collection": {
+      src: "/videos/men-collection.mp4",
+      title: "For the modern man"
+    },
+    "Women's Collection": {
+      src: "/videos/women-collection.mp4",
+      title: "Elevate your style"
+    },
+    "Kids' Collection": {
+      src: "/videos/kids-collection.mp4",
+      title: "Fun & flexible frames"
+    }
+  };
+
+  const shouldShowVideo = videoConfig[title];
+
   return (
-    <section className="min-h-screen w-full py-16 bg-white flex items-center justify-center">
-      {/* Main container - centered both horizontally and vertically */}
-      <div className="w-full max-w-[1320px] mx-auto px-4 md:px-6 relative">
-        
-        {/* Header - centered text on mobile, left-aligned on larger screens */}
-        <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-          <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 text-center md:text-left">
-            {title}
-          </h2>
-          {/* View All button - centered on mobile, right-aligned on desktop */}
-          <button className="text-sm font-semibold text-gray-600 hover:text-black transition-colors underline underline-offset-4">
-            View All
-          </button>
-        </div>
-
-        {/* 2. Navigation Arrows: Centered with the carousel */}
-        <div className="relative">
-          <div className="hidden md:block">
-            <button 
-              onClick={() => scroll('left')}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-30 bg-white border border-gray-200 rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
-              aria-label="Scroll Left"
-            >
-              <span className="text-2xl">‹</span>
-            </button>
-
-            <button 
-              onClick={() => scroll('right')}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-30 bg-white border border-gray-200 rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
-              aria-label="Scroll Right"
-            >
-              <span className="text-2xl">›</span>
+    <>
+      <section className="min-h-screen w-full py-16 bg-white flex items-center justify-center">
+        <div className="w-full max-w-[1320px] mx-auto px-4 md:px-6 relative">
+          
+          {/* Header with tag, title and subtitle */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+              {tag && (
+                <span className="inline-block text-sm font-semibold text-gray-500 mb-2">
+                  {tag}
+                </span>
+              )}
+              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
+                {title}
+              </h2>
+              {subtitle && (
+                <p className="text-gray-600 mt-1 text-sm md:text-base">
+                  {subtitle}
+                </p>
+              )}
+            </div>
+            <button className="text-sm font-semibold text-gray-600 hover:text-black transition-colors underline underline-offset-4">
+              View All
             </button>
           </div>
 
-          {/* 3. Horizontal Scroll Track with centered items */}
-          <div 
-            ref={trackRef}
-            className="flex overflow-x-auto gap-6 no-scrollbar pb-8 snap-x snap-mandatory justify-center"
-            style={{ 
-              scrollbarWidth: 'none', 
-              msOverflowStyle: 'none' 
-            }}
-          >
-            {products.map((product) => (
-              <div 
-                key={product.id} 
-                className="min-w-[280px] md:min-w-[310px] flex-shrink-0 snap-start"
+          {/* Carousel with arrows */}
+          <div className="relative">
+            <div className="hidden md:block">
+              <button 
+                onClick={() => scroll('left')}
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-30 bg-white border border-gray-200 rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
+                aria-label="Scroll Left"
               >
-                <ProductCard product={product} />
-              </div>
-            ))}
+                <span className="text-2xl">‹</span>
+              </button>
+
+              <button 
+                onClick={() => scroll('right')}
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-30 bg-white border border-gray-200 rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
+                aria-label="Scroll Right"
+              >
+                <span className="text-2xl">›</span>
+              </button>
+            </div>
+
+            <div 
+              ref={trackRef}
+              className="flex overflow-x-auto gap-6 no-scrollbar pb-8 snap-x snap-mandatory justify-center"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {products.map((product) => (
+                <div 
+                  key={product.id} 
+                  className="min-w-[280px] md:min-w-[310px] flex-shrink-0 snap-start"
+                >
+                  <ProductCard product={product} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Global CSS for the custom scrollbar behavior */}
-      <style jsx>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-      `}</style>
-    </section>
+        <style jsx>{`
+          .no-scrollbar::-webkit-scrollbar {
+            display: none;
+          }
+        `}</style>
+      </section>
+
+      {/* Full‑width video inserted directly after the carousel for every category */}
+      {shouldShowVideo && (
+        <FullWidthVideo 
+          src={shouldShowVideo.src} 
+          title={shouldShowVideo.title} 
+        />
+      )}
+    </>
   );
 };
+
 /* ─────────────────────────────────────────────
    SIMPLE CALL TO ACTION - Glass Style
 ───────────────────────────────────────────── */
 const CTASection = () => (
-  <section style={{ padding: '5rem 2rem' }}>
-    <div style={{ maxWidth: 1000, margin: '0 auto' }}>
-      <div className="glass-card reveal" style={{ padding: '3rem', textAlign: 'center' }}>
+  <section style={{
+    padding: '5rem 2rem',
+    backgroundImage: 'url("https://cdn.prod.website-files.com/66751ebd9740f5d5704a4b56/66ff7b69eec253d6cbc42034_66%20-%2015%20Best%20Try-On%20Glasses%20in%202024.webp")',
+    backgroundSize: 'cover',
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    position: 'relative'
+  }}>
+    <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+      <div 
+        className="glass-card reveal" 
+        style={{ 
+          padding: '3rem', 
+          textAlign: 'center',
+          backgroundColor: 'rgba(255, 255, 255, 0.70)', // Slight transparency
+          borderRadius: '1rem', // Keeps edges smooth (adjust as needed)
+          backdropFilter: 'blur(2px)' // Optional: adds a soft blur behind the text
+        }}
+      >
         <h2 style={{ fontFamily: 'var(--ff-display)', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', marginBottom: '1rem' }}>
           Virtual Try-On
         </h2>
         <p style={{ color: 'var(--text-muted)', maxWidth: 500, margin: '0 auto 1.5rem' }}>
           See how frames look on your face — from any angle — using our AI-powered tool.
         </p>
-        <button className="btn-gold">Try Now →</button>
+        <button className="btn-gold">Try Now</button>
       </div>
     </div>
   </section>
@@ -594,9 +648,25 @@ const Newsletter = () => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   return (
-    <section style={{ padding: '5rem 2rem' }}>
-      <div style={{ maxWidth: 600, margin: '0 auto' }}>
-        <div className="glass-card reveal" style={{ padding: '3rem', textAlign: 'center' }}>
+    <section style={{
+      padding: '5rem 2rem',
+      backgroundImage: 'url("https://static.vecteezy.com/system/resources/thumbnails/025/373/863/small/five-pairs-of-glasses-lined-up-against-a-white-background-created-with-generative-ai-technology-free-photo.jpg")', // glasses try-on related
+      backgroundSize: 'fit',
+      backgroundPosition: 'top center',
+      
+      backgroundRepeat: 'no-repeat',
+      position: 'relative'
+    }}>
+      <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
+        <div 
+          className="glass-card reveal" 
+          style={{ 
+            padding: '3rem', 
+            textAlign: 'center',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)', // slight transparency
+            borderRadius: '1rem'
+          }}
+        >
           <h2 style={{ fontFamily: 'var(--ff-display)', fontSize: '1.8rem', marginBottom: '0.5rem' }}>Get Exclusive Offers</h2>
           <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Join 50,000+ members for early access to sales.</p>
           {subscribed ? (
