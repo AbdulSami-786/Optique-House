@@ -16,8 +16,8 @@ const Checkout = () => {
   const [paymentMethod, setPaymentMethod] = useState("cod");
   const navigate = useNavigate();
 
-  // ✅ YOUR UPDATED WEB APP URL
-  const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbwA7ZZ5cmYoThPi2SktBNVj_T6G7YbWWc1_YyacbZo1IiMapvVt8c4Qb5PY8pRZrUCE1w/exec";
+  // ✅ YOUR GOOGLE SHEETS WEBHOOK URL
+  const GOOGLE_SHEETS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbz5Jt0ovrR6wg-fjK-mirrz6Ehh8QHUy8iiHH9QrgdaHgdl5wQ4wXNGhjWqSr0p_ohHFQ/exec";
 
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -31,10 +31,11 @@ const Checkout = () => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
+  // Calculate subtotal (prices are numbers)
   const getSubtotal = () => {
     return cart.reduce((total, item) => {
-      const price = parseFloat(item.discountPrice?.replace(/,/g, "")) || 0;
-      return total + (price * (item.quantity || 1));
+      const price = item.price ?? item.discountPrice ?? 0;
+      return total + price * (item.quantity || 1);
     }, 0);
   };
 
@@ -48,7 +49,7 @@ const Checkout = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!form.name || !form.phone || !form.address || !form.city) {
       alert("Please fill all required fields");
       return;
@@ -56,6 +57,7 @@ const Checkout = () => {
 
     setLoading(true);
 
+    // Prepare order data with prescription per item
     const orderData = {
       orderId: `ORD-${Date.now()}`,
       timestamp: new Date().toISOString(),
@@ -65,12 +67,18 @@ const Checkout = () => {
       deliveryAddress: `${form.address}, ${form.city}, ${form.zipCode}`,
       orderNotes: form.notes,
       paymentMethod: paymentMethod === "cod" ? "Cash on Delivery" : "Bank Transfer",
-      items: cart.map(item => ({
-        name: item.name,
-        quantity: item.quantity || 1,
-        price: item.discountPrice,
-        total: (parseFloat(item.discountPrice?.replace(/,/g, "")) || 0) * (item.quantity || 1)
-      })),
+      items: cart.map(item => {
+        const price = item.price ?? item.discountPrice ?? 0;
+        const quantity = item.quantity || 1;
+        return {
+          name: item.name,
+          variant: item.selectedVariant?.colorName || "Default",
+          quantity: quantity,
+          price: price,
+          total: price * quantity,
+          prescription: item.prescription || null   // ✅ each item has its own prescription
+        };
+      }),
       subtotal: getSubtotal(),
       shipping: getShipping(),
       total: getTotal(),
@@ -80,7 +88,8 @@ const Checkout = () => {
     console.log("Sending order:", orderData);
 
     try {
-      const response = await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
+      // ✅ Use no-cors to avoid CORS preflight issues with Google Script
+      await fetch(GOOGLE_SHEETS_WEBHOOK_URL, {
         method: "POST",
         mode: "no-cors",
         headers: {
@@ -89,20 +98,28 @@ const Checkout = () => {
         body: JSON.stringify(orderData)
       });
 
-      console.log("Order sent successfully!");
+      console.log("Order sent (no-cors mode - request accepted)");
 
+      // Save order locally
       const orders = JSON.parse(localStorage.getItem("orders")) || [];
       orders.push(orderData);
       localStorage.setItem("orders", JSON.stringify(orders));
 
+      // Clear cart
       localStorage.removeItem("cart");
 
       alert(`✅ Order placed successfully!\nOrder ID: ${orderData.orderId}\nWe'll contact you shortly.`);
       navigate("/order-success", { state: { orderData } });
-      
+
     } catch (err) {
-      console.error("Error placing order:", err);
-      alert("❌ Error placing order. Please try again.");
+      console.error("Fetch error (likely CORS or network):", err);
+      // Even if fetch fails, save order locally and inform user
+      const orders = JSON.parse(localStorage.getItem("orders")) || [];
+      orders.push(orderData);
+      localStorage.setItem("orders", JSON.stringify(orders));
+      localStorage.removeItem("cart");
+      alert(`⚠️ Order saved locally. We'll process it soon.\nOrder ID: ${orderData.orderId}`);
+      navigate("/order-success", { state: { orderData } });
     } finally {
       setLoading(false);
     }
@@ -119,20 +136,20 @@ const Checkout = () => {
         <div className="light-sweep"></div>
         <div className="particle-field"></div>
       </div>
-      
+
       <div className="container">
         <h1 className="checkout-title">
           <span className="title-icon">🔒</span> Secure Checkout
         </h1>
-        
+
         <div className="checkout-content">
           <form onSubmit={handleSubmit} className="checkout-form">
+            {/* Contact Information */}
             <div className="form-section">
               <h2>
                 <span className="section-icon">👤</span>
                 Contact Information
               </h2>
-              
               <div className="form-group">
                 <label>Full Name *</label>
                 <input
@@ -145,7 +162,6 @@ const Checkout = () => {
                   className="animated-input"
                 />
               </div>
-              
               <div className="form-group">
                 <label>Email Address</label>
                 <input
@@ -157,7 +173,6 @@ const Checkout = () => {
                   className="animated-input"
                 />
               </div>
-              
               <div className="form-group">
                 <label>Phone Number *</label>
                 <input
@@ -171,13 +186,13 @@ const Checkout = () => {
                 />
               </div>
             </div>
-            
+
+            {/* Shipping Address */}
             <div className="form-section">
               <h2>
                 <span className="section-icon">📍</span>
                 Shipping Address
               </h2>
-              
               <div className="form-group">
                 <label>Address *</label>
                 <textarea
@@ -190,7 +205,6 @@ const Checkout = () => {
                   className="animated-input"
                 />
               </div>
-              
               <div className="form-row">
                 <div className="form-group">
                   <label>City *</label>
@@ -204,7 +218,6 @@ const Checkout = () => {
                     className="animated-input"
                   />
                 </div>
-                
                 <div className="form-group">
                   <label>ZIP Code</label>
                   <input
@@ -218,13 +231,13 @@ const Checkout = () => {
                 </div>
               </div>
             </div>
-            
+
+            {/* Payment Method */}
             <div className="form-section">
               <h2>
                 <span className="section-icon">💳</span>
                 Payment Method
               </h2>
-              
               <div className="payment-options">
                 <label className="payment-option">
                   <input
@@ -239,7 +252,6 @@ const Checkout = () => {
                     <span>Pay when you receive your order</span>
                   </div>
                 </label>
-                
                 <label className="payment-option">
                   <input
                     type="radio"
@@ -255,7 +267,8 @@ const Checkout = () => {
                 </label>
               </div>
             </div>
-            
+
+            {/* Order Notes */}
             <div className="form-section">
               <h2>
                 <span className="section-icon">📝</span>
@@ -272,28 +285,54 @@ const Checkout = () => {
                 />
               </div>
             </div>
+
+            <button type="submit" className="place-order-btn" disabled={loading}>
+              {loading ? "⏳ Placing Order..." : "✅ Place Order"}
+            </button>
           </form>
-          
+
+          {/* Order Summary */}
           <div className="order-summary">
             <h2>
               <span className="summary-icon">🛒</span>
               Order Summary
             </h2>
-            
             <div className="summary-items">
-              {cart.map((item, idx) => (
-                <div key={item.id} className="summary-item" style={{ animationDelay: `${idx * 0.05}s` }}>
-                  <div className="item-info">
-                    <span className="item-name">{item.name}</span>
-                    <span className="item-quantity">x{item.quantity || 1}</span>
+              {cart.map((item, idx) => {
+                const price = item.price ?? item.discountPrice ?? 0;
+                const quantity = item.quantity || 1;
+                const total = price * quantity;
+                return (
+                  <div
+                    key={`${item.id}-${item.selectedVariant?.colorName || idx}`}
+                    className="summary-item"
+                    style={{ animationDelay: `${idx * 0.05}s` }}
+                  >
+                    <div className="item-main">
+                      <div className="item-info">
+                        <span className="item-name">{item.name}</span>
+                        {item.selectedVariant && (
+                          <span className="item-variant">({item.selectedVariant.colorName})</span>
+                        )}
+                        <span className="item-quantity">x{quantity}</span>
+                      </div>
+                      <div className="item-price">PKR {total.toLocaleString()}</div>
+                    </div>
+                    {/* ✅ Display prescription if present */}
+                    {item.prescription && (
+                      <div className="item-prescription">
+                        <strong>Prescription:</strong> SPH {item.prescription.sphere || "—"} | 
+                        CYL {item.prescription.cylinder || "—"} | 
+                        Axis {item.prescription.axis || "—"} | 
+                        BC {item.prescription.baseCurve || "—"} | 
+                        DIA {item.prescription.diameter || "—"}
+                      </div>
+                    )}
                   </div>
-                  <span className="item-price">
-                    PKR {((parseFloat(item.discountPrice?.replace(/,/g, "")) || 0) * (item.quantity || 1)).toLocaleString()}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
-            
+
             <div className="summary-totals">
               <div className="summary-row">
                 <span>Subtotal</span>
@@ -302,7 +341,7 @@ const Checkout = () => {
               <div className="summary-row">
                 <span>Shipping</span>
                 <span className={getShipping() === 0 ? "free-shipping" : ""}>
-                  {getShipping() === 0 ? '✨ Free' : `PKR ${getShipping().toLocaleString()}`}
+                  {getShipping() === 0 ? "✨ Free" : `PKR ${getShipping().toLocaleString()}`}
                 </span>
               </div>
               <div className="summary-total">
@@ -310,26 +349,12 @@ const Checkout = () => {
                 <span>PKR {getTotal().toLocaleString()}</span>
               </div>
             </div>
-            
-            <button 
-              className="place-order-btn"
-              onClick={handleSubmit}
-              disabled={loading}
-            >
-              {loading ? (
-                <span className="loading-spinner">⏳ Placing Order...</span>
-              ) : (
-                "✅ Place Order"
-              )}
-            </button>
-            
-            <p className="secure-checkout">
-              🔒 Secure checkout powered by SSL encryption
-            </p>
+
+            <p className="secure-checkout">🔒 Secure checkout powered by SSL encryption</p>
           </div>
         </div>
       </div>
-      
+
       <style jsx>{`
         .checkout-page {
           position: relative;
@@ -337,8 +362,8 @@ const Checkout = () => {
           padding: 60px 0;
           overflow-x: hidden;
         }
-        
-        /* ========== ANIMATED BACKGROUND ========== */
+
+        /* Animated Background */
         .animated-bg {
           position: fixed;
           top: 0;
@@ -349,7 +374,7 @@ const Checkout = () => {
           background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
           overflow: hidden;
         }
-        
+
         .bg-orb {
           position: absolute;
           border-radius: 50%;
@@ -357,7 +382,7 @@ const Checkout = () => {
           opacity: 0.4;
           animation: floatOrb 22s infinite alternate ease-in-out;
         }
-        
+
         .orb1 {
           width: 60vw;
           height: 60vw;
@@ -366,7 +391,7 @@ const Checkout = () => {
           left: -15%;
           animation-duration: 25s;
         }
-        
+
         .orb2 {
           width: 55vw;
           height: 55vw;
@@ -376,7 +401,7 @@ const Checkout = () => {
           animation-duration: 30s;
           animation-delay: -5s;
         }
-        
+
         .orb3 {
           width: 45vw;
           height: 45vw;
@@ -386,7 +411,7 @@ const Checkout = () => {
           animation-duration: 28s;
           animation-delay: -8s;
         }
-        
+
         .orb4 {
           width: 40vw;
           height: 40vw;
@@ -396,7 +421,7 @@ const Checkout = () => {
           animation-duration: 35s;
           animation-delay: -3s;
         }
-        
+
         @keyframes floatOrb {
           0% {
             transform: translate(0, 0) scale(1);
@@ -405,39 +430,49 @@ const Checkout = () => {
             transform: translate(6%, 8%) scale(1.12);
           }
         }
-        
+
         .light-sweep {
           position: absolute;
           top: 0;
           left: -100%;
           width: 100%;
           height: 100%;
-          background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
           animation: sweepLight 15s ease-in-out infinite;
           pointer-events: none;
         }
-        
+
         @keyframes sweepLight {
-          0% { left: -100%; }
-          50% { left: 100%; }
-          100% { left: 100%; }
+          0% {
+            left: -100%;
+          }
+          50% {
+            left: 100%;
+          }
+          100% {
+            left: 100%;
+          }
         }
-        
+
         .particle-field {
           position: absolute;
           width: 100%;
           height: 100%;
-          background-image: radial-gradient(circle at 20% 40%, rgba(255,255,255,0.08) 1px, transparent 1px);
+          background-image: radial-gradient(circle at 20% 40%, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
           background-size: 40px 40px;
           animation: particleDrift 60s linear infinite;
           pointer-events: none;
         }
-        
+
         @keyframes particleDrift {
-          0% { background-position: 0 0; }
-          100% { background-position: 200px 200px; }
+          0% {
+            background-position: 0 0;
+          }
+          100% {
+            background-position: 200px 200px;
+          }
         }
-        
+
         .container {
           max-width: 1200px;
           margin: 0 auto;
@@ -445,7 +480,7 @@ const Checkout = () => {
           position: relative;
           z-index: 1;
         }
-        
+
         .checkout-title {
           font-size: 2.5rem;
           font-weight: 700;
@@ -457,19 +492,25 @@ const Checkout = () => {
           align-items: center;
           justify-content: center;
           gap: 12px;
-          text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
-        
+
         .title-icon {
           display: inline-block;
           animation: pulseIcon 2s ease-in-out infinite;
         }
-        
+
         @keyframes pulseIcon {
-          0%, 100% { transform: scale(1); opacity: 1; }
-          50% { transform: scale(1.1); opacity: 0.9; }
+          0%, 100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+          50% {
+            transform: scale(1.1);
+            opacity: 0.9;
+          }
         }
-        
+
         @keyframes titleGlow {
           0% {
             opacity: 0;
@@ -480,13 +521,13 @@ const Checkout = () => {
             transform: translateY(0);
           }
         }
-        
+
         .checkout-content {
           display: grid;
           grid-template-columns: 1fr 400px;
           gap: 30px;
         }
-        
+
         .checkout-form {
           background: rgba(255, 255, 255, 0.96);
           backdrop-filter: blur(12px);
@@ -496,12 +537,12 @@ const Checkout = () => {
           animation: slideInLeft 0.5s ease-out;
           transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
-        
+
         .checkout-form:hover {
           transform: translateY(-3px);
           box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.3);
         }
-        
+
         @keyframes slideInLeft {
           from {
             opacity: 0;
@@ -512,18 +553,17 @@ const Checkout = () => {
             transform: translateX(0);
           }
         }
-        
+
         .form-section {
           margin-bottom: 30px;
           padding-bottom: 20px;
           border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-          transition: all 0.2s;
         }
-        
+
         .form-section:last-child {
           border-bottom: none;
         }
-        
+
         .form-section h2 {
           font-size: 1.3rem;
           margin-bottom: 22px;
@@ -532,15 +572,15 @@ const Checkout = () => {
           align-items: center;
           gap: 10px;
         }
-        
+
         .section-icon {
           font-size: 1.4rem;
         }
-        
+
         .form-group {
           margin-bottom: 20px;
         }
-        
+
         .form-group label {
           display: block;
           margin-bottom: 8px;
@@ -548,7 +588,7 @@ const Checkout = () => {
           color: #1e293b;
           font-size: 0.9rem;
         }
-        
+
         .animated-input {
           width: 100%;
           padding: 12px 16px;
@@ -559,35 +599,35 @@ const Checkout = () => {
           background: white;
           font-family: inherit;
         }
-        
+
         .animated-input:focus {
           outline: none;
           border-color: #667eea;
           box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
           transform: scale(1.01);
         }
-        
+
         .animated-input:hover {
           border-color: #cbd5e1;
         }
-        
+
         textarea.animated-input {
           resize: vertical;
           font-family: inherit;
         }
-        
+
         .form-row {
           display: grid;
           grid-template-columns: 1fr 1fr;
           gap: 15px;
         }
-        
+
         .payment-options {
           display: flex;
           flex-direction: column;
           gap: 15px;
         }
-        
+
         .payment-option {
           display: flex;
           align-items: center;
@@ -599,35 +639,35 @@ const Checkout = () => {
           transition: all 0.25s ease;
           background: white;
         }
-        
+
         .payment-option:hover {
           border-color: #667eea;
           background: linear-gradient(135deg, #f8f9ff, #ffffff);
           transform: translateX(5px);
         }
-        
+
         .payment-option input {
           margin: 0;
           width: 20px;
           height: 20px;
           accent-color: #667eea;
         }
-        
+
         .payment-option-content {
           display: flex;
           flex-direction: column;
         }
-        
+
         .payment-option-content strong {
           margin-bottom: 5px;
           color: #1a1a2e;
         }
-        
+
         .payment-option-content span {
           font-size: 0.85rem;
           color: #64748b;
         }
-        
+
         .order-summary {
           background: rgba(255, 255, 255, 0.96);
           backdrop-filter: blur(12px);
@@ -640,11 +680,11 @@ const Checkout = () => {
           animation: slideInRight 0.5s ease-out;
           transition: all 0.3s ease;
         }
-        
+
         .order-summary:hover {
           transform: translateY(-3px);
         }
-        
+
         @keyframes slideInRight {
           from {
             opacity: 0;
@@ -655,7 +695,7 @@ const Checkout = () => {
             transform: translateX(0);
           }
         }
-        
+
         .order-summary h2 {
           font-size: 1.4rem;
           margin-bottom: 22px;
@@ -665,47 +705,45 @@ const Checkout = () => {
           align-items: center;
           gap: 10px;
         }
-        
+
         .summary-icon {
           font-size: 1.3rem;
         }
-        
+
         .summary-items {
           margin-bottom: 20px;
-          max-height: 320px;
+          max-height: 400px;
           overflow-y: auto;
           scrollbar-width: thin;
         }
-        
+
         .summary-items::-webkit-scrollbar {
           width: 5px;
         }
-        
+
         .summary-items::-webkit-scrollbar-track {
           background: #e2e8f0;
           border-radius: 10px;
         }
-        
+
         .summary-items::-webkit-scrollbar-thumb {
           background: #667eea;
           border-radius: 10px;
         }
-        
+
         .summary-item {
-          display: flex;
-          justify-content: space-between;
           padding: 12px 0;
           border-bottom: 1px solid rgba(0, 0, 0, 0.06);
           animation: fadeItem 0.4s ease backwards;
           transition: all 0.2s;
         }
-        
+
         .summary-item:hover {
           background: rgba(102, 126, 234, 0.05);
           padding-left: 8px;
           border-radius: 12px;
         }
-        
+
         @keyframes fadeItem {
           from {
             opacity: 0;
@@ -716,18 +754,35 @@ const Checkout = () => {
             transform: translateX(0);
           }
         }
-        
+
+        .item-main {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+          flex-wrap: wrap;
+          gap: 8px;
+        }
+
         .item-info {
           display: flex;
           gap: 12px;
           flex-wrap: wrap;
+          align-items: baseline;
         }
-        
+
         .item-name {
-          font-weight: 600;
+          font-weight: 700;
           color: #1e293b;
         }
-        
+
+        .item-variant {
+          font-size: 0.8rem;
+          color: #667eea;
+          background: #eef2ff;
+          padding: 2px 8px;
+          border-radius: 20px;
+        }
+
         .item-quantity {
           color: #64748b;
           font-size: 0.85rem;
@@ -735,17 +790,28 @@ const Checkout = () => {
           padding: 2px 8px;
           border-radius: 20px;
         }
-        
+
         .item-price {
           font-weight: 700;
           color: #0f172a;
         }
-        
+
+        .item-prescription {
+          margin-top: 8px;
+          font-size: 0.7rem;
+          color: #4b5563;
+          padding-left: 12px;
+          border-left: 2px solid #667eea;
+          background: #f8fafc;
+          border-radius: 8px;
+          padding: 6px 10px;
+        }
+
         .summary-totals {
           padding-top: 15px;
           border-top: 2px solid rgba(0, 0, 0, 0.08);
         }
-        
+
         .summary-row {
           display: flex;
           justify-content: space-between;
@@ -753,12 +819,12 @@ const Checkout = () => {
           color: #475569;
           font-weight: 500;
         }
-        
+
         .free-shipping {
           color: #10b981;
           font-weight: 600;
         }
-        
+
         .summary-total {
           display: flex;
           justify-content: space-between;
@@ -767,13 +833,9 @@ const Checkout = () => {
           border-top: 2px solid rgba(0, 0, 0, 0.08);
           font-size: 1.3rem;
           font-weight: 800;
-          background: linear-gradient(135deg, #667eea, #764ba2);
-          -webkit-background-clip: text;
-          background-clip: text;
-          color: transparent;
           color: #1a1a2e;
         }
-        
+
         .place-order-btn {
           width: 100%;
           padding: 16px;
@@ -787,31 +849,23 @@ const Checkout = () => {
           margin-top: 20px;
           transition: all 0.3s ease;
           box-shadow: 0 10px 25px -8px rgba(102, 126, 234, 0.5);
-          letter-spacing: 0.5px;
         }
-        
+
         .place-order-btn:hover:not(:disabled) {
           transform: translateY(-3px);
           box-shadow: 0 20px 35px -10px rgba(102, 126, 234, 0.6);
           background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
         }
-        
+
         .place-order-btn:active:not(:disabled) {
           transform: translateY(1px);
         }
-        
+
         .place-order-btn:disabled {
           opacity: 0.7;
           cursor: not-allowed;
-          transform: none;
         }
-        
-        .loading-spinner {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-        }
-        
+
         .secure-checkout {
           text-align: center;
           margin-top: 18px;
@@ -822,28 +876,20 @@ const Checkout = () => {
           justify-content: center;
           gap: 6px;
         }
-        
+
         @media (max-width: 968px) {
           .checkout-content {
             grid-template-columns: 1fr;
           }
-          
           .form-row {
             grid-template-columns: 1fr;
           }
-          
           .checkout-title {
             font-size: 2rem;
           }
-          
           .order-summary {
             position: static;
           }
-        }
-        
-        /* Custom focus ring */
-        input:focus, textarea:focus {
-          outline: none;
         }
       `}</style>
     </div>

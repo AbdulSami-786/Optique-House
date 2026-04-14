@@ -12,6 +12,7 @@ const Products = () => {
   const [selectedGenders, setSelectedGenders] = useState([]);
   const [sortBy, setSortBy] = useState('default');
   const [notification, setNotification] = useState(null);
+  const [searchTerm, setSearchTerm] = useState(''); // NEW: search term state
 
   // Shape options based on product types
   const shapeOptions = ['Circle', 'Square', 'Rectangle', 'Oval', 'Cat-eye', 'Aviator', 'Wayfarer', 'Round', 'Geometric'];
@@ -30,6 +31,13 @@ const Products = () => {
   // Apply filters whenever filter criteria change
   useEffect(() => {
     let result = [...products];
+
+    // Filter by search term (product name)
+    if (searchTerm.trim() !== '') {
+      result = result.filter(product =>
+        product.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
 
     // Filter by main category
     if (activeCategory !== 'all') {
@@ -86,7 +94,7 @@ const Products = () => {
     }
 
     setFilteredProducts(result);
-  }, [activeCategory, priceRange, selectedShapes, selectedGenders, sortBy, products]);
+  }, [activeCategory, priceRange, selectedShapes, selectedGenders, sortBy, products, searchTerm]);
 
   // Handle shape filter toggle
   const toggleShape = (shape) => {
@@ -102,13 +110,14 @@ const Products = () => {
     );
   };
 
-  // Clear all filters
+  // Clear all filters (including search)
   const clearFilters = () => {
     setActiveCategory('all');
     setPriceRange({ min: '', max: '' });
     setSelectedShapes([]);
     setSelectedGenders([]);
     setSortBy('default');
+    setSearchTerm(''); // NEW: clear search term
   };
 
   // Format price display
@@ -116,18 +125,18 @@ const Products = () => {
     return `PKR ${price}`;
   };
 
-const addToCart = (product, selectedVariantIndex = 0) => {
-  const saved = JSON.parse(localStorage.getItem("cart")) || [];
-  const exists = saved.find(i => i.id === product.id);
-  
-  if (exists) {
-    exists.quantity = (exists.quantity || 1) + 1;
-  } else {
-    saved.push({ ...product, quantity: 1, selectedVariant: selectedVariantIndex });
-  }
-  
-  localStorage.setItem("cart", JSON.stringify(saved));
-};
+  const addToCart = (product, selectedVariantIndex = 0) => {
+    const saved = JSON.parse(localStorage.getItem("cart")) || [];
+    const exists = saved.find(i => i.id === product.id);
+    
+    if (exists) {
+      exists.quantity = (exists.quantity || 1) + 1;
+    } else {
+      saved.push({ ...product, quantity: 1, selectedVariant: selectedVariantIndex });
+    }
+    
+    localStorage.setItem("cart", JSON.stringify(saved));
+  };
 
   return (
     <div className="products-page">
@@ -240,18 +249,38 @@ const addToCart = (product, selectedVariantIndex = 0) => {
           {/* Products Grid */}
           <main className="products-main">
             <div className="products-header">
-              <p className="products-count">{filteredProducts.length} products found</p>
-              <select
-                className="sort-select"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-              >
-                <option value="default">Sort by: Featured</option>
-                <option value="priceLowHigh">Price: Low to High</option>
-                <option value="priceHighLow">Price: High to Low</option>
-                <option value="nameAZ">Name: A to Z</option>
-                <option value="nameZA">Name: Z to A</option>
-              </select>
+              <div className="search-wrapper">
+                <input
+                  type="text"
+                  className="search-input"
+                  placeholder="Search products by name..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                {searchTerm && (
+                  <button
+                    className="clear-search"
+                    onClick={() => setSearchTerm('')}
+                    aria-label="Clear search"
+                  >
+                    ✕
+                  </button>
+                )}
+              </div>
+              <div className="products-count-sort">
+                <p className="products-count">{filteredProducts.length} products found</p>
+                <select
+                  className="sort-select"
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                >
+                  <option value="default">Sort by: Featured</option>
+                  <option value="priceLowHigh">Price: Low to High</option>
+                  <option value="priceHighLow">Price: High to Low</option>
+                  <option value="nameAZ">Name: A to Z</option>
+                  <option value="nameZA">Name: Z to A</option>
+                </select>
+              </div>
             </div>
 
             {filteredProducts.length === 0 ? (
@@ -524,9 +553,63 @@ const addToCart = (product, selectedVariantIndex = 0) => {
           gap: 16px;
         }
 
+        .search-wrapper {
+          position: relative;
+          flex: 1;
+          min-width: 200px;
+        }
+
+        .search-input {
+          width: 100%;
+          padding: 10px 16px;
+          padding-right: 36px;
+          border: 1px solid #ddd;
+          border-radius: 40px;
+          font-size: 0.9rem;
+          background: white;
+          transition: all 0.2s;
+        }
+
+        .search-input:focus {
+          outline: none;
+          border-color: #1a1a2e;
+          box-shadow: 0 0 0 2px rgba(26,26,46,0.1);
+        }
+
+        .clear-search {
+          position: absolute;
+          right: 12px;
+          top: 50%;
+          transform: translateY(-50%);
+          background: none;
+          border: none;
+          font-size: 1.1rem;
+          cursor: pointer;
+          color: #999;
+          padding: 4px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          transition: all 0.2s;
+        }
+
+        .clear-search:hover {
+          color: #333;
+          background: #f0f0f0;
+        }
+
+        .products-count-sort {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          flex-wrap: wrap;
+        }
+
         .products-count {
           color: #666;
           font-size: 0.9rem;
+          margin: 0;
         }
 
         .sort-select {
@@ -717,6 +800,15 @@ const addToCart = (product, selectedVariantIndex = 0) => {
           .category-tab {
             padding: 8px 20px;
             font-size: 0.9rem;
+          }
+
+          .products-header {
+            flex-direction: column;
+            align-items: stretch;
+          }
+
+          .products-count-sort {
+            justify-content: space-between;
           }
         }
       `}</style>
