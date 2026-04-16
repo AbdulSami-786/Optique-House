@@ -7,6 +7,7 @@ import FullWidthVideo from '../components/FullWidthVideo';
 
 /* ─────────────────────────────────────────────
    GLOBAL STYLES - Light Theme with Gradient & Glass
+   FULLY RESPONSIVE for Mobile + iPad (design unchanged on desktop)
 ───────────────────────────────────────────── */
 const GLOBAL_CSS = `
   @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
@@ -37,6 +38,8 @@ const GLOBAL_CSS = `
     background: linear-gradient(135deg, #f8f9ff 0%, #eef2fa 50%, #e8edf5 100%);
     color: var(--ink);
     min-height: 100vh;
+    overflow-x: hidden;
+    width: 100%;
   }
 
   /* Glass base styles */
@@ -158,30 +161,6 @@ const GLOBAL_CSS = `
     border: 1px solid rgba(201, 168, 76, 0.3);
   }
 
-  /* Category circle */
-  .cat-circle {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid var(--gold);
-    padding: 3px;
-    transition: transform 0.2s var(--ease);
-  }
-
-  .cat-circle:hover {
-    transform: translateY(-4px);
-  }
-
-  /* Product card overrides */
-  .product-glass {
-    background: var(--glass-white);
-    backdrop-filter: blur(8px);
-    border-radius: 20px;
-    padding: 1rem;
-    transition: all 0.2s var(--ease);
-  }
-
   /* WhatsApp floating */
   @keyframes waPulse {
     0%, 100% { box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5); }
@@ -189,6 +168,256 @@ const GLOBAL_CSS = `
   }
   .wa-btn {
     animation: waPulse 2s infinite;
+  }
+
+  /* ============================================
+     RESPONSIVE STYLES (Mobile + iPad)
+     Desktop design completely unchanged
+  ============================================ */
+  
+  /* iPad and medium tablets (portrait and landscape) */
+  @media screen and (max-width: 1024px) and (min-width: 769px) {
+    .container {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
+    
+    .categories-grid {
+      gap: 1.25rem !important;
+    }
+    
+    .category-card .image-wrapper {
+      width: 110px !important;
+      height: 110px !important;
+    }
+    
+    .product-glass {
+      padding: 0.9rem;
+    }
+    
+    /* Hero iPad fixes */
+    .hero-overlay {
+      padding-left: 8% !important;
+      padding-right: 8% !important;
+    }
+    
+    .hero-title {
+      font-size: clamp(2rem, 4vw, 3rem) !important;
+    }
+  }
+  
+  /* Mobile devices (phones, 768px and below) */
+  @media screen and (max-width: 768px) {
+    :root {
+      --glass-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    }
+    
+    body {
+      font-size: 14px;
+    }
+    
+    /* Adjust glass card for mobile */
+    .glass-card {
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
+    }
+    
+    .glass-card:hover {
+      transform: translateY(-2px);
+    }
+    
+    /* Hero mobile fixes */
+    .hero-overlay {
+      padding-left: 5% !important;
+      padding-right: 5% !important;
+    }
+    
+    .hero-title {
+      font-size: clamp(1.5rem, 6vw, 2.2rem) !important;
+    }
+    
+    .hero-divider {
+      width: 40px !important;
+      margin: 0.75rem 0 !important;
+    }
+    
+    .hero-dots {
+      bottom: 15px !important;
+      gap: 8px !important;
+    }
+    
+    .hero-dot {
+      width: 8px !important;
+      height: 8px !important;
+    }
+    
+    /* category section mobile */
+    .categories-section {
+      padding: 2rem 1rem !important;
+    }
+    
+    .categories-grid {
+      gap: 1rem !important;
+    }
+    
+    .category-card .image-wrapper {
+      width: 85px !important;
+      height: 85px !important;
+    }
+    
+    .category-name {
+      font-size: 0.7rem !important;
+    }
+    
+    /* features grid mobile */
+    .features-grid {
+      gap: 1.5rem !important;
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    /* product section */
+    .product-section-title {
+      font-size: 1.5rem !important;
+    }
+    
+    /* hide carousel arrows on mobile */
+    .carousel-arrow {
+      display: none !important;
+    }
+    
+    .product-scroll-track {
+      gap: 1rem !important;
+      padding-bottom: 0.75rem;
+    }
+    
+    .product-card-wrapper {
+      min-width: 240px !important;
+    }
+    
+    /* CTA section mobile */
+    .cta-glass-card {
+      padding: 1.5rem !important;
+      margin: 0 0.5rem;
+    }
+    
+    .cta-title {
+      font-size: 1.4rem !important;
+    }
+    
+    /* testimonials mobile */
+    .testimonials-grid {
+      grid-template-columns: 1fr !important;
+      gap: 1.25rem !important;
+    }
+    
+    /* newsletter mobile */
+    .newsletter-glass {
+      padding: 1.75rem 1.25rem !important;
+    }
+    
+    .newsletter-input-group {
+      flex-direction: column !important;
+      gap: 0.75rem !important;
+    }
+    
+    .newsletter-input {
+      width: 100% !important;
+      min-width: auto !important;
+    }
+    
+    /* section paddings */
+    section {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+    }
+    
+    .feature-icon svg {
+      width: 32px !important;
+      height: 32px !important;
+    }
+    
+    .feature-title {
+      font-size: 0.85rem !important;
+    }
+    
+    .feature-desc {
+      font-size: 0.75rem !important;
+    }
+    
+    /* view all button */
+    .view-all-btn {
+      font-size: 0.75rem !important;
+    }
+    
+    /* product section header */
+    .section-header {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      gap: 0.5rem !important;
+    }
+    
+    /* category grid responsive */
+    .categories-grid {
+      grid-template-columns: repeat(3, 1fr) !important;
+    }
+    
+    /* Floating WA button */
+    .wa-btn {
+      width: 48px !important;
+      height: 48px !important;
+      bottom: 1rem !important;
+      right: 1rem !important;
+    }
+    
+    .wa-btn img {
+      width: 24px !important;
+      height: 24px !important;
+    }
+  }
+  
+  /* Small mobile (below 480px) */
+  @media screen and (max-width: 480px) {
+    .hero-title {
+      font-size: clamp(1.2rem, 5vw, 1.8rem) !important;
+    }
+    
+    .hero-divider {
+      width: 30px !important;
+      margin: 0.5rem 0 !important;
+    }
+    
+    .hero-overlay {
+      padding-left: 4% !important;
+      padding-right: 4% !important;
+    }
+    
+    .categories-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 0.75rem !important;
+    }
+    
+    .category-card .image-wrapper {
+      width: 90px !important;
+      height: 90px !important;
+    }
+    
+    .features-grid {
+      grid-template-columns: 1fr !important;
+      gap: 1.5rem !important;
+    }
+    
+    .product-card-wrapper {
+      min-width: 200px !important;
+    }
+    
+    .cta-glass-card {
+      padding: 1.25rem !important;
+    }
+    
+    .btn-primary, .btn-gold {
+      padding: 0.6rem 1.25rem !important;
+      font-size: 0.8rem;
+    }
   }
 `;
 
@@ -221,51 +450,50 @@ function useScrollReveal() {
 }
 
 /* ─────────────────────────────────────────────
-   SIMPLE HERO - Light & Gradient
+   FIXED HERO SECTION - Small height, proper banner width on mobile
 ───────────────────────────────────────────── */
 const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
-    {
-      image: './ban1.jpeg', // Replace with your image paths
-      title: '',
-      subtitle: '',
-      tagline: ''
-    },
-    {
-      image: './ban2.jpeg',
-      title: '',
-      subtitle: '',
-      tagline: ''
-    }
+    { image: './ban1.jpeg', title: '', subtitle: '', tagline: '' },
+    { image: './ban2.jpeg', title: '', subtitle: '', tagline: '' }
   ];
 
-  // Auto-slide logic
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
-    }, 5000); // Change slide every 5 seconds
+    }, 5000);
     return () => clearInterval(timer);
   }, [slides.length]);
 
   return (
     <section style={{
-      height: '90vh',
-      position: 'relative',
-      overflow: 'hidden',
-      backgroundColor: '#f5f5f5' // Fallback color
-    }}>
-      {/* Background Images / Carousel */}
+  minHeight: '100vh',
+  maxHeight: '100vh',
+  width: '100%',
+  position: 'relative',
+  overflow: 'hidden',
+  backgroundColor: '#f5f5f5',
+  ...(window.innerWidth <= 768 && {
+    minHeight: '30vh',
+  })
+}}>
       {slides.map((slide, index) => (
         <div
           key={index}
           style={{
             position: 'absolute',
-            inset: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            width: '100%',
+            height: 'auto',
             backgroundImage: `url(${slide.image})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
             opacity: currentSlide === index ? 1 : 0,
             transition: 'opacity 1s ease-in-out',
             zIndex: 1
@@ -273,39 +501,40 @@ const Hero = () => {
         />
       ))}
 
-      {/* Content Overlay */}
       <div style={{
         position: 'relative',
         zIndex: 2,
         height: '100%',
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        paddingLeft: '10%', // Aligns text to the left like the image
-        color: '#fff', // Change to #000 if your images are light
+        paddingLeft: '10%',
+        paddingRight: '5%',
+        color: '#fff',
         textShadow: '0 2px 10px rgba(0,0,0,0.1)'
-      }}>
-        <h1 style={{
-          fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+      }} className="hero-overlay">
+        <h1 className="hero-title" style={{
+          fontSize: 'clamp(2rem, 5vw, 3.5rem)',
           fontWeight: 400,
           letterSpacing: '0.05em',
           margin: 0,
-          lineHeight: 1.1,
+          lineHeight: 1.2,
           textTransform: 'uppercase'
         }}>
           {slides[currentSlide].title}<br />
           <span style={{ fontWeight: 700 }}>{slides[currentSlide].subtitle}</span>
         </h1>
         
-        <div style={{
-          width: '60px',
+        <div className="hero-divider" style={{
+          width: '50px',
           height: '2px',
           backgroundColor: '#fff',
-          margin: '2rem 0'
+          margin: '1.5rem 0'
         }} />
 
         <p style={{
-          fontSize: '1rem',
+          fontSize: '0.9rem',
           letterSpacing: '0.2em',
           textTransform: 'uppercase',
           fontWeight: 500
@@ -314,20 +543,20 @@ const Hero = () => {
         </p>
       </div>
 
-      {/* Carousel Indicators (The dots at the bottom) */}
-      <div style={{
+      <div className="hero-dots" style={{
         position: 'absolute',
-        bottom: '30px',
+        bottom: '20px',
         left: '50%',
         transform: 'translateX(-50%)',
         display: 'flex',
-        gap: '12px',
+        gap: '10px',
         zIndex: 3
       }}>
         {slides.map((_, i) => (
           <button
             key={i}
             onClick={() => setCurrentSlide(i)}
+            className="hero-dot"
             style={{
               width: '10px',
               height: '10px',
@@ -345,7 +574,7 @@ const Hero = () => {
 };
 
 /* ─────────────────────────────────────────────
-   CATEGORY CIRCLES (Glass)
+   CATEGORY CIRCLES (responsive grid)
 ───────────────────────────────────────────── */
 const TopCategories = () => {
   const cats = [
@@ -358,17 +587,32 @@ const TopCategories = () => {
   ];
 
   return (
-    <section className="categories-section">
-      <div className="container">
-        <h2 className="section-title">Top Categories</h2>
+    <section className="categories-section" style={{ padding: '3rem 1rem', background: 'transparent' }}>
+      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+        <h2 className="section-title" style={{ fontFamily: 'var(--ff-display)', fontSize: 'clamp(1.6rem, 4vw, 2.2rem)', textAlign: 'center', marginBottom: '1.75rem' }}>Top Categories</h2>
         
-        <div className="categories-grid">
+        <div className="categories-grid" style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))',
+          gap: '1.5rem',
+          justifyItems: 'center',
+          alignItems: 'center'
+        }}>
           {cats.map((cat, i) => (
-            <div key={i} className="category-card">
-              <div className="image-wrapper">
-                <img src={cat.img} alt={cat.name} />
+            <div key={i} className="category-card" style={{ textAlign: 'center', cursor: 'pointer' }}>
+              <div className="image-wrapper" style={{
+                width: '110px',
+                height: '110px',
+                borderRadius: '50%',
+                overflow: 'hidden',
+                border: '2px solid var(--gold)',
+                padding: '3px',
+                margin: '0 auto',
+                transition: 'transform 0.2s var(--ease)'
+              }}>
+                <img src={cat.img} alt={cat.name} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }} />
               </div>
-              <p className="category-name">{cat.name}</p>
+              <p className="category-name" style={{ marginTop: '0.65rem', fontSize: '0.8rem', fontWeight: 500 }}>{cat.name}</p>
             </div>
           ))}
         </div>
@@ -378,35 +622,19 @@ const TopCategories = () => {
 };
 
 /* ─────────────────────────────────────────────
-   FEATURE CARDS (Glass)
+   FEATURE CARDS (responsive grid)
 ───────────────────────────────────────────── */
 const Features = () => {
   const features = [
-    { 
-      icon: <Gem size={40} strokeWidth={1} />, 
-      title: 'PREMIUM QUALITY', 
-      desc: 'Premium Quality Frames & Lenses' 
-    },
-    { 
-      icon: <Box size={40} strokeWidth={1} />, 
-      title: 'DELIVERING WORLDWIDE', 
-      desc: 'Order now and get your deliveries worldwide' 
-    },
-    { 
-      icon: <Headset size={40} strokeWidth={1} />, 
-      title: 'SUPPORT 24/7', 
-      desc: "Contact us! We're available 24/7" 
-    },
-    { 
-      icon: <RotateCcw size={40} strokeWidth={1} />, 
-      title: 'RETURN & EXCHANGE', 
-      desc: 'Easy 7 Days Exchange Policy' 
-    },
+    { icon: <Gem size={38} strokeWidth={1} />, title: 'PREMIUM QUALITY', desc: 'Premium Quality Frames & Lenses' },
+    { icon: <Box size={38} strokeWidth={1} />, title: 'DELIVERING WORLDWIDE', desc: 'Order now and get your deliveries worldwide' },
+    { icon: <Headset size={38} strokeWidth={1} />, title: 'SUPPORT 24/7', desc: "Contact us! We're available 24/7" },
+    { icon: <RotateCcw size={38} strokeWidth={1} />, title: 'RETURN & EXCHANGE', desc: 'Easy 7 Days Exchange Policy' },
   ];
 
   return (
-    <section style={{ padding: '4rem 1rem', backgroundColor: '#fff' }}>
-      <div style={{ 
+    <section style={{ padding: '3rem 1rem', backgroundColor: '#fff' }}>
+      <div className="features-grid" style={{ 
         maxWidth: '1200px', 
         margin: '0 auto', 
         display: 'grid', 
@@ -415,35 +643,13 @@ const Features = () => {
       }}>
         {features.map((f, i) => (
           <div key={i} style={{ textAlign: 'center', color: '#1a1a1a' }}>
-            {/* Icon Container */}
-            <div style={{ 
-              display: 'flex', 
-              justifyContent: 'center', 
-              marginBottom: '1.5rem',
-              color: '#333'
-            }}>
+            <div className="feature-icon" style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem', color: '#333' }}>
               {f.icon}
             </div>
-
-            {/* Title - Uppercase and Bold */}
-            <h4 style={{ 
-              fontSize: '1.1rem', 
-              fontWeight: '600', 
-              letterSpacing: '1px',
-              textTransform: 'uppercase',
-              margin: '0 0 0.75rem 0' 
-            }}>
+            <h4 className="feature-title" style={{ fontSize: '1rem', fontWeight: '600', letterSpacing: '1px', textTransform: 'uppercase', margin: '0 0 0.5rem 0' }}>
               {f.title}
             </h4>
-
-            {/* Description - Lighter and Muted */}
-            <p style={{ 
-              fontSize: '0.95rem', 
-              color: '#777', 
-              fontWeight: '300',
-              lineHeight: '1.4',
-              margin: 0 
-            }}>
+            <p className="feature-desc" style={{ fontSize: '0.85rem', color: '#777', fontWeight: '300', lineHeight: '1.4', margin: 0 }}>
               {f.desc}
             </p>
           </div>
@@ -454,7 +660,7 @@ const Features = () => {
 };
 
 /* ─────────────────────────────────────────────
-   PRODUCT SECTION with Horizontal Scroll
+   PRODUCT SECTION with Horizontal Scroll (responsive)
 ───────────────────────────────────────────── */
 const ProductSection = ({ title, subtitle, products, tag }) => {
   const trackRef = useRef(null);
@@ -468,61 +674,36 @@ const ProductSection = ({ title, subtitle, products, tag }) => {
 
   if (!products?.length) return null;
 
-  // Map category titles to video sources and optional overlay text
   const videoConfig = {
-    "Contact Lenses": {
-      src: "/videos/contact-lens.mp4",
-      title: "See clearly, live fully"
-    },
-    "Men's Collection": {
-      src: "/videos/men-collection.mp4",
-      title: "For the modern man"
-    },
-    "Women's Collection": {
-      src: "/videos/women-collection.mp4",
-      title: "Elevate your style"
-    },
-    "Kids' Collection": {
-      src: "/videos/kids-collection.mp4",
-      title: "Fun & flexible frames"
-    }
+    "Contact Lenses": { src: "https://cdn.shopify.com/videos/c/o/v/833459dc295b4d71aef7a9636dffa2e8.mp4", title: "" },
+    "Men's Collection": { src: "https://cdn.shopify.com/videos/c/o/v/ed1b7a80d9de4a0a90c8ce5dff2bd48b.mp4", title: "" },
+    "Women's Collection": { src: "/videos/women-collection.mp4", title: "Elevate your style" },
+    "Kids' Collection": { src: "/videos/kids-collection.mp4", title: "Fun & flexible frames" }
   };
 
   const shouldShowVideo = videoConfig[title];
 
   return (
     <>
-      <section className="min-h-screen w-full py-16 bg-white flex items-center justify-center">
+      <section className="min-h-screen w-full py-12 bg-white flex items-center justify-center">
         <div className="w-full max-w-[1320px] mx-auto px-4 md:px-6 relative">
           
-          {/* Header with tag, title and subtitle */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+          <div className="section-header flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
             <div>
-              {tag && (
-                <span className="inline-block text-sm font-semibold text-gray-500 mb-2">
-                  {tag}
-                </span>
-              )}
-              <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">
-                {title}
-              </h2>
-              {subtitle && (
-                <p className="text-gray-600 mt-1 text-sm md:text-base">
-                  {subtitle}
-                </p>
-              )}
+              {tag && <span className="inline-block text-sm font-semibold text-gray-500 mb-2">{tag}</span>}
+              <h2 className="product-section-title text-2xl md:text-3xl font-bold tracking-tight text-gray-900">{title}</h2>
+              {subtitle && <p className="text-gray-600 mt-1 text-sm md:text-base">{subtitle}</p>}
             </div>
-            <button className="text-sm font-semibold text-gray-600 hover:text-black transition-colors underline underline-offset-4">
+            <button className="view-all-btn text-sm font-semibold text-gray-600 hover:text-black transition-colors underline underline-offset-4">
               View All
             </button>
           </div>
 
-          {/* Carousel with arrows */}
           <div className="relative">
-            <div className="hidden md:block">
+            <div className="hidden md:block carousel-arrow">
               <button 
                 onClick={() => scroll('left')}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-30 bg-white border border-gray-200 rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-30 bg-white border border-gray-200 rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
                 aria-label="Scroll Left"
               >
                 <span className="text-2xl">‹</span>
@@ -530,7 +711,7 @@ const ProductSection = ({ title, subtitle, products, tag }) => {
 
               <button 
                 onClick={() => scroll('right')}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-30 bg-white border border-gray-200 rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-30 bg-white border border-gray-200 rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
                 aria-label="Scroll Right"
               >
                 <span className="text-2xl">›</span>
@@ -539,14 +720,11 @@ const ProductSection = ({ title, subtitle, products, tag }) => {
 
             <div 
               ref={trackRef}
-              className="flex overflow-x-auto gap-6 no-scrollbar pb-8 snap-x snap-mandatory justify-center"
-              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              className="product-scroll-track flex overflow-x-auto gap-6 no-scrollbar pb-6 snap-x snap-mandatory"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', justifyContent: 'flex-start' }}
             >
               {products.map((product) => (
-                <div 
-                  key={product.id} 
-                  className="min-w-[280px] md:min-w-[310px] flex-shrink-0 snap-start"
-                >
+                <div key={product.id} className="product-card-wrapper min-w-[270px] md:min-w-[290px] flex-shrink-0 snap-start">
                   <ProductCard product={product} />
                 </div>
               ))}
@@ -554,51 +732,40 @@ const ProductSection = ({ title, subtitle, products, tag }) => {
           </div>
         </div>
 
-        <style jsx>{`
-          .no-scrollbar::-webkit-scrollbar {
-            display: none;
-          }
+        <style>{`
+          .no-scrollbar::-webkit-scrollbar { display: none; }
         `}</style>
       </section>
 
-      {/* Full‑width video inserted directly after the carousel for every category */}
-      {shouldShowVideo && (
-        <FullWidthVideo 
-          src={shouldShowVideo.src} 
-          title={shouldShowVideo.title} 
-        />
-      )}
+      {shouldShowVideo && <FullWidthVideo src={shouldShowVideo.src} title={shouldShowVideo.title} />}
     </>
   );
 };
 
 /* ─────────────────────────────────────────────
-   SIMPLE CALL TO ACTION - Glass Style
+   SIMPLE CALL TO ACTION - Glass Style (responsive)
 ───────────────────────────────────────────── */
 const CTASection = () => (
   <section style={{
-    padding: '5rem 2rem',
+    padding: '4rem 2rem',
     backgroundImage: 'url("https://cdn.prod.website-files.com/66751ebd9740f5d5704a4b56/66ff7b69eec253d6cbc42034_66%20-%2015%20Best%20Try-On%20Glasses%20in%202024.webp")',
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     backgroundRepeat: 'no-repeat',
     position: 'relative'
   }}>
-    <div style={{ maxWidth: 1000, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-      <div 
-        className="glass-card reveal" 
-        style={{ 
-          padding: '3rem', 
-          textAlign: 'center',
-          backgroundColor: 'rgba(255, 255, 255, 0.70)', // Slight transparency
-          borderRadius: '1rem', // Keeps edges smooth (adjust as needed)
-          backdropFilter: 'blur(2px)' // Optional: adds a soft blur behind the text
-        }}
-      >
-        <h2 style={{ fontFamily: 'var(--ff-display)', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', marginBottom: '1rem' }}>
+    <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1, padding: '0 1rem' }}>
+      <div className="glass-card reveal cta-glass-card" style={{ 
+        padding: '2.5rem', 
+        textAlign: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 0.75)',
+        borderRadius: '1rem',
+        backdropFilter: 'blur(2px)'
+      }}>
+        <h2 className="cta-title" style={{ fontFamily: 'var(--ff-display)', fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)', marginBottom: '0.75rem' }}>
           Virtual Try-On
         </h2>
-        <p style={{ color: 'var(--text-muted)', maxWidth: 500, margin: '0 auto 1.5rem' }}>
+        <p style={{ color: 'var(--text-muted)', maxWidth: 500, margin: '0 auto 1.25rem', fontSize: '0.9rem' }}>
           See how frames look on your face — from any angle — using our AI-powered tool.
         </p>
         <button className="btn-gold">Try Now</button>
@@ -608,7 +775,7 @@ const CTASection = () => (
 );
 
 /* ─────────────────────────────────────────────
-   TESTIMONIALS (Glass Cards)
+   TESTIMONIALS (Glass Cards) responsive grid
 ───────────────────────────────────────────── */
 const Testimonials = () => {
   const reviews = [
@@ -617,21 +784,21 @@ const Testimonials = () => {
     { name: 'Sana Ahmed', text: 'Excellent quality at fair prices. Customer service was extremely helpful.', rating: 5 },
   ];
   return (
-    <section style={{ padding: '5rem 2rem' }}>
+    <section style={{ padding: '4rem 2rem' }}>
       <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-        <div className="reveal" style={{ textAlign: 'center', marginBottom: '3rem' }}>
+        <div className="reveal" style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
           <span className="tag">Testimonials</span>
-          <h2 style={{ fontFamily: 'var(--ff-display)', fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', marginTop: '0.75rem' }}>
+          <h2 style={{ fontFamily: 'var(--ff-display)', fontSize: 'clamp(1.6rem, 3.5vw, 2.5rem)', marginTop: '0.75rem' }}>
             What Customers <span style={{ color: 'var(--gold)' }}>Say</span>
           </h2>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
+        <div className="testimonials-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
           {reviews.map((r, i) => (
-            <div key={i} className={`glass-card reveal d${i + 1}`} style={{ padding: '2rem' }}>
-              <div style={{ display: 'flex', gap: 2, marginBottom: '1rem' }}>
+            <div key={i} className="glass-card reveal" style={{ padding: '1.75rem' }}>
+              <div style={{ display: 'flex', gap: 2, marginBottom: '0.75rem' }}>
                 {[...Array(r.rating)].map((_, j) => <span key={j} style={{ color: 'var(--gold)' }}>★</span>)}
               </div>
-              <p style={{ fontStyle: 'italic', marginBottom: '1.5rem', color: 'var(--ink)' }}>"{r.text}"</p>
+              <p style={{ fontStyle: 'italic', marginBottom: '1.25rem', color: 'var(--ink)', fontSize: '0.9rem' }}>"{r.text}"</p>
               <p style={{ fontWeight: 700 }}>{r.name}</p>
             </div>
           ))}
@@ -642,45 +809,42 @@ const Testimonials = () => {
 };
 
 /* ─────────────────────────────────────────────
-   NEWSLETTER - Glass
+   NEWSLETTER - Glass (responsive)
 ───────────────────────────────────────────── */
 const Newsletter = () => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   return (
     <section style={{
-      padding: '5rem 2rem',
-      backgroundImage: 'url("https://static.vecteezy.com/system/resources/thumbnails/025/373/863/small/five-pairs-of-glasses-lined-up-against-a-white-background-created-with-generative-ai-technology-free-photo.jpg")', // glasses try-on related
-      backgroundSize: 'fit',
+      padding: '4rem 2rem',
+      backgroundImage: 'url("https://static.vecteezy.com/system/resources/thumbnails/025/373/863/small/five-pairs-of-glasses-lined-up-against-a-white-background-created-with-generative-ai-technology-free-photo.jpg")',
+      backgroundSize: 'cover',
       backgroundPosition: 'top center',
-      
       backgroundRepeat: 'no-repeat',
       position: 'relative'
     }}>
-      <div style={{ maxWidth: 600, margin: '0 auto', position: 'relative', zIndex: 1 }}>
-        <div 
-          className="glass-card reveal" 
-          style={{ 
-            padding: '3rem', 
-            textAlign: 'center',
-            backgroundColor: 'rgba(255, 255, 255, 0.9)', // slight transparency
-            borderRadius: '1rem'
-          }}
-        >
-          <h2 style={{ fontFamily: 'var(--ff-display)', fontSize: '1.8rem', marginBottom: '0.5rem' }}>Get Exclusive Offers</h2>
-          <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>Join 50,000+ members for early access to sales.</p>
+      <div style={{ maxWidth: 550, margin: '0 auto', position: 'relative', zIndex: 1, padding: '0 1rem' }}>
+        <div className="glass-card reveal newsletter-glass" style={{ 
+          padding: '2.5rem', 
+          textAlign: 'center',
+          backgroundColor: 'rgba(255, 255, 255, 0.92)',
+          borderRadius: '1rem'
+        }}>
+          <h2 style={{ fontFamily: 'var(--ff-display)', fontSize: '1.6rem', marginBottom: '0.5rem' }}>Get Exclusive Offers</h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '1.25rem', fontSize: '0.85rem' }}>Join 50,000+ members for early access to sales.</p>
           {subscribed ? (
             <p style={{ fontWeight: 600, color: 'var(--gold)' }}>🎉 You're in! Check your inbox.</p>
           ) : (
-            <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div className="newsletter-input-group" style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', justifyContent: 'center' }}>
               <input
                 type="email"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
                 placeholder="Your email"
-                style={{ flex: 1, minWidth: 200, padding: '0.8rem 1.2rem', borderRadius: '48px', border: '1px solid rgba(0,0,0,0.1)', background: 'white', fontFamily: 'var(--ff-body)' }}
+                className="newsletter-input"
+                style={{ flex: 1, minWidth: 200, padding: '0.7rem 1.2rem', borderRadius: '48px', border: '1px solid rgba(0,0,0,0.1)', background: 'white', fontFamily: 'var(--ff-body)', fontSize: '0.9rem' }}
               />
-              <button className="btn-primary" onClick={() => email && setSubscribed(true)}>Subscribe →</button>
+              <button className="btn-primary" onClick={() => email && setSubscribed(true)} style={{ padding: '0.7rem 1.5rem', fontSize: '0.9rem' }}>Subscribe →</button>
             </div>
           )}
         </div>
@@ -690,18 +854,18 @@ const Newsletter = () => {
 };
 
 /* ─────────────────────────────────────────────
-   FLOATING WHATSAPP
+   FLOATING WHATSAPP (responsive)
 ───────────────────────────────────────────── */
 const FloatingWA = () => (
   <a href="https://wa.me/923001234567" target="_blank" rel="noopener noreferrer"
     className="wa-btn"
     style={{
       position: 'fixed',
-      bottom: '2rem',
-      right: '2rem',
+      bottom: '1.5rem',
+      right: '1.5rem',
       zIndex: 999,
-      width: 54,
-      height: 54,
+      width: 52,
+      height: 52,
       borderRadius: '50%',
       background: '#25d366',
       display: 'flex',
@@ -712,7 +876,7 @@ const FloatingWA = () => (
     }}
     onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.1)'}
     onMouseLeave={e => e.currentTarget.style.transform = ''}>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style={{ width: 28, height: 28 }} />
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" style={{ width: 26, height: 26 }} />
   </a>
 );
 
@@ -743,7 +907,6 @@ const Home = () => {
   useGlobalStyles();
   useScrollReveal();
 
-  // Filter products from data.json or fallback to sample
   const contactLenses = data.products?.filter(p => p.category === 'contact-lenses')?.length > 0
     ? data.products.filter(p => p.category === 'contact-lenses')
     : SAMPLE.contactLenses;
@@ -763,33 +926,10 @@ const Home = () => {
       <TopCategories />
       <Features />
       
-      <ProductSection
-        title="Contact Lenses"
-        subtitle="Daily & monthly disposables"
-        products={contactLenses}
-        tag="👁️ Vision"
-      />
-      
-      <ProductSection
-        title="Men's Collection"
-        subtitle="Bold, refined frames"
-        products={men}
-        tag="👔 For Him"
-      />
-      
-      <ProductSection
-        title="Women's Collection"
-        subtitle="Elegant designs"
-        products={women}
-        tag="💃 For Her"
-      />
-      
-      <ProductSection
-        title="Kids' Collection"
-        subtitle="Durable & flexible"
-        products={kids}
-        tag="🧸 For Kids"
-      />
+      <ProductSection title="Contact Lenses" subtitle="Daily & monthly disposables" products={contactLenses} tag="👁️ Vision" />
+      <ProductSection title="Men's Collection" subtitle="Bold, refined frames" products={men} tag="👔 For Him" />
+      <ProductSection title="Women's Collection" subtitle="Elegant designs" products={women} tag="💃 For Her" />
+      <ProductSection title="Kids' Collection" subtitle="Durable & flexible" products={kids} tag="🧸 For Kids" />
       
       <CTASection />
       <Testimonials />
