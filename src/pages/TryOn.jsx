@@ -8,279 +8,156 @@ const AVIATOR_ADJ = { scaleW: 1, scaleH: 1.18, offsetX: 0, offsetY: 18, rotate: 
 const ROUND_ADJ   = { scaleW: 1, scaleH: 0.85, offsetX: 0, offsetY: 6, rotate: 0 };
 
 // ══════════════════════════════════════════════════════════════════
-// ── GLASS OPTIONS WITH PER-FRAME SIZES ────────────────────────────
+// ── GLASS OPTIONS – each frame now has only ONE size ──────────────
 // ══════════════════════════════════════════════════════════════════
-// To remove a size from a frame, simply delete it from the sizes array
-// Frame 1 (Classic) now only has M, L, XL - S has been removed
 const GLASS_OPTIONS = [
   { id: "/glass1.png",  name: "Classic",  price: "PKR 4,500", emoji: "👓", 
-    sizes: [
-      { label:"XL", scale:1.10, mobileScale:0.65 }
-    ] 
+    sizes: [{ label:"XL", scale:1.10, mobileScale:0.65 }] 
   },
   { id: "/glass2.png",  name: "Aviator",  price: "PKR 5,200", emoji: "🕶️", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:1.00 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:1.00 }] 
   },
   { id: "/glass3.png",  name: "Sport",    price: "PKR 3,800", emoji: "🥽", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:1.00 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:1.00 }] 
   },
   { id: "/glass4.png",  name: "Round",    price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-    
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass5.png",  name: "Wayfarer", price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.25, mobileScale:0.98 },
-
-    ] 
+    sizes: [{ label:"L", scale:1.25, mobileScale:0.98 }] 
   },
   { id: "/glass6.png",  name: "Vintage",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [,
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass7.png",  name: "Clubmaster", price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-
-      { label:"XL", scale:1.30, mobileScale:1.10 }
-    ] 
+    sizes: [{ label:"XL", scale:1.30, mobileScale:1.10 }] 
   },
   { id: "/glass8.png",  name: "Cat Eye",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-
-      { label:"XL", scale:1.30, mobileScale:1.10 }
-    ] 
+    sizes: [{ label:"XL", scale:1.30, mobileScale:1.10 }] 
   },
   { id: "/glass9.png",  name: "Shield",    price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"M", scale:1.00, mobileScale:0.75 },
-    ] 
+    sizes: [{ label:"M", scale:1.00, mobileScale:0.75 }] 
   },
   { id: "/glass10.png", name: "Oval",      price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass11.png", name: "Square",    price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"S", scale:0.75, mobileScale:0.50 }
-    ] 
+    sizes: [{ label:"S", scale:0.75, mobileScale:0.50 }] 
   },
   { id: "/glass12.png", name: "Hexagonal", price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass13.png", name: "Geometric", price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"M", scale:1.00, mobileScale:0.75 },
-    ] 
+    sizes: [{ label:"M", scale:1.00, mobileScale:0.75 }] 
   },
   { id: "/glass14.png", name: "Steampunk", price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"S", scale:0.95, mobileScale:0.50 },
-    ] 
+    sizes: [{ label:"S", scale:0.95, mobileScale:0.50 }] 
   },
   { id: "/glass15.png", name: "Sports",    price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass16.png", name: "Retro",     price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass17.png", name: "Modern",    price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass18.png", name: "Luxury",    price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-   
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass19.png", name: "Designer",  price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-   
-      { label:"L", scale:1.15, mobileScale:0.95 },
-
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass20.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass21.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"M", scale:1.00, mobileScale:0.75 },
-    ] 
+    sizes: [{ label:"M", scale:1.00, mobileScale:0.75 }] 
   },
   { id: "/glass22.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.05, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.05, mobileScale:0.95 }] 
   },
   { id: "/glass23.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass24.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"S", scale:0.85, mobileScale:0.50 },
-      { label:"M", scale:1.00, mobileScale:0.75 },
-      { label:"L", scale:1.15, mobileScale:0.95 },
-      { label:"XL", scale:1.30, mobileScale:1.10 }
-    ] 
+    sizes: [{ label:"S", scale:0.85, mobileScale:0.50 }] 
   },
   { id: "/glass25.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass26.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass27.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass28.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"M", scale:1.00, mobileScale:0.75 },
-    ] 
+    sizes: [{ label:"M", scale:1.00, mobileScale:0.75 }] 
   },
   { id: "/glass29.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.25, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.25, mobileScale:0.95 }] 
   },
   { id: "/glass30.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass31.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass32.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass33.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass34.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass35.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"M", scale:1.10, mobileScale:0.75 },
-    ] 
+    sizes: [{ label:"M", scale:1.10, mobileScale:0.75 }] 
   },
   { id: "/glass36.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass37.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass38.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      
-      { label:"XL", scale:1.30, mobileScale:1.10 }
-    ] 
+    sizes: [{ label:"XL", scale:1.30, mobileScale:1.10 }] 
   },
   { id: "/glass39.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass40.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-
-      { label:"M", scale:1.00, mobileScale:0.75 },
-    ] 
+    sizes: [{ label:"M", scale:1.00, mobileScale:0.75 }] 
   },
   { id: "/glass41.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass42.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"S", scale:0.95, mobileScale:0.50 },
-
-    ] 
+    sizes: [{ label:"S", scale:0.95, mobileScale:0.50 }] 
   },
   { id: "/glass43.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass44.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
   { id: "/glass45.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"XL", scale:1.30, mobileScale:1.10 }
-    ] 
+    sizes: [{ label:"XL", scale:1.30, mobileScale:1.10 }] 
   },
   { id: "/glass46.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-
-      { label:"XL", scale:1.40, mobileScale:1.10 }
-    ] 
+    sizes: [{ label:"XL", scale:1.40, mobileScale:1.10 }] 
   },
   { id: "/glass47.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"XL", scale:1.20, mobileScale:1.10 }
-    ] 
+    sizes: [{ label:"XL", scale:1.20, mobileScale:1.10 }] 
   },
   { id: "/glass48.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"M", scale:1.00, mobileScale:0.75 },
-    ] 
+    sizes: [{ label:"M", scale:1.00, mobileScale:0.75 }] 
   },
   { id: "/glass49.png", name: "Classic",   price: "PKR 4,900", emoji: "🪬", 
-    sizes: [
-      { label:"L", scale:1.15, mobileScale:0.95 },
-      
-    ] 
+    sizes: [{ label:"L", scale:1.15, mobileScale:0.95 }] 
   },
-  
 ];
 
 // ══════════════════════════════════════════════════════════════════
@@ -407,7 +284,7 @@ function extractFaceGeometry(lm, W, H) {
   return { centerX, centerY, angle, glassesWidth, glassesHeight, depthScale };
 }
 
-// ── REALISTIC GLASSES WITH SIDE ARMS ──────────────────────────────
+// ── REALISTIC GLASSES WITH SIDE ARMS (always drawn) ───────────────
 const drawGlassesWithRealisticArms = (ctx, img, x, y, w, h, angle) => {
   ctx.save();
   ctx.translate(x, y);
@@ -518,10 +395,8 @@ const TryOn = () => {
   const [contrast, setContrast]         = useState(100);
   const [saturate, setSaturate]         = useState(100);
   const [glbLoading, setGlbLoading]     = useState(false);
-  const [showArms, setShowArms]         = useState(true);
   const [cameraReady, setCameraReady]   = useState(false);
   const cameraReadyRef = useRef(false);
-  const [selectedSizeKey, setSelectedSizeKey] = useState("M");
 
   const smootherRef = useRef(new LandmarkSmoother(isMobile ? MOBILE_EMA_ALPHA : 0.45));
 
@@ -541,7 +416,6 @@ const TryOn = () => {
   const glassesRef     = useRef(glasses);
   const is3DRef        = useRef(false);
   const adjRef         = useRef(adjustments);
-  const showArmsRef    = useRef(showArms);
 
   useEffect(() => { brightnessRef.current = brightness; }, [brightness]);
   useEffect(() => { contrastRef.current   = contrast;   }, [contrast]);
@@ -549,20 +423,6 @@ const TryOn = () => {
   useEffect(() => { glassesRef.current    = glasses;    }, [glasses]);
   useEffect(() => { is3DRef.current       = glasses === "__3D__"; }, [glasses]);
   useEffect(() => { adjRef.current        = adjustments; }, [adjustments]);
-  useEffect(() => { showArmsRef.current   = showArms;   }, [showArms]);
-
-  // ════════════════════════════════════════════════════════════════
-  // ── FIX: Reset size selection when switching frames ─────────────
-  // ════════════════════════════════════════════════════════════════
-  useEffect(() => {
-    const currentSizes = GLASS_OPTIONS.find(g => g.id === glasses)?.sizes || [];
-    if (currentSizes.length > 0) {
-      const sizeExists = currentSizes.some(s => s.label === selectedSizeKey);
-      if (!sizeExists) {
-        setSelectedSizeKey(currentSizes[0].label);
-      }
-    }
-  }, [glasses, selectedSizeKey]);
 
   const is3D   = glasses === "__3D__";
   const curAdj = adjustments[glasses] || DEFAULT_ADJ;
@@ -676,11 +536,11 @@ const TryOn = () => {
         prevPosRef.current = { cx: smoothed.cx, cy: smoothed.cy };
       }
 
+      // Use first (and only) size from the frame's sizes array
       const currentGlassObj = GLASS_OPTIONS.find(g => g.id === glassesRef.current);
       let sizeScale = 1.0;
-      if (currentGlassObj?.sizes) {
-        const sizeObj = currentGlassObj.sizes.find(s => s.label === selectedSizeKey);
-        sizeScale = getSizeScale(sizeObj);
+      if (currentGlassObj?.sizes && currentGlassObj.sizes.length > 0) {
+        sizeScale = getSizeScale(currentGlassObj.sizes[0]);
       }
 
       if (_is3D) {
@@ -716,19 +576,12 @@ const TryOn = () => {
         const fx = smoothed.cx + adj.offsetX;
         const fy = smoothed.cy + adj.offsetY;
 
-        if (showArmsRef.current) {
-          drawGlassesWithRealisticArms(ctx, img, fx, fy, w, h, finalAngle);
-        } else {
-          ctx.save();
-          ctx.translate(fx, fy);
-          ctx.rotate(finalAngle);
-          ctx.drawImage(img, -w / 2, -h / 2, w, h);
-          ctx.restore();
-        }
+        // Arms are always drawn
+        drawGlassesWithRealisticArms(ctx, img, fx, fy, w, h, finalAngle);
       }
     }
     return () => { if (faceMesh) faceMesh.close(); };
-  }, [selectedSizeKey]);
+  }, []);  // No dependency on selectedSizeKey – removed
 
   useEffect(() => {
     if (!is3D && imgRef.current) {
@@ -765,7 +618,6 @@ const TryOn = () => {
     touchStartXRef.current = null;
   }, [glasses]);
 
-  const currentFrameSizes = GLASS_OPTIONS.find(g => g.id === glasses)?.sizes || [];
   const currentGlassName  = GLASS_OPTIONS.find(g => g.id === glasses)?.name || "";
 
   // Mobile layout
@@ -931,62 +783,7 @@ const TryOn = () => {
           background: "linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.6) 60%, transparent 100%)",
           zIndex: 20,
         }}>
-          {/* Size buttons - only show if there are sizes available */}
-          {currentFrameSizes.length > 0 && (
-            <div style={{
-              padding: "12px 20px 8px",
-              borderBottom: "1px solid rgba(255,255,255,0.1)",
-            }}>
-              <div style={{
-                fontSize: "10px",
-                fontWeight: 600,
-                letterSpacing: "1px",
-                color: "#c9a84c",
-                marginBottom: "10px",
-                paddingLeft: "4px",
-              }}>
-                FRAME SIZE
-              </div>
-              <div style={{
-                display: "flex",
-                gap: "12px",
-                overflowX: "auto",
-                scrollSnapType: "x mandatory",
-                WebkitOverflowScrolling: "touch",
-                scrollbarWidth: "none",
-                msOverflowStyle: "none",
-                paddingBottom: "8px",
-              }}>
-                {currentFrameSizes.map(size => (
-                  <button
-                    key={size.label}
-                    onClick={() => setSelectedSizeKey(size.label)}
-                    style={{
-                      flexShrink: 0,
-                      minWidth: "70px",
-                      background: selectedSizeKey === size.label
-                        ? "linear-gradient(135deg, #c9a84c, #b38f3a)"
-                        : "rgba(20,20,28,0.8)",
-                      border: `1px solid ${selectedSizeKey === size.label ? "#c9a84c" : "rgba(201,168,76,0.3)"}`,
-                      color: selectedSizeKey === size.label ? "#0a0a0f" : "#ffffff",
-                      fontSize: "14px",
-                      fontWeight: 700,
-                      padding: "10px 0",
-                      borderRadius: "40px",
-                      cursor: "pointer",
-                      transition: "all 0.2s ease",
-                      letterSpacing: "0.5px",
-                      textTransform: "uppercase",
-                      scrollSnapAlign: "start",
-                      WebkitTapHighlightColor: "transparent",
-                    }}
-                  >
-                    {size.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Size selection removed – no buttons here anymore */}
 
           <div style={{
             overflowX: "auto",
@@ -1040,30 +837,7 @@ const TryOn = () => {
             justifyContent: "space-around",
             padding: "12px 40px 16px",
           }}>
-            {!is3D ? (
-              <button
-                onClick={() => setShowArms(p => !p)}
-                style={{
-                  width: "52px",
-                  height: "52px",
-                  borderRadius: "50%",
-                  background: showArms ? "rgba(201,168,76,0.3)" : "rgba(255,255,255,0.12)",
-                  border: `2px solid ${showArms ? "#c9a84c" : "rgba(255,255,255,0.25)"}`,
-                  color: "#fff",
-                  fontSize: "22px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  backdropFilter: "blur(6px)",
-                  WebkitTapHighlightColor: "transparent",
-                  transition: "all 0.2s",
-                }}
-                aria-label="Toggle arms"
-              >
-                🦾
-              </button>
-            ) : <div style={{ width: "52px", height: "52px" }} />}
+            <div style={{ width: "52px", height: "52px" }} />
 
             <button
               onClick={capturePhoto}
@@ -1146,7 +920,6 @@ const TryOn = () => {
               <span style={{ fontSize:"10px", fontWeight:500, background:"rgba(0,0,0,0.7)", backdropFilter:"blur(8px)", border:"0.5px solid rgba(255,255,255,0.1)", padding:"5px 14px", borderRadius:"100px", letterSpacing:"0.3px" }}>💡 {brightness}%</span>
               <span style={{ fontSize:"10px", fontWeight:500, background:"rgba(0,0,0,0.7)", backdropFilter:"blur(8px)", border:"0.5px solid rgba(255,255,255,0.1)", padding:"5px 14px", borderRadius:"100px" }}>🎨 {contrast}%</span>
               <span style={{ fontSize:"10px", fontWeight:500, background:"rgba(0,0,0,0.7)", backdropFilter:"blur(8px)", border:"0.5px solid rgba(255,255,255,0.1)", padding:"5px 14px", borderRadius:"100px" }}>🌈 {saturate}%</span>
-              {showArms && !is3D && <span style={{ fontSize:"10px", background:"rgba(201,168,76,0.2)", borderColor:"#c9a84c", color:"#c9a84c", padding:"5px 14px", borderRadius:"100px" }}>🦾 ARMS</span>}
               {is3D && <span style={{ fontSize:"10px", color:"#64b4ff", background:"rgba(100,180,255,0.15)", border:"0.5px solid rgba(100,180,255,0.4)", padding:"5px 14px", borderRadius:"100px" }}>✨ 3D MODEL</span>}
             </div>
             {glbLoading && (
@@ -1188,34 +961,7 @@ const TryOn = () => {
             </div>
           </div>
 
-          {/* Size buttons - only show if there are sizes available for this frame */}
-          {currentFrameSizes.length > 0 && (
-            <div>
-              <div style={{ fontSize:"11px", letterSpacing:"3px", color:"#c9a84c", marginBottom:"16px", fontWeight:600, display:"flex", alignItems:"center", gap:"10px" }}>
-                <span style={{ width:"24px", height:"1px", background:"#c9a84c" }}></span>
-                FRAME SIZE
-              </div>
-              <div style={{ display:"flex", gap:"12px", justifyContent:"stretch" }}>
-                {currentFrameSizes.map(size => (
-                  <button key={size.label} onClick={() => setSelectedSizeKey(size.label)} style={{ flex:1, background:selectedSizeKey===size.label?"linear-gradient(135deg,#c9a84c,#b38f3a)":"rgba(20,20,28,0.8)", border:`1px solid ${selectedSizeKey===size.label?"#c9a84c":"rgba(201,168,76,0.2)"}`, color:selectedSizeKey===size.label?"#0a0a0f":"#ffffff", fontSize:"13px", fontWeight:700, padding:"12px 0", borderRadius:"100px", cursor:"pointer", transition:"all 0.2s ease", letterSpacing:"0.5px", textTransform:"uppercase" }}>
-                    {size.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {!is3D && (
-            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", padding:"8px 0" }}>
-              <span style={{ fontSize:"13px", fontWeight:500, color:"rgba(255,255,255,0.7)", letterSpacing:"0.3px" }}>🦾 Realistic Arms (Behind Ears)</span>
-              <label style={{ position:"relative", display:"inline-block", width:"52px", height:"26px" }}>
-                <input type="checkbox" checked={showArms} onChange={e => setShowArms(e.target.checked)} style={{ opacity:0, width:0, height:0 }} />
-                <span style={{ position:"absolute", cursor:"pointer", top:0, left:0, right:0, bottom:0, backgroundColor:"rgba(30,30,38,0.8)", transition:"0.3s", borderRadius:"26px", border:"0.5px solid rgba(201,168,76,0.3)" }}>
-                  <span style={{ position:"absolute", height:"20px", width:"20px", left:"3px", bottom:"2px", backgroundColor:"#c9a84c", transition:"0.3s", borderRadius:"50%", transform:showArms?"translateX(26px)":"none" }} />
-                </span>
-              </label>
-            </div>
-          )}
+          {/* Size buttons section removed */}
 
           {!is3D && (
             <div style={{ background:"rgba(0,0,0,0.3)", borderRadius:"28px", padding:"20px", border:"0.5px solid rgba(201,168,76,0.15)" }}>
