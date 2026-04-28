@@ -90,7 +90,7 @@ const infoCards = [
       </svg>
     ),
     label: "Visit Us",
-    lines: ["Shop #14, Vision Plaza", "Blue Area, Islamabad", "Pakistan"],
+    lines: ["Shop No.1, Sadiq Heights", "Sharfabad, Karachi", "Pakistan"],
   },
   {
     icon: (
@@ -99,7 +99,7 @@ const infoCards = [
       </svg>
     ),
     label: "Call Us",
-    lines: ["+92 51 234 5678", "+92 300 123 4567", "Mon – Sat, 9am – 7pm"],
+    lines: ["+92 312 2251134", "Mon – Sat, 11am – 9pm"],
   },
   {
     icon: (
@@ -108,7 +108,7 @@ const infoCards = [
       </svg>
     ),
     label: "Email Us",
-    lines: ["hello@optiquehouse.pk", "support@optiquehouse.pk", "We reply within 24 hours"],
+    lines: ["info.optiquehouse@gmail.com", "We reply within 24 hours"],
   },
   {
     icon: (
@@ -117,7 +117,31 @@ const infoCards = [
       </svg>
     ),
     label: "Opening Hours",
-    lines: ["Mon – Thu: 9am – 7pm", "Fri – Sat: 10am – 8pm", "Sunday: Closed"],
+    lines: ["Mon – Sat: 11am – 9pm", "Sunday: 3pm – 9pm"],
+  },
+];
+
+// Shop images for gallery (high-quality eyewear & boutique ambience)
+const shopImages = [
+  {
+    url: "./shop1.jpeg",
+    alt: "Luxury eyewear display",
+    caption: "Latest Designer Frames"
+  },
+  {
+    url: "shop2.jpeg",
+    alt: "Optical shop interior",
+    caption: "Elegant Boutique Setting"
+  },
+  {
+    url: "shop3.jpeg",
+    alt: "Premium sunglasses collection",
+    caption: "Sunglasses Lookbook"
+  },
+  {
+    url: "shop4.jpeg",
+    alt: "Eye exam station",
+    caption: "Precision Eye Care"
   },
 ];
 
@@ -164,7 +188,7 @@ export default function Contact() {
             </span>
           </h1>
           <p style={{ fontFamily: "Arial,sans-serif", fontSize: 16, fontWeight: 300, lineHeight: 1.8, color: "#5A5A5A", maxWidth: 500, margin: "0 auto" }}>
-            Whether you're booking an eye exam, asking about our frames, or just saying hello — our team is here and happy to help.
+            Visit our boutique in Sharfabad or reach out — we're here to help you see the world with clarity & style.
           </p>
         </div>
       </section>
@@ -206,7 +230,7 @@ export default function Contact() {
 
       <div style={{ height: 1, background: "#E8E4DE", maxWidth: 1060, margin: "0 auto" }} />
 
-      {/* ── FORM + MAP ── */}
+      {/* ── FORM + MAP + GALLERY ── */}
       <section style={{ maxWidth: 1060, margin: "0 auto", padding: "72px 48px 96px", display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 64, alignItems: "start" }}>
 
         {/* FORM */}
@@ -227,7 +251,7 @@ export default function Contact() {
                   <InputField label="Email Address" type="email" name="email" placeholder="your@email.com" value={form.email} onChange={handleChange} />
                 </div>
                 <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 18 }}>
-                  <InputField label="Phone Number" type="tel" name="phone" placeholder="+92 300 000 0000" value={form.phone} onChange={handleChange} />
+                  <InputField label="Phone Number" type="tel" name="phone" placeholder="+92 312 2251134" value={form.phone} onChange={handleChange} />
                   <div style={{ display: "flex", flexDirection: "column", gap: 7 }}>
                     <label style={{ fontFamily: "Arial,sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: "0.1em", textTransform: "uppercase", color: "#6A6A6A" }}>Subject</label>
                     <select
@@ -292,44 +316,36 @@ export default function Contact() {
         <FadeUp delay={0.15}>
           <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
 
-            {/* MAP PLACEHOLDER */}
-            <div style={{ borderRadius: 20, overflow: "hidden", border: "1px solid #E8E4DE", boxShadow: "0 8px 28px rgba(0,0,0,0.06)", position: "relative" }}>
-              <div style={{ background: "#E8E4DE", height: 260, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
-                {/* Grid lines */}
-                {[...Array(8)].map((_, i) => (
-                  <div key={i} style={{ position: "absolute", left: 0, right: 0, top: `${i * 14.28}%`, height: 1, background: "#D4D0CA" }} />
-                ))}
-                {[...Array(10)].map((_, i) => (
-                  <div key={i} style={{ position: "absolute", top: 0, bottom: 0, left: `${i * 11.11}%`, width: 1, background: "#D4D0CA" }} />
-                ))}
-                {/* Roads */}
-                <div style={{ position: "absolute", top: "55%", left: 0, right: 0, height: 10, background: "#C8C4BE", opacity: 0.8 }} />
-                <div style={{ position: "absolute", left: "38%", top: 0, bottom: 0, width: 10, background: "#C8C4BE", opacity: 0.8 }} />
-                {/* Pin */}
-                <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center" }}>
-                  <div style={{ width: 44, height: 44, borderRadius: "50%", background: grad, display: "flex", alignItems: "center", justifyContent: "center", boxShadow: `0 8px 24px ${PURPLE}40`, fontSize: 20 }}>📍</div>
-                  <div style={{ width: 12, height: 12, borderRadius: "50%", background: `${PURPLE}30`, marginTop: 4 }} />
-                </div>
+            {/* MAP - Interactive OpenStreetMap with actual location */}
+            <div style={{ borderRadius: 20, overflow: "hidden", border: "1px solid #E8E4DE", boxShadow: "0 8px 28px rgba(0,0,0,0.06)", background: "#fff" }}>
+              <div style={{ height: 260, width: "100%", position: "relative" }}>
+                <iframe
+                  title="Optique House Location"
+                  src="https://www.openstreetmap.org/export/embed.html?bbox=67.0600%2C24.8550%2C67.0800%2C24.8700&layer=mapnik&marker=24.8625%2C67.0700"
+                  style={{ width: "100%", height: "100%", border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                />
               </div>
-              <div style={{ background: "#fff", padding: "18px 22px", display: "flex", alignItems: "center", gap: 14 }}>
+              <div style={{ background: "#fff", padding: "18px 22px", display: "flex", alignItems: "center", gap: 14, borderTop: "1px solid #F0EDE8" }}>
                 <div style={{ color: PURPLE }}>
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 </div>
                 <div>
                   <div style={{ fontFamily: "Arial,sans-serif", fontSize: 13, fontWeight: 600, color: "#2C2C2C" }}>Optique House</div>
-                  <div style={{ fontFamily: "Arial,sans-serif", fontSize: 12, color: "#9A9A9A", marginTop: 1 }}>Shop #14, Vision Plaza, Blue Area, Islamabad</div>
+                  <div style={{ fontFamily: "Arial,sans-serif", fontSize: 12, color: "#9A9A9A", marginTop: 1 }}>Shop No.1, Sadiq Heights, Sharfabad, Karachi</div>
                 </div>
               </div>
             </div>
 
-            {/* SOCIAL LINKS */}
+            {/* SOCIAL LINKS with actual details */}
             <div style={{ background: "#fff", borderRadius: 18, padding: "28px", border: "1px solid #E8E4DE" }}>
-              <div style={{ fontFamily: "Arial,sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: PURPLE, marginBottom: 18 }}>Follow Us</div>
+              <div style={{ fontFamily: "Arial,sans-serif", fontSize: 11, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", color: PURPLE, marginBottom: 18 }}>Connect With Us</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {[
-                  { platform: "Instagram", handle: "@optiquehouse.pk", color: "#C13584" },
+                  { platform: "Instagram", handle: "@optiquehouse.khi", color: "#C13584" },
                   { platform: "Facebook", handle: "Optique House Pakistan", color: "#1877F2" },
-                  { platform: "WhatsApp", handle: "+92 300 123 4567", color: "#25D366" },
+                  { platform: "WhatsApp", handle: "+92 312 2251134", color: "#25D366" },
                 ].map((s) => (
                   <div key={s.platform} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderRadius: 10, background: "#FAFAF8", border: "1px solid #F0EDE8" }}>
                     <div style={{ width: 8, height: 8, borderRadius: "50%", background: s.color, flexShrink: 0 }} />
@@ -340,7 +356,7 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* QUICK NOTE */}
+            {/* QUOTE */}
             <div style={{ background: "#1C1C1C", borderRadius: 18, padding: "28px", position: "relative", overflow: "hidden" }}>
               <div style={{ position: "absolute", inset: 0, background: `linear-gradient(135deg, ${PURPLE}22, ${TEAL}18)`, pointerEvents: "none" }} />
               <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 3, background: grad }} />
@@ -351,9 +367,46 @@ export default function Contact() {
                 <div style={{ fontFamily: "Arial,sans-serif", fontSize: 11, color: TEAL, fontWeight: 600, letterSpacing: "0.08em", textTransform: "uppercase" }}>— The Optique House Team</div>
               </div>
             </div>
-
           </div>
         </FadeUp>
+      </section>
+
+      {/* ── SHOP IMAGES GALLERY SECTION ── */}
+      <section style={{ background: "#FAFAF8", padding: "0 48px 80px" }}>
+        <div style={{ maxWidth: 1060, margin: "0 auto" }}>
+          <FadeUp>
+            <div style={{ textAlign: "center", marginBottom: 48 }}>
+              <div style={{ fontFamily: "Arial,sans-serif", fontSize: 11, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase", color: PURPLE, marginBottom: 12, display: "inline-flex", alignItems: "center", gap: 8 }}>
+                <div style={{ width: 28, height: 1, background: grad }} />
+                Premium Eyewear Boutique
+                <div style={{ width: 28, height: 1, background: grad }} />
+              </div>
+              <h2 style={{ fontFamily: "Georgia,serif", fontSize: "clamp(28px,3vw,42px)", fontWeight: 700, color: "#1C1C1C" }}>
+                Our Karachi Store
+              </h2>
+            </div>
+          </FadeUp>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 28 }}>
+            {shopImages.map((img, idx) => (
+              <FadeUp key={idx} delay={idx * 0.05}>
+                <div style={{ borderRadius: 20, overflow: "hidden", boxShadow: "0 12px 28px rgba(0,0,0,0.08)", transition: "transform 0.3s ease", cursor: "pointer", background: "#fff" }}
+                  onMouseEnter={(e) => e.currentTarget.style.transform = "translateY(-6px)"}
+                  onMouseLeave={(e) => e.currentTarget.style.transform = "translateY(0)"}>
+                  <img src={img.url} alt={img.alt} style={{ width: "100%", height: 240, objectFit: "cover", display: "block" }} loading="lazy" />
+                  <div style={{ padding: "14px 18px", fontFamily: "Arial,sans-serif", fontSize: 13, fontWeight: 500, color: "#2C2C2C", borderTop: "1px solid #F2EFEA", background: "#fff" }}>
+                    {img.caption}
+                  </div>
+                </div>
+              </FadeUp>
+            ))}
+          </div>
+          {/* Brand prestige strip */}
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: 32, marginTop: 56, padding: "24px 0", borderTop: "1px solid #E8E4DE", borderBottom: "1px solid #E8E4DE" }}>
+            {["CHANEL", "GUCCI", "PRADA", "CARRERA", "VOGUE", "RAY-BAN"].map(brand => (
+              <span key={brand} style={{ fontFamily: "Arial,sans-serif", fontSize: 13, fontWeight: 600, letterSpacing: "0.2em", color: "#A19B92" }}>{brand}</span>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* ── FOOTER ── */}
@@ -364,7 +417,6 @@ export default function Contact() {
         </div>
         <div style={{ fontFamily: "Georgia,serif", fontStyle: "italic", fontSize: 15, color: "#5A5A5A" }}>Vision is Life</div>
       </footer>
-
     </div>
   );
 }
