@@ -494,7 +494,7 @@ const Footer = () => {
               <h4>Shop</h4>
               <ul className="footer-links">
                 {["Men's Frames","Women's Frames","Kids' Collection","Blue Light Glasses","Sunglasses"].map(item => (
-                  <li key={item}><Link to="/product">{item}</Link></li>
+                  <li key={item}><Link to="/products">{item}</Link></li>
                 ))}
               </ul>
             </div>
