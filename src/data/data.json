@@ -17,16 +17,8 @@
       "pattern": null,
       "detailDescription": "Premium square plastic sunglass with luxury matte white finish. Features UV400 protection, durable hinges, and comfortable fit for all-day wear.",
       "variants": [
-        {
-          "colorName": "Mat White",
-          "hex": "#ffffff",
-          "images": ["./p1.jpeg", "./p5.jpeg"]
-        },
-        {
-          "colorName": "Black & Blue",
-          "hex": "#ffffff",
-          "images": ["./p17.jpeg", "./p18.jpeg"]
-        }
+        { "colorName": "Mat White",   "hex": "#F0F0F0", "images": ["./p1.jpeg",  "./p5.jpeg"]  },
+        { "colorName": "Black & Blue","hex": "#1A2E4A", "images": ["./p17.jpeg", "./p18.jpeg"] }
       ]
     },
     {
@@ -46,11 +38,7 @@
       "pattern": null,
       "detailDescription": "Fun and lightweight oval plastic sunglass for kids. Bright yellow color with rounded edges for safety. Provides basic UV protection.",
       "variants": [
-        {
-          "colorName": "Yellow",
-          "hex": "#ffffff",
-          "images": ["./p2.jpeg", "./p7.jpeg"]
-        }
+        { "colorName": "Yellow", "hex": "#FFD700", "images": ["./p2.jpeg", "./p7.jpeg"] }
       ]
     },
     {
@@ -70,11 +58,7 @@
       "pattern": null,
       "detailDescription": "Modern square plastic sunglass in matte blue finish. Sturdy construction with spring hinges and complete UV protection.",
       "variants": [
-        {
-          "colorName": "Mat Blue",
-          "hex": "#ffffff",
-          "images": ["./p3.jpeg", "./p21.jpeg"]
-        }
+        { "colorName": "Mat Blue", "hex": "#4A7DAA", "images": ["./p3.jpeg", "./p21.jpeg"] }
       ]
     },
     {
@@ -94,11 +78,7 @@
       "pattern": null,
       "detailDescription": "Affordable square plastic sunglass designed for kids. Brown color frame with lightweight material for active children.",
       "variants": [
-        {
-          "colorName": "",
-          "hex": "#ffffff",
-          "images": ["./p4.jpeg", "./p20.jpeg"]
-        }
+        { "colorName": "Brown", "hex": "#8B6914", "images": ["./p4.jpeg", "./p20.jpeg"] }
       ]
     },
     {
@@ -118,11 +98,7 @@
       "pattern": "Leopard",
       "detailDescription": "Bold square plastic sunglass with trendy leopard pattern. Fashion-forward design for style-conscious men with UV protection.",
       "variants": [
-        {
-          "colorName": "Lepord",
-          "hex": "#ffffff",
-          "images": ["./p6.jpeg", "./p25.jpeg"]
-        }
+        { "colorName": "Leopard", "hex": "#C19A6B", "images": ["./p6.jpeg", "./p25.jpeg"] }
       ]
     },
     {
@@ -142,11 +118,7 @@
       "pattern": "Marble Texture",
       "detailDescription": "Elegant square plastic sunglass featuring unique marble texture. Chic design for women with scratch-resistant lenses.",
       "variants": [
-        {
-          "colorName": "Lepord",
-          "hex": "#ffffff",
-          "images": ["./p8.jpeg", "./p33.jpeg"]
-        }
+        { "colorName": "Marble Texture", "hex": "#B0B0B0", "images": ["./p8.jpeg", "./p33.jpeg"] }
       ]
     },
     {
@@ -166,11 +138,7 @@
       "pattern": null,
       "detailDescription": "Classic black square plastic sunglass for women. Timeless design that complements any outfit with UV400 protection.",
       "variants": [
-        {
-          "colorName": "Black",
-          "hex": "#ffffff",
-          "images": ["./p9.jpeg", "./p31.jpeg"]
-        }
+        { "colorName": "Black", "hex": "#1A1A1A", "images": ["./p9.jpeg", "./p31.jpeg"] }
       ]
     },
     {
@@ -190,11 +158,7 @@
       "pattern": null,
       "detailDescription": "Stylish brown plastic eyeglass frame for women. Comfortable fit for daily wear, can be fitted with prescription lenses.",
       "variants": [
-        {
-          "colorName": "Brown",
-          "hex": "#ffffff",
-          "images": ["./p10.jpeg", "./p37.jpeg"]
-        }
+        { "colorName": "Brown", "hex": "#8B5E3C", "images": ["./p10.jpeg", "./p37.jpeg"] }
       ]
     },
     {
@@ -214,11 +178,7 @@
       "pattern": null,
       "detailDescription": "Sleek black square plastic sunglass for men. Strong build quality with reinforced hinges, great for driving and outdoor activities.",
       "variants": [
-        {
-          "colorName": "Black",
-          "hex": "#ffffff",
-          "images": ["./p11.jpeg", "./p14.jpeg"]
-        }
+        { "colorName": "Black", "hex": "#1A1A1A", "images": ["./p11.jpeg", "./p14.jpeg"] }
       ]
     },
     {
@@ -238,16 +198,8 @@
       "pattern": null,
       "detailDescription": "Premium plastic eyeglass frame with matte finish. Lightweight design perfect for all-day wear in multiple elegant colors.",
       "variants": [
-        {
-          "colorName": "Mat Mehroon",
-          "hex": "#ffffff",
-          "images": ["./p12.jpeg", "./p35.jpeg"]
-        },
-        {
-          "colorName": "Mat Brown",
-          "hex": "#ffffff",
-          "images": ["./p27.jpeg", "./p36.jpeg"]
-        }
+        { "colorName": "Mat Mehroon", "hex": "#7B2D3E", "images": ["./p12.jpeg", "./p35.jpeg"] },
+        { "colorName": "Mat Brown",   "hex": "#795548", "images": ["./p27.jpeg", "./p36.jpeg"] }
       ]
     },
     {
@@ -267,11 +219,7 @@
       "pattern": null,
       "detailDescription": "Two-tone square plastic sunglass combining black and brown. Fashionable gradient style for women with full UV protection.",
       "variants": [
-        {
-          "colorName": "Black & Brown",
-          "hex": "#ffffff",
-          "images": ["./p13.jpeg", "./p29.jpeg"]
-        }
+        { "colorName": "Black & Brown", "hex": "#3D2B1A", "images": ["./p13.jpeg", "./p29.jpeg"] }
       ]
     },
     {
@@ -291,11 +239,7 @@
       "pattern": null,
       "detailDescription": "Clean white plastic eyeglass frame for a fresh look. Comfortable nose pads and flexible temples, prescription-ready.",
       "variants": [
-        {
-          "colorName": "White",
-          "hex": "#ffffff",
-          "images": ["./p15.jpeg", "./p40.jpeg"]
-        }
+        { "colorName": "White", "hex": "#F5F5F5", "images": ["./p15.jpeg", "./p40.jpeg"] }
       ]
     },
     {
@@ -315,11 +259,7 @@
       "pattern": null,
       "detailDescription": "Fun one-piece sunglass design for kids. Durable black plastic frame that bends without breaking, perfect for active play.",
       "variants": [
-        {
-          "colorName": "Black ",
-          "hex": "#ffffff",
-          "images": ["./p16.jpeg", "./p19.jpeg"]
-        }
+        { "colorName": "Black", "hex": "#1A1A1A", "images": ["./p16.jpeg", "./p19.jpeg"] }
       ]
     },
     {
@@ -339,11 +279,7 @@
       "pattern": "Black Leopard",
       "detailDescription": "Premium square sunglass with black leopard pattern. High-end finish for the modern man with superior lens clarity.",
       "variants": [
-        {
-          "colorName": "Black & Leopard",
-          "hex": "#ffffff",
-          "images": ["./p22.jpeg", "./p26.jpeg"]
-        }
+        { "colorName": "Black & Leopard", "hex": "#2C2416", "images": ["./p22.jpeg", "./p26.jpeg"] }
       ]
     },
     {
@@ -363,11 +299,7 @@
       "pattern": null,
       "detailDescription": "Rich brown square plastic sunglass for men. Classic color with modern shape and comfortable fit for extended wear.",
       "variants": [
-        {
-          "colorName": "Brown",
-          "hex": "#ffffff",
-          "images": ["./p23.jpeg", "./p24.jpeg"]
-        }
+        { "colorName": "Brown", "hex": "#8B5E3C", "images": ["./p23.jpeg", "./p24.jpeg"] }
       ]
     },
     {
@@ -387,11 +319,7 @@
       "pattern": null,
       "detailDescription": "Soft peach square plastic sunglass with feminine appeal. Trendy box shape that frames the face beautifully with UV protection.",
       "variants": [
-        {
-          "colorName": "Peach",
-          "hex": "#ffffff",
-          "images": ["./p30.jpeg", "./p32.jpeg"]
-        }
+        { "colorName": "Peach", "hex": "#FFCBA4", "images": ["./p30.jpeg", "./p32.jpeg"] }
       ]
     },
     {
@@ -411,11 +339,7 @@
       "pattern": null,
       "detailDescription": "Bold black box-shaped plastic sunglass for women. Statement piece that adds edge to any look, durable and stylish.",
       "variants": [
-        {
-          "colorName": "Black",
-          "hex": "#ffffff",
-          "images": ["./p34.jpeg", "./p39.jpeg"]
-        }
+        { "colorName": "Black", "hex": "#1A1A1A", "images": ["./p34.jpeg", "./p39.jpeg"] }
       ]
     },
     {
@@ -435,16 +359,8 @@
       "pattern": null,
       "detailDescription": "Premium metal oval eyeglass frame for men. Gold and brown color options with lightweight construction and adjustable nose pads.",
       "variants": [
-        {
-          "colorName": "Gold",
-          "hex": "#ffd700",
-          "images": ["./p79.jpeg", "./p80.jpeg"]
-        },
-        {
-          "colorName": "Brown",
-          "hex": "#c0c0c0",
-          "images": ["./p77.jpeg", "./p78.jpeg"]
-        }
+        { "colorName": "Gold",  "hex": "#FFD700", "images": ["./p79.jpeg", "./p80.jpeg"] },
+        { "colorName": "Brown", "hex": "#8B6914", "images": ["./p77.jpeg", "./p78.jpeg"] }
       ]
     },
     {
@@ -464,16 +380,8 @@
       "pattern": null,
       "detailDescription": "Curve square plastic frame with unique design. Made in Taiwan, featuring black and black-red color options for unisex style.",
       "variants": [
-        {
-          "colorName": "Black",
-          "hex": "#ff69b4",
-          "images": ["./p93.jpeg", "./p94.jpeg"]
-        },
-        {
-          "colorName": "Black & Red",
-          "hex": "#9b59b6",
-          "images": ["./p91.jpeg", "./p92.jpeg"]
-        }
+        { "colorName": "Black",     "hex": "#1A1A1A", "images": ["./p93.jpeg", "./p94.jpeg"] },
+        { "colorName": "Black & Red","hex": "#8B0000", "images": ["./p91.jpeg", "./p92.jpeg"] }
       ]
     },
     {
@@ -493,11 +401,7 @@
       "pattern": null,
       "detailDescription": "Contactless-friendly plastic square frame in black and white. Lightweight design perfect for daily wear with prescription lenses.",
       "variants": [
-        {
-          "colorName": "Black & White",
-          "hex": "#e0e0e0",
-          "images": ["./p65.jpeg", "./p66.jpeg"]
-        }
+        { "colorName": "Black & White", "hex": "#2C2C2C", "images": ["./p65.jpeg", "./p66.jpeg"] }
       ]
     },
     {
@@ -517,11 +421,7 @@
       "pattern": null,
       "detailDescription": "Classic wayfarer plastic eyeglass frame for men. Made in Taiwan with durable black finish and comfortable fit.",
       "variants": [
-        {
-          "colorName": "Black",
-          "hex": "#000000",
-          "images": ["./p75.jpeg", "./p76.jpeg"]
-        }
+        { "colorName": "Black", "hex": "#000000", "images": ["./p75.jpeg", "./p76.jpeg"] }
       ]
     },
     {
@@ -541,11 +441,7 @@
       "pattern": null,
       "detailDescription": "Unique vaffer shape plastic eyeglass frame in white and black. Modern design with premium build quality.",
       "variants": [
-        {
-          "colorName": "White & Black",
-          "hex": "#e67e22",
-          "images": ["./p73.jpeg", "./p74.jpeg"]
-        }
+        { "colorName": "White & Black", "hex": "#E8E8E8", "images": ["./p73.jpeg", "./p74.jpeg"] }
       ]
     },
     {
@@ -565,11 +461,7 @@
       "pattern": null,
       "detailDescription": "Square plastic frame in black and shade mahroon. Lightweight and comfortable for extended wear.",
       "variants": [
-        {
-          "colorName": "Black & Shade Mahroon",
-          "hex": "#3498db",
-          "images": ["./p71.jpeg", "./p72.jpeg"]
-        }
+        { "colorName": "Black & Shade Mahroon", "hex": "#3D0D0D", "images": ["./p71.jpeg", "./p72.jpeg"] }
       ]
     },
     {
@@ -589,11 +481,7 @@
       "pattern": "Leopard",
       "detailDescription": "Trendy leopard print square plastic eyeglass frame for women. Made in Taiwan with stylish pattern and comfortable fit.",
       "variants": [
-        {
-          "colorName": "Leopard",
-          "hex": "#ffd700",
-          "images": ["./p41.jpeg", "./p70.jpeg"]
-        }
+        { "colorName": "Leopard", "hex": "#C19A6B", "images": ["./p41.jpeg", "./p70.jpeg"] }
       ]
     },
     {
@@ -613,11 +501,7 @@
       "pattern": null,
       "detailDescription": "Geometric plastic eyeglass frame in brown. Modern design with lightweight TR-90 material for all-day comfort.",
       "variants": [
-        {
-          "colorName": "Brown",
-          "hex": "#333333",
-          "images": ["./p68.jpeg", "./p69.jpeg"]
-        }
+        { "colorName": "Brown", "hex": "#795548", "images": ["./p68.jpeg", "./p69.jpeg"] }
       ]
     },
     {
@@ -637,11 +521,7 @@
       "pattern": null,
       "detailDescription": "Eye-shaped plastic frame in black and purple. Unique design that stands out, perfect for fashion-forward women.",
       "variants": [
-        {
-          "colorName": "Black & Purple",
-          "hex": "#ff69b4",
-          "images": ["./p64.jpeg", "./p67.jpeg"]
-        }
+        { "colorName": "Black & Purple", "hex": "#3B0A6B", "images": ["./p64.jpeg", "./p67.jpeg"] }
       ]
     },
     {
@@ -661,11 +541,7 @@
       "pattern": null,
       "detailDescription": "Pretty pink square plastic eyeglass frame for women. Lightweight and comfortable for daily prescription wear.",
       "variants": [
-        {
-          "colorName": "Pink",
-          "hex": "#ff69b4",
-          "images": ["./p62.jpeg", "./p63.jpeg"]
-        }
+        { "colorName": "Pink", "hex": "#FF69B4", "images": ["./p62.jpeg", "./p63.jpeg"] }
       ]
     },
     {
@@ -685,21 +561,9 @@
       "pattern": null,
       "detailDescription": "Round plastic eyeglass frame available in purple, pink & white, and mahroon & white. Versatile style for any occasion.",
       "variants": [
-        {
-          "colorName": "Purple",
-          "hex": "#ff69b4",
-          "images": ["./p95.jpeg", "./p96.jpeg"]
-        },
-        {
-          "colorName": "Pink & White",
-          "hex": "#ff69b4",
-          "images": ["./p97.jpeg", "./p98.jpeg"]
-        },
-        {
-          "colorName": "mahroon & White",
-          "hex": "#ff69b4",
-          "images": ["./p99.jpeg", "./p100.jpeg"]
-        }
+        { "colorName": "Purple",        "hex": "#9B59B6", "images": ["./p95.jpeg",  "./p96.jpeg"]  },
+        { "colorName": "Pink & White",  "hex": "#FFB6C1", "images": ["./p97.jpeg",  "./p98.jpeg"]  },
+        { "colorName": "Mahroon & White","hex": "#7B2D3E", "images": ["./p99.jpeg",  "./p100.jpeg"] }
       ]
     },
     {
@@ -719,11 +583,7 @@
       "pattern": null,
       "detailDescription": "Metal round eyeglass frame in black. Sleek and durable with adjustable nose pads for perfect fit.",
       "variants": [
-        {
-          "colorName": "Black",
-          "hex": "#ff69b4",
-          "images": ["./p85.jpeg", "./p86.jpeg"]
-        }
+        { "colorName": "Black", "hex": "#1A1A1A", "images": ["./p85.jpeg", "./p86.jpeg"] }
       ]
     },
     {
@@ -743,11 +603,7 @@
       "pattern": null,
       "detailDescription": "Round plastic eyeglass frame in black and white. Classic two-tone design that matches any outfit.",
       "variants": [
-        {
-          "colorName": "Black & White",
-          "hex": "#ff69b4",
-          "images": ["./p81.jpeg", "./p82.jpeg"]
-        }
+        { "colorName": "Black & White", "hex": "#2C2C2C", "images": ["./p81.jpeg", "./p82.jpeg"] }
       ]
     },
     {
@@ -767,11 +623,7 @@
       "pattern": null,
       "detailDescription": "Purple round plastic eyeglass frame. Soft color and lightweight design for comfortable daily wear.",
       "variants": [
-        {
-          "colorName": "Purple",
-          "hex": "#ff69b4",
-          "images": ["./p83.jpeg", "./p84.jpeg"]
-        }
+        { "colorName": "Purple", "hex": "#9B59B6", "images": ["./p83.jpeg", "./p84.jpeg"] }
       ]
     },
     {
@@ -791,11 +643,7 @@
       "pattern": null,
       "detailDescription": "Round plastic frame in black and green. Unique color combination for a distinctive look.",
       "variants": [
-        {
-          "colorName": "Black & Green",
-          "hex": "#ff69b4",
-          "images": ["./p87.jpeg", "./p89.jpeg"]
-        }
+        { "colorName": "Black & Green", "hex": "#1B4D2E", "images": ["./p87.jpeg", "./p89.jpeg"] }
       ]
     },
     {
@@ -815,11 +663,7 @@
       "pattern": null,
       "detailDescription": "Brown round plastic eyeglass frame. Classic color with modern round shape for everyday elegance.",
       "variants": [
-        {
-          "colorName": "Brown",
-          "hex": "#ff69b4",
-          "images": ["./p42.jpeg", "./p43.jpeg"]
-        }
+        { "colorName": "Brown", "hex": "#795548", "images": ["./p42.jpeg", "./p43.jpeg"] }
       ]
     },
     {
@@ -839,11 +683,7 @@
       "pattern": null,
       "detailDescription": "Round plastic frame in black and red. Bold color combination for confident style statements.",
       "variants": [
-        {
-          "colorName": "Black & Red",
-          "hex": "#ff69b4",
-          "images": ["./p44.jpeg", "./p45.jpeg"]
-        }
+        { "colorName": "Black & Red", "hex": "#8B0000", "images": ["./p44.jpeg", "./p45.jpeg"] }
       ]
     },
     {
@@ -863,11 +703,7 @@
       "pattern": null,
       "detailDescription": "Classic black round plastic eyeglass frame. Timeless design that never goes out of style.",
       "variants": [
-        {
-          "colorName": "Black",
-          "hex": "#ff69b4",
-          "images": ["./p46.jpeg", "./p47.jpeg"]
-        }
+        { "colorName": "Black", "hex": "#1A1A1A", "images": ["./p46.jpeg", "./p47.jpeg"] }
       ]
     },
     {
@@ -887,11 +723,7 @@
       "pattern": null,
       "detailDescription": "Purple round plastic eyeglass frame. Vibrant color for those who want to stand out.",
       "variants": [
-        {
-          "colorName": "Purple",
-          "hex": "#ff69b4",
-          "images": ["./p48.jpeg", "./p49.jpeg"]
-        }
+        { "colorName": "Purple", "hex": "#9B59B6", "images": ["./p48.jpeg", "./p49.jpeg"] }
       ]
     },
     {
@@ -911,11 +743,7 @@
       "pattern": "Tiger",
       "detailDescription": "Round frame with tiger pattern. Combination of plastic and metal for durability and style.",
       "variants": [
-        {
-          "colorName": "Tiger",
-          "hex": "#ff69b4",
-          "images": ["./p50.jpeg", "./p51.jpeg"]
-        }
+        { "colorName": "Tiger", "hex": "#C65B00", "images": ["./p50.jpeg", "./p51.jpeg"] }
       ]
     },
     {
@@ -935,11 +763,7 @@
       "pattern": "Marble",
       "detailDescription": "Marble patterned round frame. Hybrid plastic and metal construction for lightweight strength.",
       "variants": [
-        {
-          "colorName": "Marble",
-          "hex": "#ff69b4",
-          "images": ["./p52.jpeg", "./p53.jpeg"]
-        }
+        { "colorName": "Marble", "hex": "#B0BEC5", "images": ["./p52.jpeg", "./p53.jpeg"] }
       ]
     },
     {
@@ -959,11 +783,7 @@
       "pattern": "Leopard",
       "detailDescription": "Leopard print round frame. Perfect for fashion-conscious women who love animal prints.",
       "variants": [
-        {
-          "colorName": "Leopard",
-          "hex": "#ff69b4",
-          "images": ["./p54.jpeg", "./p55.jpeg"]
-        }
+        { "colorName": "Leopard", "hex": "#C19A6B", "images": ["./p54.jpeg", "./p55.jpeg"] }
       ]
     },
     {
@@ -983,11 +803,7 @@
       "pattern": "Marbel",
       "detailDescription": "Marble design round frame. Premium hybrid construction for lasting wear and unique style.",
       "variants": [
-        {
-          "colorName": "Marbel",
-          "hex": "#ff69b4",
-          "images": ["./p56.jpeg", "./p57.jpeg"]
-        }
+        { "colorName": "Marbel", "hex": "#90A4AE", "images": ["./p56.jpeg", "./p57.jpeg"] }
       ]
     },
     {
@@ -1007,11 +823,7 @@
       "pattern": "Leopard",
       "detailDescription": "Leopard print round frame with hybrid construction. Bold style meets everyday comfort.",
       "variants": [
-        {
-          "colorName": "Leopard",
-          "hex": "#ff69b4",
-          "images": ["./p58.jpeg", "./p59.jpeg"]
-        }
+        { "colorName": "Leopard", "hex": "#C19A6B", "images": ["./p58.jpeg", "./p59.jpeg"] }
       ]
     },
     {
@@ -1031,11 +843,7 @@
       "pattern": null,
       "detailDescription": "Pink rimless round eyeglass frame. Minimalist design that's lightweight and nearly invisible on face.",
       "variants": [
-        {
-          "colorName": "Pink",
-          "hex": "#ff69b4",
-          "images": ["./p60.jpeg", "./p61.jpeg"]
-        }
+        { "colorName": "Pink", "hex": "#FF69B4", "images": ["./p60.jpeg", "./p61.jpeg"] }
       ]
     }
   ]
