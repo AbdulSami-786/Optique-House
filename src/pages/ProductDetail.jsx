@@ -287,12 +287,26 @@ const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }
   );
   
   const [errors, setErrors] = useState({});
-
-  const lensOptions = [
-    { id: 'standard', name: 'Standard Lenses', price: 850, description: 'Clear vision with anti-reflective coating' },
-    { id: 'blueCut', name: 'Blue Cut Lenses', price: 1800, description: 'Protects against harmful blue light' },
-    { id: 'photochromic', name: 'Photochromic Lenses', price: 2500, description: 'Automatically darken in sunlight' },
-  ];
+const lensOptions = [
+  { 
+    id: 'standard', 
+    name: 'Normal Uncoat Glass', 
+    price: 850, 
+    description: 'Basic clear lenses for everyday vision and comfortable use.' 
+  },
+  { 
+    id: 'blueCut', 
+    name: 'Anti Clear Glass', 
+    price: 1850, 
+    description: 'Reduces blue light exposure from mobile, laptop, and computer screens.' 
+  },
+  { 
+    id: 'photochromic', 
+    name: 'High UV Glass', 
+    price: 4500, 
+    description: 'UV-protected lenses that automatically darken in sunlight outdoors.' 
+  },
+];
   
   const selectedLens = lensOptions.find((l) => l.id === lensType) || lensOptions[0];
   
