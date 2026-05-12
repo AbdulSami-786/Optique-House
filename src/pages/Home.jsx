@@ -1134,7 +1134,7 @@ const Newsletter = () => {
    FLOATING WHATSAPP (responsive)
 ───────────────────────────────────────────── */
 const FloatingWA = () => (
-  <a href="https://wa.me/923001234567" target="_blank" rel="noopener noreferrer"
+  <a href="https://wa.me/923122251134" target="_blank" rel="noopener noreferrer"
     className="wa-btn"
     style={{
       position: 'fixed',
