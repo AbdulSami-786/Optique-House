@@ -457,13 +457,13 @@ const Checkout = () => {
                           <span className="item-quantity">Qty: {quantity}</span>
                         </div>
                       </div>
-                      <div className="item-price">₹{total.toLocaleString()}</div>
+                      <div className="item-price">Pkr{total.toLocaleString()}</div>
                     </div>
                     
                     {/* Show price breakdown */}
                     {lensCharge > 0 && (
                       <div className="price-breakdown">
-                        Frame: ₹{framePrice.toLocaleString()} + Lens: ₹{lensCharge.toLocaleString()}
+                        Frame: Pkr{framePrice.toLocaleString()} + Lens: Pkr{lensCharge.toLocaleString()}
                       </div>
                     )}
                     
@@ -471,7 +471,7 @@ const Checkout = () => {
                     {prescriptionDisplay && (
                       <div className="item-prescription">
                         <div className="prescription-header">
-                          <strong>👓 Lens:</strong> {prescriptionDisplay.lensName} (+₹{prescriptionDisplay.lensPrice.toLocaleString()})
+                          <strong>👓 Lens:</strong> {prescriptionDisplay.lensName} (+Pkr{prescriptionDisplay.lensPrice.toLocaleString()})
                         </div>
                         <div className="prescription-details">
                           <div className="eye-column">
@@ -511,17 +511,17 @@ const Checkout = () => {
             <div className="summary-totals">
               <div className="summary-row">
                 <span>Subtotal</span>
-                <span>₹{getSubtotal().toLocaleString()}</span>
+                <span>Pkr{getSubtotal().toLocaleString()}</span>
               </div>
               <div className="summary-row">
                 <span>Shipping</span>
                 <span className={getShipping() === 0 ? "free-shipping" : ""}>
-                  {getShipping() === 0 ? "✨ Free" : `₹${getShipping().toLocaleString()}`}
+                  {getShipping() === 0 ? "✨ Free" : `Pkr${getShipping().toLocaleString()}`}
                 </span>
               </div>
               <div className="summary-total">
                 <span>Total</span>
-                <span>₹{getTotal().toLocaleString()}</span>
+                <span>Pkr{getTotal().toLocaleString()}</span>
               </div>
             </div>
 

@@ -92,7 +92,7 @@ const Cart = () => {
     }, 0);
   };
 
-  // Shipping cost (free over ₹5000)
+  // Shipping cost (free over Pkr5000)
   const getShipping = () => {
     return getSubtotal() > 5000 ? 0 : 200;
   };
@@ -207,7 +207,7 @@ const Cart = () => {
                           {item.prescription && (
                             <span className="product-prescription">
                               Lens: {item.prescription.lensName || item.prescription.lensType || 'Standard'} 
-                              (+₹{parsePrice(item.prescription.lensPrice).toLocaleString()})
+                              (+Pkr{parsePrice(item.prescription.lensPrice).toLocaleString()})
                             </span>
                           )}
                         </div>
@@ -215,10 +215,10 @@ const Cart = () => {
                     </div>
                     
                     <div className="price-col">
-                      <span className="price">₹{price.toLocaleString()}</span>
+                      <span className="price">Pkr{price.toLocaleString()}</span>
                       {lensCharge > 0 && (
                         <span className="price-breakdown">
-                          Frame: ₹{framePrice.toLocaleString()} + Lens: ₹{lensCharge.toLocaleString()}
+                          Frame: Pkr{framePrice.toLocaleString()} + Lens: Pkr{lensCharge.toLocaleString()}
                         </span>
                       )}
                       {item.discount && parseFloat(item.discount) > 0 && (
@@ -266,7 +266,7 @@ const Cart = () => {
                     </div>
                     
                     <div className="total-col">
-                      <span className="item-total">₹{itemTotal.toLocaleString()}</span>
+                      <span className="item-total">Pkr{itemTotal.toLocaleString()}</span>
                     </div>
                     
                     <div className="action-col">
@@ -292,23 +292,23 @@ const Cart = () => {
               
               <div className="summary-row">
                 <span>Subtotal</span>
-                <span>₹{getSubtotal().toLocaleString()}</span>
+                <span>Pkr{getSubtotal().toLocaleString()}</span>
               </div>
               
               <div className="summary-row">
                 <span>Shipping</span>
-                <span>{getShipping() === 0 ? 'Free' : `₹${getShipping().toLocaleString()}`}</span>
+                <span>{getShipping() === 0 ? 'Free' : `Pkr${getShipping().toLocaleString()}`}</span>
               </div>
               
               {getShipping() > 0 && getSubtotal() < 5000 && (
                 <div className="shipping-note">
-                  ✨ Add ₹{(5000 - getSubtotal()).toLocaleString()} more for free shipping
+                  ✨ Add Pkr{(5000 - getSubtotal()).toLocaleString()} more for free shipping
                 </div>
               )}
               
               <div className="summary-total">
                 <span>Total</span>
-                <span>₹{getTotal().toLocaleString()}</span>
+                <span>Pkr{getTotal().toLocaleString()}</span>
               </div>
               
               <button 
