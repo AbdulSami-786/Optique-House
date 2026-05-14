@@ -640,7 +640,6 @@ const TryOn = () => {
   // ════════════════════════════════════════════════════════════
   return (
     <>
-      <Navbar />
       <div style={{ fontFamily:"'Space Grotesk',sans-serif", background:C.gradBg, color:C.text, height:"100vh", display:"flex", overflow:"hidden" }}>
         <style>{css}</style>
 
@@ -790,7 +789,7 @@ const TryOn = () => {
           </Section>
         </div>
       </div>
-      <Footer />
+      
     </>
   );
 };
