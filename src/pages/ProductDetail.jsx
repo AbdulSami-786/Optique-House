@@ -1,443 +1,249 @@
-// components/ProductDetail.js
+// product detail
+
+
+
+
+
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import productsData from '../data/data.json';
 
-// ==================== Helper Components ====================
+// ── same mapping as Products.jsx ──────────────────────────────────────────────
+const CODE_TO_FRAME = {
+  "T04917":"/glass1.png","K01":"/glass2.png","D403054S":"/glass3.png",
+  "20237":"/glass4.png","RB4455F":"/glass5.png","5013":"/glass6.png",
+  "S2160":"/glass7.png","3377":"/glass8.png","28044":"/glass9.png",
+  "99032":"/glass10.png","T1798":"/glass11.png","28118":"/glass12.png",
+  "IPB":"/glass13.png","F0493":"/glass14.png","BL0985":"/glass15.png",
+  "D7481":"/glass16.png","H077048":"/glass17.png","9702":"/glass18.png",
+  "JV5816":"/glass19.png","D8822":"/glass20.png","PS8035":"/glass21.png",
+  "D8815":"/glass22.png","9362":"/glass23.png","D8953":"/glass24.png",
+  "TR1020":"/glass25.png","BV6522":"/glass26.png","D9108":"/glass27.png",
+  "9368":"/glass28.png","K88212":"/glass29.png","B7195":"/glass30.png",
+  "D1256":"/glass31.png","P3002":"/glass32.png","2011":"/glass33.png",
+  "AR2005":"/glass34.png","P210":"/glass35.png","D8954":"/glass36.png",
+  "K58083":"/glass37.png","LFL228":"/glass38.png","OF8651":"/glass39.png",
+  "OF8506":"/glass40.png","1122":"/glass41.png","R1013":"/glass42.png",
+};
+const getFrameId = (product) =>
+  (product?.code && CODE_TO_FRAME[product.code]) || "/glass1.png";
+
+// ── Helper Components ─────────────────────────────────────────────────────────
 const StarRating = ({ rating }) => {
-  const fullStars = Math.floor(rating);
-  const hasHalfStar = rating % 1 >= 0.5;
-  
+  const full = Math.floor(rating);
+  const half = rating % 1 >= 0.5;
   return (
-    <div className="flex items-center gap-1">
-      {[...Array(5)].map((_, i) => (
-        <svg
-        key={i}
-        className={`w-5 h-5 ${
-          i < fullStars
-          ? 'text-yellow-400 fill-current'
-          : i === fullStars && hasHalfStar
-          ? 'text-yellow-400 fill-current opacity-50'
-          : 'text-gray-300 fill-current'
-        }`}
-        viewBox="0 0 20 20"
-        >
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+    <div style={{ display:'flex', alignItems:'center', gap:4 }}>
+      {[...Array(5)].map((_,i) => (
+        <svg key={i} width="20" height="20" viewBox="0 0 20 20"
+          style={{ color: i < full || (i===full && half) ? '#FBBF24' : '#D1D5DB', fill:'currentColor' }}>
+          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
         </svg>
       ))}
-      <span className="text-sm text-gray-500 ml-2">({rating})</span>
+      <span style={{ fontSize:13, color:'#6B7280', marginLeft:6 }}>({rating})</span>
     </div>
   );
 };
 
-const QuantitySelector = ({ quantity, setQuantity, maxStock = 10 }) => {
-  const decrease = () => setQuantity((prev) => Math.max(1, prev - 1));
-  const increase = () => setQuantity((prev) => Math.min(maxStock, prev + 1));
-  
-  return (
-    <div className="flex items-center border border-gray-200 rounded-full overflow-hidden">
-      <button
-        onClick={decrease}
-        className="w-10 h-10 flex items-center justify-center hover:bg-gray-100 transition-colors text-gray-600"
-        aria-label="Decrease quantity"
-        >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 12H4" />
-        </svg>
-      </button>
-      <span className="w-12 text-center font-medium text-gray-800">{quantity}</span>
-      <button
-        onClick={increase}
-        className="w-12 h-12 flex items-center justify-center hover:bg-gray-100 transition-colors text-gray-600"
-        aria-label="Increase quantity"
-        >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-        </svg>
-      </button>
-    </div>
-  );
-};
+const QuantitySelector = ({ quantity, setQuantity, maxStock=10 }) => (
+  <div style={{ display:'flex', alignItems:'center', border:'1px solid #E5E7EB', borderRadius:999, overflow:'hidden' }}>
+    <button onClick={() => setQuantity(p => Math.max(1,p-1))}
+      style={{ width:40, height:40, display:'flex', alignItems:'center', justifyContent:'center', background:'none', border:'none', cursor:'pointer' }}>
+      <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M20 12H4"/></svg>
+    </button>
+    <span style={{ width:44, textAlign:'center', fontWeight:600 }}>{quantity}</span>
+    <button onClick={() => setQuantity(p => Math.min(maxStock,p+1))}
+      style={{ width:40, height:40, display:'flex', alignItems:'center', justifyContent:'center', background:'none', border:'none', cursor:'pointer' }}>
+      <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"/></svg>
+    </button>
+  </div>
+);
 
 const ColorVariantSelector = ({ variants, selectedVariant, setSelectedVariant }) => {
-  if (!variants || variants.length === 0) return null;
-  const totalColors = variants.length;
-  
+  if (!variants?.length) return null;
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <label className="block text-sm font-medium text-gray-700">Color / Variant</label>
-        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-          {totalColors} {totalColors === 1 ? 'Color' : 'Colors'} Available
+    <div style={{ display:'flex', flexDirection:'column', gap:10 }}>
+      <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+        <span style={{ fontSize:13, fontWeight:600, color:'#374151' }}>Color / Variant</span>
+        <span style={{ fontSize:11, color:'#6B7280', background:'#F3F4F6', padding:'2px 10px', borderRadius:999 }}>
+          {variants.length} {variants.length===1?'Color':'Colors'}
         </span>
       </div>
-      <div className="flex flex-wrap gap-3">
-        {variants.map((variant) => {
-          const isSelected = selectedVariant?.colorName === variant.colorName;
+      <div style={{ display:'flex', flexWrap:'wrap', gap:10 }}>
+        {variants.map(v => {
+          const sel = selectedVariant?.colorName === v.colorName;
           return (
-            <label
-              key={variant.colorName}
-              className={`
-                relative flex items-center gap-3 px-4 py-2 rounded-full border cursor-pointer
-                transition-all duration-200 ease-out
-                ${isSelected
-                  ? 'border-black bg-black text-white shadow-md'
-                  : 'border-gray-200 bg-white text-gray-700 hover:border-gray-400 hover:shadow-sm'
-                }
-                `}
-                >
-              <input
-                type="radio"
-                name="productColor"
-                value={variant.colorName}
-                checked={isSelected}
-                onChange={() => setSelectedVariant(variant)}
-                className="sr-only"
-                />
-              <div
-                className="w-5 h-5 rounded-full border border-white/30 shadow-sm"
-                style={{ backgroundColor: variant.hex || '#E8F4F8' }}
-                />
-              <span className="text-sm font-medium">{variant.colorName}</span>
-              {isSelected && (
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                </svg>
-              )}
+            <label key={v.colorName} style={{
+              display:'flex', alignItems:'center', gap:10, padding:'8px 16px',
+              borderRadius:999, border:`2px solid ${sel?'#000':'#E5E7EB'}`,
+              background:sel?'#000':'#fff', color:sel?'#fff':'#374151',
+              cursor:'pointer', transition:'all .2s',
+            }}>
+              <input type="radio" name="color" value={v.colorName}
+                checked={sel} onChange={() => setSelectedVariant(v)} style={{ display:'none' }} />
+              <div style={{ width:18, height:18, borderRadius:'50%', background:v.hex||'#ccc',
+                border:'2px solid rgba(255,255,255,.5)', flexShrink:0 }} />
+              <span style={{ fontSize:13, fontWeight:500 }}>{v.colorName}</span>
+              {sel && <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>}
             </label>
           );
         })}
       </div>
-      {selectedVariant && (
-        <p className="text-sm text-gray-500 mt-2 animate-fade-in">
-          Selected: <span className="font-medium text-gray-900">{selectedVariant.colorName}</span>
-        </p>
-      )}
     </div>
   );
 };
 
-// ==================== PROFESSIONAL SCROLL NUMBER INPUT WITH SIGN DISPLAY ====================
-const ScrollNumberInput = ({ 
-  value, 
-  onChange, 
-  min = -20, 
-  max = 20, 
-  step = 0.25, 
-  label, 
-  unit = '', 
-  required = false,
-  placeholder = "0.00",
-  description = "",
-  showSign = true,
-  allowNegative = true
-}) => {
-  const displayValue = value === '' || value === undefined || value === null ? '' : value;
-  
-  // Format value with sign for display
-  const getFormattedValue = () => {
-    if (displayValue === '' || displayValue === '-') return '';
-    const num = parseFloat(displayValue);
-    if (isNaN(num)) return '';
-    if (!showSign) return num.toString();
-    if (num > 0) return `+${num}`;
-    if (num < 0) return `${num}`;
-    return '0';
-  };
-  
-  const handleIncrement = () => {
-    let currentValue = typeof value === 'number' ? value : 0;
-    let newValue = currentValue + step;
-    newValue = Math.round(newValue / step) * step;
-    if (newValue <= max) {
-      onChange(newValue);
-    }
-  };
-  
-  const handleDecrement = () => {
-    let currentValue = typeof value === 'number' ? value : 0;
-    let newValue = currentValue - step;
-    newValue = Math.round(newValue / step) * step;
-    if (newValue >= min) {
-      onChange(newValue);
-    }
-  };
-  
-  const handleInputChange = (e) => {
-    let rawValue = e.target.value;
-    // Remove any + sign from input
-    rawValue = rawValue.replace(/\+/g, '');
-    
-    if (rawValue === '' || rawValue === '-') {
-      onChange(rawValue);
-      return;
-    }
-    let numValue = parseFloat(rawValue);
-    if (!isNaN(numValue)) {
-      let rounded = Math.round(numValue / step) * step;
-      rounded = Math.min(max, Math.max(min, rounded));
-      onChange(rounded);
-    }
-  };
-  
-  const preventScroll = (e) => {
-    e.preventDefault();
-  };
-
-  const isValid = () => {
-    if (!required) return true;
-    return value !== '' && value !== undefined && value !== null && value !== '-';
-  };
-  
-  // Get color class based on value
-  const getValueColorClass = () => {
-    if (displayValue === '' || displayValue === '-') return 'text-gray-800';
-    const num = parseFloat(displayValue);
-    if (isNaN(num)) return 'text-gray-800';
-    if (num > 0) return 'text-green-600';
-    if (num < 0) return 'text-red-600';
-    return 'text-gray-800';
-  };
-  
-  return (
-    <div className="w-full h-full flex flex-col">
-      <label className="block text-xs font-semibold text-gray-700 mb-1.5">
-        {label}
-        {required && <span className="text-red-500 ml-1">*</span>}
-      </label>
-      {description && (
-        <p className="text-[10px] text-gray-400 mb-2">{description}</p>
-      )}
-      <div className="flex items-center gap-2">
-        <button
-          type="button"
-          onClick={handleDecrement}
-          className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-lg transition-all duration-150 text-gray-700"
-          aria-label={`Decrease ${label}`}
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M20 12H4" />
-          </svg>
-        </button>
-        
-        <div className={`relative flex-1 ${!isValid() && required ? 'ring-2 ring-red-500 rounded-lg' : ''}`}>
-          <input
-            type="text"
-            value={getFormattedValue()}
-            onChange={handleInputChange}
-            onWheel={preventScroll}
-            placeholder={placeholder}
-            className={`w-full text-center py-2.5 px-2 bg-white border rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent font-mono text-sm font-medium [appearance:textfield] transition-all ${getValueColorClass()} ${
-              !isValid() && required ? 'border-red-500' : 'border-gray-200 hover:border-gray-300'
-            }`}
-          />
-          {unit && (
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400 pointer-events-none font-medium">
-              {unit}
-            </span>
-          )}
-        </div>
-        
-        <button
-          type="button"
-          onClick={handleIncrement}
-          className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-gray-100 hover:bg-gray-200 active:bg-gray-300 rounded-lg transition-all duration-150 text-gray-700"
-          aria-label={`Increase ${label}`}
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M12 4v16m8-8H4" />
-          </svg>
-        </button>
-      </div>
-      <div className="flex justify-between items-center mt-1.5">
-        <span className="text-[9px] text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded-full">
-          Range: {min} to {max}
-        </span>
-        <span className="text-[9px] text-gray-400 bg-gray-50 px-1.5 py-0.5 rounded-full">
-          Step: {step}
-        </span>
-      </div>
-      {!isValid() && required && (
-        <p className="text-red-500 text-[10px] mt-1">Required</p>
-      )}
-    </div>
-  );
-};
-
-// ==================== PRESCRIPTION FORM ====================
-const PrescriptionForm = ({ show, onClose, onSave, existingPrescription = null }) => {
-  const [lensType, setLensType] = useState(existingPrescription?.lensType || 'standard');
-  
-  // Right eye first, then left eye
-  const [rightEye, setRightEye] = useState(
-    existingPrescription?.rightEye || {
-      sphere: '',
-      cylinder: '',
-      axis: '',
-      addition: '',
-    }
-  );
-  const [leftEye, setLeftEye] = useState(
-    existingPrescription?.leftEye || {
-      sphere: '',
-      cylinder: '',
-      axis: '',
-      addition: '',
-    }
-  );
-  
-  const [errors, setErrors] = useState({});
-const lensOptions = [
-  { 
-    id: 'standard', 
-    name: 'Normal Uncoat Glass', 
-    price: 850, 
-    description: 'Basic clear lenses for everyday vision and comfortable use.' 
-  },
-  { 
-    id: 'blueCut', 
-    name: 'Anti Clear Glass', 
-    price: 1850, 
-    description: 'Reduces blue light exposure from mobile, laptop, and computer screens.' 
-  },
-  { 
-    id: 'photochromic', 
-    name: 'High UV Glass', 
-    price: 4500, 
-    description: 'UV-protected lenses that automatically darken in sunlight outdoors.' 
-  },
+// ── Prescription helpers ───────────────────────────────────────────────────────
+const LENS_OPTIONS = [
+  { id:'standard',     name:'Standard Lenses',     price:850,  desc:'Clear vision with anti-reflective coating' },
+  { id:'blueCut',      name:'Blue Cut Lenses',      price:1800, desc:'Protects against harmful blue light' },
+  { id:'photochromic', name:'hight UV',  price:4500, desc:'Auto-darken in sunlight' },
 ];
-  
-  const selectedLens = lensOptions.find((l) => l.id === lensType) || lensOptions[0];
-  
-  const isAxisRequired = (eye) => {
-    return eye.cylinder !== '' && eye.cylinder !== undefined && eye.cylinder !== null && eye.cylinder !== 0;
+
+const emptyEye = () => ({ sphere:'', cylinder:'', axis:'', addition:'' });
+
+const ScrollNumInput = ({ label, value, onChange, min, max, step, unit, required, placeholder, showSign }) => {
+  const num   = value === '' ? '' : parseFloat(value);
+  const color = typeof num === 'number' && !isNaN(num)
+    ? num > 0 ? '#16a34a' : num < 0 ? '#dc2626' : '#111' : '#111';
+
+  const fmt = () => {
+    if (num === '' || isNaN(num)) return '';
+    if (!showSign) return String(num);
+    return num > 0 ? `+${num}` : String(num);
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (isAxisRequired(rightEye) && (!rightEye.axis || rightEye.axis === '')) {
-      newErrors.right_axis = 'Axis is required when Cylinder has a value';
-    }
-    
-    if (isAxisRequired(leftEye) && (!leftEye.axis || leftEye.axis === '')) {
-      newErrors.left_axis = 'Axis is required when Cylinder has a value';
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const step_ = (dir) => {
+    const cur = typeof num === 'number' && !isNaN(num) ? num : 0;
+    let nv = Math.round((cur + dir * step) / step) * step;
+    nv = Math.min(max, Math.max(min, nv));
+    onChange(nv);
   };
-  
-  const handleRightChange = (field, value) => {
-    setRightEye((prev) => ({ ...prev, [field]: value }));
-    if (field === 'cylinder' && (!value || value === 0)) {
-      setErrors((prev) => ({ ...prev, right_axis: '' }));
-    }
-    if (field === 'axis' && errors.right_axis) {
-      setErrors((prev) => ({ ...prev, right_axis: '' }));
-    }
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:4 }}>
+      <label style={{ fontSize:11, fontWeight:600, color:'#374151' }}>
+        {label}{required && <span style={{ color:'#ef4444' }}> *</span>}
+      </label>
+      <div style={{ display:'flex', alignItems:'center', gap:6 }}>
+        <button type="button" onClick={() => step_(-1)}
+          style={{ width:34, height:34, borderRadius:8, border:'1px solid #E5E7EB', background:'#F9FAFB', cursor:'pointer', flexShrink:0 }}>−</button>
+        <input
+          type="text" value={fmt()} placeholder={placeholder}
+          onChange={e => {
+            let v = e.target.value.replace(/\+/g,'');
+            if (v===''||v==='-') { onChange(v); return; }
+            const n = parseFloat(v);
+            if (!isNaN(n)) onChange(Math.min(max, Math.max(min, Math.round(n/step)*step)));
+          }}
+          style={{ flex:1, textAlign:'center', padding:'6px 4px', border:'1px solid #E5E7EB',
+            borderRadius:8, fontWeight:600, fontSize:13, color, outline:'none' }}
+        />
+        {unit && <span style={{ fontSize:11, color:'#9CA3AF', marginLeft:-22, pointerEvents:'none' }}>{unit}</span>}
+        <button type="button" onClick={() => step_(1)}
+          style={{ width:34, height:34, borderRadius:8, border:'1px solid #E5E7EB', background:'#F9FAFB', cursor:'pointer', flexShrink:0 }}>+</button>
+      </div>
+      <div style={{ display:'flex', justifyContent:'space-between' }}>
+        <span style={{ fontSize:9, color:'#9CA3AF' }}>{min} to {max}</span>
+        <span style={{ fontSize:9, color:'#9CA3AF' }}>step {step}</span>
+      </div>
+    </div>
+  );
+};
+
+const PrescriptionModal = ({ show, onClose, onSave, existing }) => {
+  const [lensType, setLensType] = useState(existing?.lensType || 'standard');
+  const [right,    setRight]    = useState(existing?.rightEye || emptyEye());
+  const [left,     setLeft]     = useState(existing?.leftEye  || emptyEye());
+  const [errors,   setErrors]   = useState({});
+
+  const needsAxis = eye => eye.cylinder !== '' && eye.cylinder !== 0 && eye.cylinder !== undefined;
+
+  const validate = () => {
+    const e = {};
+    if (needsAxis(right) && (right.axis===''||right.axis===null)) e.ra = 'Axis required when Cylinder has value';
+    if (needsAxis(left)  && (left.axis==='' ||left.axis===null))  e.la = 'Axis required when Cylinder has value';
+    setErrors(e);
+    return !Object.keys(e).length;
   };
-  
-  const handleLeftChange = (field, value) => {
-    setLeftEye((prev) => ({ ...prev, [field]: value }));
-    if (field === 'cylinder' && (!value || value === 0)) {
-      setErrors((prev) => ({ ...prev, left_axis: '' }));
-    }
-    if (field === 'axis' && errors.left_axis) {
-      setErrors((prev) => ({ ...prev, left_axis: '' }));
-    }
-  };
-  
-  const handleSave = () => {
-    if (!validateForm()) {
-      return;
-    }
-    
-    const prescriptionData = {
-      lensType,
-      lensName: selectedLens.name,
-      lensPrice: selectedLens.price,
-      rightEye,
-      leftEye,
-    };
-    onSave(prescriptionData);
+
+  const save = () => {
+    if (!validate()) return;
+    const lens = LENS_OPTIONS.find(l => l.id===lensType);
+    onSave({ lensType, lensName:lens.name, lensPrice:lens.price, rightEye:right, leftEye:left });
     onClose();
   };
-  
+
   if (!show) return null;
-  
+
+  const EyeSection = ({ label, abbr, eye, setEye, axisErr }) => (
+    <div style={{ background:'#F9FAFB', borderRadius:14, border:'1px solid #E5E7EB', padding:18, marginBottom:16 }}>
+      <div style={{ display:'flex', alignItems:'center', gap:10, marginBottom:16 }}>
+        <div style={{ width:34, height:34, borderRadius:8, background:'#2563EB', display:'flex', alignItems:'center', justifyContent:'center' }}>
+          <span style={{ color:'#fff', fontWeight:700, fontSize:14 }}>{abbr}</span>
+        </div>
+        <div>
+          <div style={{ fontWeight:700, fontSize:15 }}>{label}</div>
+          <div style={{ fontSize:10, color:'#6B7280' }}>{abbr==='R'?'OD – Oculus Dexter':'OS – Oculus Sinister'}</div>
+        </div>
+      </div>
+      <div style={{ display:'grid', gridTemplateColumns:'repeat(2,1fr)', gap:14 }}>
+        <ScrollNumInput label="Sphere" value={eye.sphere} onChange={v => setEye(p=>({...p,sphere:v}))} min={-20} max={20} step={0.25} unit="D" required={false} placeholder="0.00" showSign />
+        <ScrollNumInput label="Cylinder" value={eye.cylinder} onChange={v => setEye(p=>({...p,cylinder:v}))} min={-6} max={6} step={0.25} unit="D" required={false} placeholder="0.00" showSign />
+        <div>
+          <ScrollNumInput label="Axis" value={eye.axis} onChange={v => setEye(p=>({...p,axis:v}))} min={0} max={180} step={1} unit="°" required={needsAxis(eye)} placeholder="0" showSign={false} />
+          {axisErr && <p style={{ color:'#ef4444', fontSize:10, marginTop:3 }}>{axisErr}</p>}
+        </div>
+        <ScrollNumInput label="Addition" value={eye.addition} onChange={v => setEye(p=>({...p,addition:v}))} min={0} max={3.5} step={0.25} unit="D" required={false} placeholder="0.00" showSign />
+      </div>
+    </div>
+  );
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in overflow-y-auto">
-      <div className="bg-white rounded-2xl max-w-6xl w-full p-6 transform animate-slide-up max-h-[90vh] overflow-y-auto shadow-xl">
+    <div style={{ position:'fixed', inset:0, zIndex:9999, background:'rgba(0,0,0,.5)',
+      backdropFilter:'blur(4px)', display:'flex', alignItems:'center', justifyContent:'center', padding:16, overflowY:'auto' }}>
+      <div style={{ background:'#fff', borderRadius:20, maxWidth:680, width:'100%',
+        padding:24, maxHeight:'90vh', overflowY:'auto', boxShadow:'0 25px 50px rgba(0,0,0,.2)' }}>
+
         {/* Header */}
-        <div className="flex justify-between items-center mb-6 pb-3 border-b border-gray-100">
+        <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', marginBottom:20, paddingBottom:14, borderBottom:'1px solid #F3F4F6' }}>
           <div>
-            <h3 className="text-xl font-bold text-gray-900">Prescription Details</h3>
-            <p className="text-xs text-gray-500 mt-0.5">Enter your optical prescription information</p>
+            <h3 style={{ fontSize:18, fontWeight:700, margin:0 }}>Prescription Details</h3>
+            <p style={{ fontSize:11, color:'#6B7280', margin:'4px 0 0' }}>Enter your optical prescription information</p>
           </div>
-          <button 
-            onClick={onClose} 
-            className="text-gray-400 hover:text-gray-600 transition-colors p-1 hover:bg-gray-100 rounded-full"
-            >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+          <button onClick={onClose} style={{ background:'none', border:'none', cursor:'pointer', padding:4, borderRadius:999, color:'#6B7280' }}>
+            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
           </button>
         </div>
 
-        {/* Info Banner */}
-        <div className="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-3">
-          <div className="flex items-start gap-2">
-            <svg className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            <div className="text-xs text-blue-800">
-              <p><span className="font-semibold">Note:</span> All fields are optional.</p>
-              <p className="mt-0.5">• <strong>Sphere & Cylinder</strong> can be positive (+) or negative (-)</p>
-              <p>• <strong>Axis</strong> is only required if Cylinder has a value (0-180°)</p>
-              <p>• <strong>Addition</strong> is only positive values (+)</p>
-            </div>
-          </div>
+        {/* Info */}
+        <div style={{ background:'#EFF6FF', border:'1px solid #BFDBFE', borderRadius:10, padding:12, marginBottom:18 }}>
+          <p style={{ fontSize:11, color:'#1D4ED8', margin:0 }}>
+            All fields optional. Sphere & Cylinder can be ±. Axis required only if Cylinder has a value.
+          </p>
         </div>
 
-        {/* Lens Type Selection */}
-        <div className="mb-6">
-          <label className="block text-sm font-bold text-gray-800 mb-2">
-            Select Lens Type
-          </label>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-            {lensOptions.map((lens) => (
-              <label
-              key={lens.id}
-              className={`relative p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                lensType === lens.id
-                ? 'border-black bg-gray-50'
-                : 'border-gray-200 bg-white hover:border-gray-300'
-              }`}
-              >
-                <input
-                  type="radio"
-                  name="lensType"
-                  value={lens.id}
-                  checked={lensType === lens.id}
-                  onChange={() => setLensType(lens.id)}
-                  className="sr-only"
-                  />
-                <div className="flex justify-between items-start mb-1">
-                  <span className={`font-semibold text-sm ${lensType === lens.id ? 'text-black' : 'text-gray-800'}`}>
-                    {lens.name}
-                  </span>
-                  <span className={`font-bold text-sm ${lensType === lens.id ? 'text-black' : 'text-gray-700'}`}>
-                    +Pkr {lens.price}
-                  </span>
+        {/* Lens Type */}
+        <div style={{ marginBottom:20 }}>
+          <p style={{ fontWeight:700, fontSize:13, marginBottom:10 }}>Select Lens Type</p>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(170px,1fr))', gap:10 }}>
+            {LENS_OPTIONS.map(l => (
+              <label key={l.id} style={{
+                border:`2px solid ${lensType===l.id?'#000':'#E5E7EB'}`,
+                borderRadius:12, padding:12, cursor:'pointer',
+                background:lensType===l.id?'#F9FAFB':'#fff', position:'relative',
+              }}>
+                <input type="radio" name="lens" value={l.id} checked={lensType===l.id}
+                  onChange={() => setLensType(l.id)} style={{ display:'none' }} />
+                <div style={{ display:'flex', justifyContent:'space-between', marginBottom:4 }}>
+                  <span style={{ fontWeight:600, fontSize:12 }}>{l.name}</span>
+                  <span style={{ fontWeight:700, fontSize:12 }}>+{l.price}</span>
                 </div>
-                <p className="text-[10px] text-gray-500">{lens.description}</p>
-                {lensType === lens.id && (
-                  <div className="absolute top-2 right-2">
-                    <svg className="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
+                <p style={{ fontSize:10, color:'#6B7280', margin:0 }}>{l.desc}</p>
+                {lensType===l.id && (
+                  <div style={{ position:'absolute', top:8, right:8 }}>
+                    <svg width="14" height="14" fill="none" stroke="#22c55e" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
                   </div>
                 )}
               </label>
@@ -445,198 +251,23 @@ const lensOptions = [
           </div>
         </div>
 
-        {/* RIGHT EYE (First) */}
-        <div className="mb-6 bg-gray-50 rounded-xl border border-gray-200 p-4">
-          <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200">
-            <div className="bg-blue-600 w-8 h-8 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">R</span>
-            </div>
-            <div>
-              <h4 className="font-bold text-base text-gray-800">Right Eye</h4>
-              <p className="text-[10px] text-gray-500">OD (Oculus Dexter)</p>
-            </div>
-          </div>
-          
-          {/* 4-column grid for perfect alignment */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <ScrollNumberInput
-              label="Sphere (Power)"
-              value={rightEye.sphere === '' ? '' : parseFloat(rightEye.sphere) || 0}
-              onChange={(val) => handleRightChange('sphere', val)}
-              min={-20}
-              max={20}
-              step={0.25}
-              unit="D"
-              required={false}
-              placeholder="0.00"
-              description="Distance correction (±)"
-              showSign={true}
-              allowNegative={true}
-              />
-            
-            <ScrollNumberInput
-              label="Cylinder"
-              value={rightEye.cylinder === '' ? '' : parseFloat(rightEye.cylinder) || 0}
-              onChange={(val) => handleRightChange('cylinder', val)}
-              min={-6}
-              max={6}
-              step={0.25}
-              unit="D"
-              required={false}
-              placeholder="0.00"
-              description="Astigmatism (±)"
-              showSign={true}
-              allowNegative={true}
-              />
-            
-            <div>
-              <ScrollNumberInput
-                label="Axis"
-                value={rightEye.axis === '' ? '' : parseFloat(rightEye.axis) || 0}
-                onChange={(val) => handleRightChange('axis', val)}
-                min={0}
-                max={180}
-                step={1}
-                unit="°"
-                required={isAxisRequired(rightEye)}
-                placeholder="0"
-                description="0-180 degrees"
-                showSign={false}
-                allowNegative={false}
-                />
-              {errors.right_axis && (
-                <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1">
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {errors.right_axis}
-                </p>
-              )}
-            </div>
-            
-            <ScrollNumberInput
-              label="Addition"
-              value={rightEye.addition === '' ? '' : parseFloat(rightEye.addition) || 0}
-              onChange={(val) => handleRightChange('addition', val)}
-              min={0}
-              max={3.5}
-              step={0.25}
-              unit="D"
-              required={false}
-              placeholder="0.00"
-              description="Reading/Multifocal (+ only)"
-              showSign={true}
-              allowNegative={false}
-              />
-          </div>
+        <EyeSection label="Right Eye" abbr="R" eye={right} setEye={setRight} axisErr={errors.ra} />
+        <EyeSection label="Left Eye"  abbr="L" eye={left}  setEye={setLeft}  axisErr={errors.la} />
+
+        {/* Summary */}
+        <div style={{ background:'#F3F4F6', borderRadius:10, padding:12, marginBottom:18, display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+          <span style={{ fontSize:13, fontWeight:600 }}>Lens Extra Charge:</span>
+          <span style={{ fontSize:18, fontWeight:700 }}>+PKR {LENS_OPTIONS.find(l=>l.id===lensType)?.price}</span>
         </div>
 
-        {/* LEFT EYE (Second) */}
-        <div className="mb-6 bg-gray-50 rounded-xl border border-gray-200 p-4">
-          <div className="flex items-center gap-2 mb-4 pb-2 border-b border-gray-200">
-            <div className="bg-blue-600 w-8 h-8 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">L</span>
-            </div>
-            <div>
-              <h4 className="font-bold text-base text-gray-800">Left Eye</h4>
-              <p className="text-[10px] text-gray-500">OS (Oculus Sinister)</p>
-            </div>
-          </div>
-          
-          {/* 4-column grid for perfect alignment */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <ScrollNumberInput
-              label="Sphere (Power)"
-              value={leftEye.sphere === '' ? '' : parseFloat(leftEye.sphere) || 0}
-              onChange={(val) => handleLeftChange('sphere', val)}
-              min={-20}
-              max={20}
-              step={0.25}
-              unit="D"
-              required={false}
-              placeholder="0.00"
-              description="Distance correction (±)"
-              showSign={true}
-              allowNegative={true}
-            />
-            
-            <ScrollNumberInput
-              label="Cylinder"
-              value={leftEye.cylinder === '' ? '' : parseFloat(leftEye.cylinder) || 0}
-              onChange={(val) => handleLeftChange('cylinder', val)}
-              min={-6}
-              max={6}
-              step={0.25}
-              unit="D"
-              required={false}
-              placeholder="0.00"
-              description="Astigmatism (±)"
-              showSign={true}
-              allowNegative={true}
-              />
-            
-            <div>
-              <ScrollNumberInput
-                label="Axis"
-                value={leftEye.axis === '' ? '' : parseFloat(leftEye.axis) || 0}
-                onChange={(val) => handleLeftChange('axis', val)}
-                min={0}
-                max={180}
-                step={1}
-                unit="°"
-                required={isAxisRequired(leftEye)}
-                placeholder="0"
-                description="0-180 degrees"
-                showSign={false}
-                allowNegative={false}
-                />
-              {errors.left_axis && (
-                <p className="text-red-500 text-[10px] mt-1 flex items-center gap-1">
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  {errors.left_axis}
-                </p>
-              )}
-            </div>
-            
-            <ScrollNumberInput
-              label="Addition"
-              value={leftEye.addition === '' ? '' : parseFloat(leftEye.addition) || 0}
-              onChange={(val) => handleLeftChange('addition', val)}
-              min={0}
-              max={3.5}
-              step={0.25}
-              unit="D"
-              required={false}
-              placeholder="0.00"
-              description="Reading/Multifocal (+ only)"
-              showSign={true}
-              allowNegative={false}
-              />
-          </div>
-        </div>
-
-        {/* Summary Section */}
-        <div className="bg-gray-100 rounded-lg p-3 mb-5">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-semibold text-gray-700">Lens Extra Charge:</span>
-            <span className="font-bold text-xl text-black">+Pkr {selectedLens.price}</span>
-          </div>
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex gap-3">
-          <button
-            onClick={onClose}
-            className="flex-1 bg-gray-100 text-gray-700 py-2.5 rounded-lg font-semibold text-sm hover:bg-gray-200 transition-colors"
-            >
+        {/* Buttons */}
+        <div style={{ display:'flex', gap:12 }}>
+          <button onClick={onClose}
+            style={{ flex:1, padding:'10px 0', borderRadius:10, border:'none', background:'#F3F4F6', cursor:'pointer', fontWeight:600, fontSize:13 }}>
             Cancel
           </button>
-          <button
-            onClick={handleSave}
-            className="flex-1 bg-black text-white py-2.5 rounded-lg font-semibold text-sm hover:bg-gray-800 transition-colors"
-            >
+          <button onClick={save}
+            style={{ flex:1, padding:'10px 0', borderRadius:10, border:'none', background:'#000', color:'#fff', cursor:'pointer', fontWeight:600, fontSize:13 }}>
             Save Prescription
           </button>
         </div>
@@ -645,355 +276,245 @@ const lensOptions = [
   );
 };
 
-// ==================== MAIN PRODUCT DETAIL COMPONENT ====================
-const ProductDetail = () => {
-  const { id } = useParams();
+// ── Main ProductDetail ────────────────────────────────────────────────────────
+export default function ProductDetail() {
+  const { id }   = useParams();
   const navigate = useNavigate();
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [quantity, setQuantity] = useState(1);
-  const [selectedVariant, setSelectedVariant] = useState(null);
-  const [showPrescriptionModal, setShowPrescriptionModal] = useState(false);
-  const [prescriptionData, setPrescriptionData] = useState(null);
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [currentImage, setCurrentImage] = useState('');
-  const [showAddedToCart, setShowAddedToCart] = useState(false);
-  
-  // Force page reload on every navigation to this component
+
+  const [product,          setProduct]          = useState(null);
+  const [loading,          setLoading]          = useState(true);
+  const [error,            setError]            = useState(null);
+  const [quantity,         setQuantity]         = useState(1);
+  const [selectedVariant,  setSelectedVariant]  = useState(null);
+  const [showRx,           setShowRx]           = useState(false);
+  const [rxData,           setRxData]           = useState(null);
+  const [activeImg,        setActiveImg]        = useState('');
+  const [activeIdx,        setActiveIdx]        = useState(0);
+  const [cartToast,        setCartToast]        = useState(false);
+
+  // Reload once per product visit to clear stale state
   useEffect(() => {
-    // Check if this is a navigation/render and reload if needed
-    const hasReloaded = sessionStorage.getItem('productDetailReloaded');
-    
-    if (!hasReloaded) {
-      // Set flag to prevent infinite reload loop
-      sessionStorage.setItem('productDetailReloaded', 'true');
+    const key = `pdReloaded_${id}`;
+    if (!sessionStorage.getItem(key)) {
+      sessionStorage.setItem(key, '1');
       window.location.reload();
       return;
     }
-    
-    // Clean up the flag after component unmounts or after a delay
-    // This ensures that if user navigates away and comes back, it reloads again
-    const cleanupTimer = setTimeout(() => {
-      sessionStorage.removeItem('productDetailReloaded');
-    }, 500);
-    
-    return () => clearTimeout(cleanupTimer);
-  }, [id]); // Re-run when id changes (different product)
-  
-  // Scroll to top on mount
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-  
-  // Load product from imported JSON
+    const t = setTimeout(() => sessionStorage.removeItem(key), 600);
+    return () => clearTimeout(t);
+  }, [id]);
+
+  useEffect(() => { window.scrollTo(0,0); }, []);
+
   useEffect(() => {
     try {
       setLoading(true);
-      const products = Array.isArray(productsData) ? productsData : productsData.products || [];
-      const productId = parseInt(id);
-      const foundProduct = products.find((p) => p.id === productId);
+      const all  = Array.isArray(productsData) ? productsData : productsData.products || [];
+      const found = all.find(p => p.id === parseInt(id));
+      if (!found) throw new Error('Product not found');
 
-      if (!foundProduct) throw new Error('Product not found');
+      const imgs = [];
+      found.variants?.forEach(v => v.images?.forEach(i => imgs.push(i)));
 
-      // Extract images from variants
-      const allImages = [];
-      if (foundProduct.variants && foundProduct.variants.length > 0) {
-        foundProduct.variants.forEach(variant => {
-          if (variant.images && Array.isArray(variant.images)) {
-            allImages.push(...variant.images);
-          }
-        });
-      }
-
-      const transformedProduct = {
-        id: foundProduct.id,
-        name: foundProduct.name,
-        discount: foundProduct.discount || '0%',
-        madeInTaiwan: foundProduct.madeInTaiwan || false,
-        originalPrice: parseFloat(foundProduct.originalPrice.toString().replace(/,/g, '')),
-        discountPrice: parseFloat(foundProduct.discountPrice.toString().replace(/,/g, '')),
-        reviews: foundProduct.reviews || 0,
-        rating: 4.5,
-        description: foundProduct.detailDescription || foundProduct.description || `Experience style and comfort with our ${foundProduct.name}. Crafted with premium materials.`,
-        features: foundProduct.features || [
-          'Premium quality material',
-          'UV protection coating',
-          'Scratch resistant',
-          'Lightweight design',
-          'Comfort fit',
-        ],
-        specifications: foundProduct.specifications || {
-          Material: foundProduct.type || 'Premium Plastic/Metal',
-          'Frame Type': foundProduct.shape || 'Standard',
-          Gender: foundProduct.gender || 'Unisex',
-          Color: foundProduct.color || 'Standard',
-          Warranty: '1 Year Manufacturing Warranty',
+      setProduct({
+        ...found,
+        originalPrice: parseFloat(String(found.originalPrice).replace(/,/g,'')),
+        discountPrice: parseFloat(String(found.discountPrice).replace(/,/g,'')),
+        rating:   4.5,
+        images:   imgs,
+        features: found.features  || ['Premium quality','UV protection','Scratch resistant','Lightweight'],
+        specifications: found.specifications || {
+          Material:   found.type  || 'Premium Plastic',
+          'Frame Type': found.shape || 'Standard',
+          Gender:     found.gender || 'Unisex',
         },
-        variants: foundProduct.variants || [],
-        images: allImages.length > 0 ? allImages : [],
-        category: foundProduct.category || 'eyeglasses',
-        inStock: foundProduct.inStock !== undefined ? foundProduct.inStock : true,
-        freeShipping: foundProduct.freeShipping !== undefined ? foundProduct.freeShipping : true,
-        warranty: foundProduct.warranty || '30-day satisfaction guarantee',
-        shape: foundProduct.shape || 'Standard',
-        gender: foundProduct.gender || 'Unisex',
-        code: foundProduct.code,
-        color: foundProduct.color,
-        pattern: foundProduct.pattern,
-      };
+      });
 
-      setProduct(transformedProduct);
-      if (transformedProduct.variants && transformedProduct.variants.length > 0) {
-        setSelectedVariant(transformedProduct.variants[0]);
-        // Set first image from first variant
-        if (transformedProduct.variants[0].images && transformedProduct.variants[0].images[0]) {
-          setCurrentImage(transformedProduct.variants[0].images[0]);
-        }
-      } else if (transformedProduct.images && transformedProduct.images.length > 0) {
-        setCurrentImage(transformedProduct.images[0]);
-      }
+      const firstVariant = found.variants?.[0];
+      setSelectedVariant(firstVariant || null);
+      setActiveImg(firstVariant?.images?.[0] || imgs[0] || '');
       setLoading(false);
-    } catch (err) {
-      console.error('Error loading product:', err);
-      setError(err.message);
+    } catch (e) {
+      setError(e.message);
       setLoading(false);
     }
   }, [id]);
 
   useEffect(() => {
-    if (selectedVariant && selectedVariant.images && selectedVariant.images[0]) {
-      setCurrentImage(selectedVariant.images[0]);
-      setActiveImageIndex(-1);
-    } else if (product && product.images && product.images[0]) {
-      setCurrentImage(product.images[0]);
-      setActiveImageIndex(0);
-    }
-  }, [selectedVariant, product]);
+    if (selectedVariant?.images?.[0]) setActiveImg(selectedVariant.images[0]);
+  }, [selectedVariant]);
 
-  const handleThumbnailClick = (img, idx) => {
-    setCurrentImage(img);
-    setActiveImageIndex(idx);
-  };
+  const framePrice = product?.discountPrice || product?.originalPrice || 0;
+  const lensCharge = rxData?.lensPrice || 0;
+  const totalPrice = framePrice + lensCharge;
 
-  // Calculate total price (frame + lens extra)
-  const getFramePrice = () => {
-    return product?.discountPrice || product?.originalPrice || 0;
-  };
-
-  const getLensExtraCharge = () => {
-    return prescriptionData?.lensPrice || 0;
-  };
-
-  const getTotalItemPrice = () => {
-    return getFramePrice() + getLensExtraCharge();
-  };
-
-  // Add to cart with prescription and lens extra charge
   const addToCart = () => {
     if (!product) return;
-
-    const existingCart = JSON.parse(localStorage.getItem('cart')) || [];
-
-    const cartItem = {
-      id: product.id,
-      name: product.name,
-      framePrice: getFramePrice(),
-      lensExtraCharge: getLensExtraCharge(),
-      totalPrice: getTotalItemPrice(),
-      quantity: quantity,
-      selectedVariant: selectedVariant,
-      image: currentImage,
-      prescription: prescriptionData || null,
+    const cart  = JSON.parse(localStorage.getItem('cart')) || [];
+    const item  = {
+      id: product.id, name: product.name,
+      framePrice, lensExtraCharge: lensCharge, totalPrice,
+      quantity, selectedVariant, image: activeImg,
+      prescription: rxData || null,
     };
-
-    // Check if same product, variant, and prescription lens type already exists
-    const existingIndex = existingCart.findIndex(
-      (item) =>
-        item.id === cartItem.id &&
-        item.selectedVariant?.colorName === cartItem.selectedVariant?.colorName &&
-        item.prescription?.lensType === cartItem.prescription?.lensType
+    const idx = cart.findIndex(i =>
+      i.id===item.id &&
+      i.selectedVariant?.colorName===item.selectedVariant?.colorName &&
+      i.prescription?.lensType===item.prescription?.lensType
     );
-
-    if (existingIndex !== -1) {
-      existingCart[existingIndex].quantity += quantity;
-    } else {
-      existingCart.push(cartItem);
-    }
-
-    localStorage.setItem('cart', JSON.stringify(existingCart));
-    
-    // Dispatch event to update navbar cart badge
+    if (idx !== -1) cart[idx].quantity += quantity;
+    else cart.push(item);
+    localStorage.setItem('cart', JSON.stringify(cart));
     window.dispatchEvent(new Event('cartUpdated'));
-    
-    setShowAddedToCart(true);
-    setTimeout(() => setShowAddedToCart(false), 2000);
+    setCartToast(true);
+    setTimeout(() => setCartToast(false), 2200);
   };
 
-  const handleAddToCart = () => addToCart();
-  const handleBuyNow = () => {
-    addToCart();
-    navigate('/checkout');
+  const handleTryOn = () => {
+    if (!product) return;
+    navigate('/tryon', {
+      state: {
+        frameId:     getFrameId(product),
+        productName: product.name,
+        productId:   product.id,
+      }
+    });
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-16 h-16 border-4 border-gray-200 border-t-black rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-500">Loading product details...</p>
-        </div>
+  if (loading) return (
+    <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center' }}>
+      <div style={{ textAlign:'center' }}>
+        <div style={{ width:56, height:56, border:'4px solid #E5E7EB', borderTopColor:'#000',
+          borderRadius:'50%', animation:'spin 0.8s linear infinite', margin:'0 auto 16px' }} />
+        <p style={{ color:'#6B7280' }}>Loading product…</p>
       </div>
-    );
-  }
+      <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+    </div>
+  );
 
-  if (error || !product) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-4">{error || 'Product Not Found'}</h2>
-          <button onClick={() => navigate('/')} className="bg-black text-white px-6 py-3 rounded-full">
-            Back to Home
-          </button>
-        </div>
-      </div>
-    );
-  }
+  if (error || !product) return (
+    <div style={{ minHeight:'100vh', display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', gap:16 }}>
+      <h2 style={{ fontSize:22, fontWeight:700 }}>{error || 'Product Not Found'}</h2>
+      <button onClick={() => navigate('/')}
+        style={{ background:'#000', color:'#fff', padding:'12px 28px', borderRadius:999, border:'none', cursor:'pointer', fontWeight:600 }}>
+        Back to Home
+      </button>
+    </div>
+  );
 
-  const discountPercent = product.discount
+  const discountPct = product.discount
     ? parseInt(product.discount)
     : Math.round(((product.originalPrice - product.discountPrice) / product.originalPrice) * 100);
-  const finalFramePrice = getFramePrice();
-  const lensCharge = getLensExtraCharge();
-  const totalItemPrice = getTotalItemPrice();
 
   return (
-    <div className="relative overflow-hidden bg-white">
-      {/* Animated Background Elements */}
-      <div className="fixed inset-0 -z-10 pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-float-delayed"></div>
+    <div style={{ background:'#fff', minHeight:'100vh', position:'relative', overflow:'hidden' }}>
+      {/* Ambient bg */}
+      <div style={{ position:'fixed', inset:0, zIndex:0, pointerEvents:'none' }}>
+        <div style={{ position:'absolute', top:'25%', left:'25%', width:384, height:384,
+          borderRadius:'50%', background:'rgba(196,181,253,.3)', filter:'blur(80px)', mixBlendMode:'multiply' }} />
+        <div style={{ position:'absolute', bottom:'25%', right:'25%', width:384, height:384,
+          borderRadius:'50%', background:'rgba(147,197,253,.3)', filter:'blur(80px)', mixBlendMode:'multiply' }} />
       </div>
 
-      {/* Breadcrumb */}
-      <div className="max-w-7xl mx-auto px-6 pt-8">
-        <nav className="flex items-center gap-2 text-sm text-gray-500">
-          <button onClick={() => navigate('/')} className="hover:text-black transition-colors">
-            Home
+      <div style={{ position:'relative', zIndex:1, maxWidth:1200, margin:'0 auto', padding:'32px 24px' }}>
+        {/* Breadcrumb */}
+        <nav style={{ display:'flex', alignItems:'center', gap:8, fontSize:13, color:'#6B7280', marginBottom:32 }}>
+          <button onClick={() => navigate('/')} style={{ background:'none', border:'none', cursor:'pointer', color:'#6B7280' }}>Home</button>
+          <span>›</span>
+          <button onClick={() => navigate('/products')} style={{ background:'none', border:'none', cursor:'pointer', color:'#6B7280', textTransform:'capitalize' }}>
+            {product.category?.replace('-',' ') || 'Shop'}
           </button>
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-          </svg>
-          <button onClick={() => navigate('/')} className="hover:text-black transition-colors capitalize">
-            {product.category?.replace('-', ' ') || 'Shop'}
-          </button>
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-          </svg>
-          <span className="text-gray-900 font-medium truncate">{product.name}</span>
+          <span>›</span>
+          <span style={{ color:'#111', fontWeight:500 }}>{product.name}</span>
         </nav>
-      </div>
 
-      {/* Main Product Section */}
-      <div className="max-w-7xl mx-auto px-6 py-8 md:py-12">
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-16">
-          {/* Image Gallery */}
-          <div className="space-y-4">
-            <div className="aspect-square rounded-3xl overflow-hidden bg-gray-100 shadow-lg">
-              <img
-                src={`.${currentImage}`}
-                alt={product.name}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+        {/* Main grid */}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:48, alignItems:'start' }}>
+          {/* Images */}
+          <div style={{ display:'flex', flexDirection:'column', gap:14 }}>
+            <div style={{ borderRadius:24, overflow:'hidden', background:'#F9FAFB',
+              aspectRatio:'1/1', boxShadow:'0 4px 24px rgba(0,0,0,.08)' }}>
+              <img src={`.${activeImg}`} alt={product.name}
+                style={{ width:'100%', height:'100%', objectFit:'cover', transition:'transform .5s ease' }}
+                onMouseEnter={e => e.currentTarget.style.transform='scale(1.05)'}
+                onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}
               />
             </div>
-            {product.images && product.images.length > 1 && (
-              <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-                {product.images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => handleThumbnailClick(img, idx)}
-                    className={`w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
-                      activeImageIndex === idx ? 'border-black shadow-md' : 'border-transparent opacity-70 hover:opacity-100'
-                    }`}
-                  >
-                    <img src={`.${img}`} alt={`View ${idx + 1}`} className="w-full h-full object-cover" />
+            {product.images?.length > 1 && (
+              <div style={{ display:'flex', gap:10, overflowX:'auto', paddingBottom:4 }}>
+                {product.images.map((img, i) => (
+                  <button key={i} onClick={() => { setActiveImg(img); setActiveIdx(i); }}
+                    style={{ width:72, height:72, borderRadius:12, overflow:'hidden', flexShrink:0,
+                      border:`2px solid ${activeIdx===i?'#000':'transparent'}`,
+                      opacity: activeIdx===i ? 1 : 0.65, cursor:'pointer', transition:'all .2s' }}>
+                    <img src={`.${img}`} alt={`view ${i+1}`} style={{ width:'100%', height:'100%', objectFit:'cover' }} />
                   </button>
                 ))}
               </div>
             )}
           </div>
 
-          {/* Product Info */}
-          <div className="space-y-6">
+          {/* Info */}
+          <div style={{ display:'flex', flexDirection:'column', gap:20 }}>
             {/* Badges */}
-            <div className="flex flex-wrap gap-2">
-              {product.discount && parseFloat(product.discount) > 0 && (
-                <span className="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                  {discountPercent}% OFF
+            <div style={{ display:'flex', flexWrap:'wrap', gap:8 }}>
+              {discountPct > 0 && (
+                <span style={{ background:'#EF4444', color:'#fff', fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:999 }}>
+                  {discountPct}% OFF
                 </span>
               )}
-              {product.madeInTaiwan && (
-                <span className="bg-blue-100 text-blue-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                  🇹🇼 Made in Taiwan
-                </span>
-              )}
-              {product.freeShipping && (
-                <span className="bg-green-100 text-green-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                  Free Shipping
-                </span>
-              )}
-              {product.inStock ? (
-                <span className="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                  In Stock
-                </span>
-              ) : (
-                <span className="bg-red-100 text-red-700 text-xs font-bold px-3 py-1 rounded-full shadow-sm">
-                  Out of Stock
-                </span>
-              )}
+              {product.madeInTaiwan && <span style={{ background:'#DBEAFE', color:'#1D4ED8', fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:999 }}>🇹🇼 Made in Taiwan</span>}
+              {product.freeShipping && <span style={{ background:'#D1FAE5', color:'#065F46', fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:999 }}>Free Shipping</span>}
+              <span style={{ background: product.inStock!==false?'#D1FAE5':'#FEE2E2',
+                color: product.inStock!==false?'#065F46':'#991B1B',
+                fontSize:11, fontWeight:700, padding:'3px 10px', borderRadius:999 }}>
+                {product.inStock!==false ? 'In Stock' : 'Out of Stock'}
+              </span>
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight tracking-tight">
+            <h1 style={{ fontSize:'clamp(1.6rem,3vw,2.4rem)', fontWeight:800, lineHeight:1.2, margin:0 }}>
               {product.name}
             </h1>
 
             {/* Rating */}
-            <div className="flex items-center gap-4">
-              <StarRating rating={product.rating || 4.5} />
-              <span className="text-sm text-gray-500">{product.reviews} reviews</span>
+            <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+              <StarRating rating={product.rating||4.5} />
+              <span style={{ fontSize:13, color:'#6B7280' }}>{product.reviews||0} reviews</span>
             </div>
 
-            {/* Price Breakdown */}
+            {/* Price */}
             <div>
-              <div className="flex items-baseline gap-3">
-                <span className="text-3xl font-bold text-gray-900">Pkr {finalFramePrice.toLocaleString()}</span>
-                {product.originalPrice !== finalFramePrice && (
+              <div style={{ display:'flex', alignItems:'baseline', gap:12 }}>
+                <span style={{ fontSize:28, fontWeight:800 }}>PKR {framePrice.toLocaleString()}</span>
+                {product.originalPrice !== framePrice && (
                   <>
-                    <span className="text-lg text-gray-400 line-through">Pkr {product.originalPrice.toLocaleString()}</span>
-                    <span className="text-green-600 font-semibold">{product.discount} off</span>
+                    <span style={{ fontSize:16, color:'#9CA3AF', textDecoration:'line-through' }}>PKR {product.originalPrice.toLocaleString()}</span>
+                    <span style={{ fontSize:13, color:'#16A34A', fontWeight:600 }}>{product.discount} off</span>
                   </>
                 )}
               </div>
-              {prescriptionData && (
-                <div className="mt-2 text-sm">
-                  <span className="text-gray-600">+ Lens extra: </span>
-                  <span className="font-semibold text-blue-600">Pkr {lensCharge.toLocaleString()}</span>
-                  <span className="text-gray-500 ml-2">({prescriptionData.lensName})</span>
+              {rxData && (
+                <div style={{ marginTop:6, fontSize:13 }}>
+                  <span style={{ color:'#6B7280' }}>+ Lens: </span>
+                  <span style={{ fontWeight:700, color:'#2563EB' }}>PKR {lensCharge.toLocaleString()}</span>
+                  <span style={{ color:'#9CA3AF', marginLeft:6 }}>({rxData.lensName})</span>
                 </div>
               )}
-              {prescriptionData && (
-                <div className="mt-1 text-md font-bold">
-                  Total: <span className="text-black">Pkr {totalItemPrice.toLocaleString()}</span>
+              {rxData && (
+                <div style={{ marginTop:4, fontWeight:700, fontSize:15 }}>
+                  Total: <span>PKR {totalPrice.toLocaleString()}</span>
                 </div>
               )}
             </div>
 
-            {/* Short Description */}
-            <p className="text-gray-600 leading-relaxed border-t border-gray-100 pt-4">{product.description}</p>
+            {/* Description */}
+            <p style={{ color:'#4B5563', lineHeight:1.7, borderTop:'1px solid #F3F4F6', paddingTop:16, margin:0, fontSize:14 }}>
+              {product.description}
+            </p>
 
-            {/* Color Variant Selector */}
-            {product.variants && product.variants.length > 0 && (
+            {/* Variants */}
+            {product.variants?.length > 0 && (
               <ColorVariantSelector
                 variants={product.variants}
                 selectedVariant={selectedVariant}
@@ -1001,34 +522,26 @@ const ProductDetail = () => {
               />
             )}
 
-            {/* Prescription Block - shown for all eyeglasses */}
-            <div className="bg-blue-50 rounded-2xl p-4 shadow-inner">
-              <div className="flex items-start gap-3">
-                <svg className="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            {/* Prescription block */}
+            <div style={{ background:'#EFF6FF', borderRadius:16, padding:16, border:'1px solid #BFDBFE' }}>
+              <div style={{ display:'flex', gap:12, alignItems:'flex-start' }}>
+                <svg width="18" height="18" fill="none" stroke="#2563EB" strokeWidth="2" viewBox="0 0 24 24" style={{ flexShrink:0, marginTop:2 }}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
-                <div className="flex-1">
-                  <p className="text-sm text-blue-800 font-medium">Prescription Lenses (Extra Charge)</p>
-                  <p className="text-xs text-blue-600 mt-1">
-                    Add your prescription details and choose lens type. Extra charges apply.
-                  </p>
-                  <button
-                    onClick={() => setShowPrescriptionModal(true)}
-                    className="text-xs text-blue-700 font-semibold underline mt-2 hover:text-blue-900"
-                  >
-                    {prescriptionData ? 'Edit Prescription →' : 'Add Prescription →'}
+                <div style={{ flex:1 }}>
+                  <p style={{ fontWeight:600, color:'#1E40AF', fontSize:13, margin:'0 0 4px' }}>Prescription Lenses (Extra Charge)</p>
+                  <p style={{ fontSize:11, color:'#3B82F6', margin:'0 0 8px' }}>Add prescription & choose lens type. Extra charges apply.</p>
+                  <button onClick={() => setShowRx(true)}
+                    style={{ fontSize:11, color:'#1D4ED8', fontWeight:700, textDecoration:'underline', background:'none', border:'none', cursor:'pointer', padding:0 }}>
+                    {rxData ? 'Edit Prescription →' : 'Add Prescription →'}
                   </button>
-                  {prescriptionData && (
-                    <div className="mt-2 text-xs text-green-700 bg-green-50 p-2 rounded-lg">
-                      <p>✓ {prescriptionData.lensName} added (+Pkr {prescriptionData.lensPrice})</p>
-                      <p className="text-gray-600 mt-1">
-                        {prescriptionData.rightEye.sphere && prescriptionData.rightEye.sphere !== '' 
-                          ? `Right: ${prescriptionData.rightEye.sphere > 0 ? '+' : ''}${prescriptionData.rightEye.sphere}D` 
-                          : 'Right: Not specified'}
+                  {rxData && (
+                    <div style={{ marginTop:8, fontSize:11, background:'#F0FDF4', border:'1px solid #BBF7D0', borderRadius:8, padding:8, color:'#166534' }}>
+                      <p style={{ margin:'0 0 2px' }}>✓ {rxData.lensName} (+PKR {rxData.lensPrice})</p>
+                      <p style={{ margin:0, color:'#6B7280' }}>
+                        R: {rxData.rightEye.sphere !== '' ? `${rxData.rightEye.sphere > 0?'+':''}${rxData.rightEye.sphere}D` : 'N/A'}
                         {' | '}
-                        {prescriptionData.leftEye.sphere && prescriptionData.leftEye.sphere !== '' 
-                          ? `Left: ${prescriptionData.leftEye.sphere > 0 ? '+' : ''}${prescriptionData.leftEye.sphere}D` 
-                          : 'Left: Not specified'}
+                        L: {rxData.leftEye.sphere  !== '' ? `${rxData.leftEye.sphere  > 0?'+':''}${rxData.leftEye.sphere}D`  : 'N/A'}
                       </p>
                     </div>
                   )}
@@ -1036,139 +549,107 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            {/* Quantity & Actions */}
-            <div className="flex flex-wrap gap-4 pt-4">
+            {/* Quantity + Actions */}
+            <div style={{ display:'flex', flexWrap:'wrap', gap:12, alignItems:'center' }}>
               <QuantitySelector quantity={quantity} setQuantity={setQuantity} maxStock={20} />
-
-              <button
-                onClick={handleAddToCart}
-                disabled={!product.inStock}
-                className="flex-1 bg-gray-900 text-white px-8 py-3 rounded-full font-bold hover:bg-black transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-md"
+              <button onClick={addToCart} disabled={product.inStock===false}
+                style={{ flex:1, minWidth:130, display:'flex', alignItems:'center', justifyContent:'center', gap:8,
+                  background:'#111', color:'#fff', padding:'12px 20px', borderRadius:999, border:'none',
+                  fontWeight:700, fontSize:14, cursor:'pointer', opacity:product.inStock===false?0.5:1, transition:'background .2s' }}
+                onMouseEnter={e => e.currentTarget.style.background='#000'}
+                onMouseLeave={e => e.currentTarget.style.background='#111'}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                </svg>
+                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
                 Add to Cart
               </button>
-
-              <button
-                onClick={handleBuyNow}
-                disabled={!product.inStock}
-                className="bg-blue-600 text-white px-8 py-3 rounded-full font-bold hover:bg-blue-700 transition-all disabled:opacity-50 shadow-md"
+              <button onClick={() => { addToCart(); navigate('/checkout'); }} disabled={product.inStock===false}
+                style={{ padding:'12px 22px', borderRadius:999, border:'none', background:'#2563EB', color:'#fff',
+                  fontWeight:700, fontSize:14, cursor:'pointer', opacity:product.inStock===false?0.5:1, transition:'background .2s' }}
+                onMouseEnter={e => e.currentTarget.style.background='#1D4ED8'}
+                onMouseLeave={e => e.currentTarget.style.background='#2563EB'}
               >
                 Buy Now
               </button>
             </div>
 
-            {/* Added to cart notification */}
-            {showAddedToCart && (
-              <div className="fixed top-24 right-6 z-50 bg-green-500 text-white px-6 py-3 rounded-full shadow-lg animate-slide-up">
-                ✓ Added to cart!
-              </div>
-            )}
+            {/* ── Try On Button ── */}
+            <button
+              onClick={handleTryOn}
+              style={{
+                width:'100%', padding:'13px 0',
+                background:'linear-gradient(135deg,#E87F24,#F5A623)',
+                color:'#fff', border:'none', borderRadius:14, cursor:'pointer',
+                fontWeight:800, fontSize:15, letterSpacing:'.5px',
+                display:'flex', alignItems:'center', justifyContent:'center', gap:10,
+                boxShadow:'0 4px 20px rgba(232,127,36,.40)',
+                transition:'all .25s ease',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.transform='translateY(-2px)'; e.currentTarget.style.boxShadow='0 8px 28px rgba(232,127,36,.55)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform='translateY(0)'; e.currentTarget.style.boxShadow='0 4px 20px rgba(232,127,36,.40)'; }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="3"/><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7S2 12 2 12z"/>
+              </svg>
+              Try On Virtually — AR
+            </button>
 
             {/* Trust badges */}
-            <div className="flex flex-wrap gap-6 pt-4 border-t border-gray-100">
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                </svg>
-                <span>30-Day Returns</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
-                <span>Secure Checkout</span>
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                </svg>
-                <span>Secure Payment</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Details Tabs Section */}
-        <div className="mt-20">
-          <div className="border-b border-gray-200">
-            <div className="flex gap-8 overflow-x-auto scrollbar-hide">
-              {['Features', 'Specifications', 'Shipping & Returns'].map((tab, idx) => (
-                <button
-                  key={tab}
-                  className={`pb-4 text-lg font-medium transition-colors whitespace-nowrap ${
-                    idx === 0 ? 'text-black border-b-2 border-black' : 'text-gray-500 hover:text-black'
-                  }`}
-                >
-                  {tab}
-                </button>
+            <div style={{ display:'flex', flexWrap:'wrap', gap:20, borderTop:'1px solid #F3F4F6', paddingTop:16 }}>
+              {[['30-Day Returns','M5 13l4 4L19 7'],['Secure Checkout','M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z'],['Secure Payment','M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z']].map(([label, d]) => (
+                <div key={label} style={{ display:'flex', alignItems:'center', gap:8, fontSize:13, color:'#4B5563' }}>
+                  <svg width="16" height="16" fill="none" stroke="#22c55e" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d={d}/></svg>
+                  {label}
+                </div>
               ))}
             </div>
           </div>
-          <div className="py-8">
-            <div className="space-y-4">
-              <ul className="grid md:grid-cols-2 gap-3">
-                {product.features?.map((feature, idx) => (
-                  <li key={idx} className="flex items-center gap-3 text-gray-700">
-                    <svg className="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
         </div>
 
-        {/* Related Products Section */}
+        {/* Features */}
+        <div style={{ marginTop:60 }}>
+          <h2 style={{ fontSize:20, fontWeight:700, marginBottom:20, paddingBottom:12, borderBottom:'2px solid #000', display:'inline-block' }}>Features</h2>
+          <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fit,minmax(240px,1fr))', gap:12 }}>
+            {product.features?.map((f,i) => (
+              <div key={i} style={{ display:'flex', alignItems:'center', gap:10, color:'#374151', fontSize:14 }}>
+                <svg width="16" height="16" fill="none" stroke="#22c55e" strokeWidth="2.5" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
+                {f}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Prescription Modal */}
-      <PrescriptionForm
-        show={showPrescriptionModal}
-        onClose={() => setShowPrescriptionModal(false)}
-        onSave={(data) => setPrescriptionData(data)}
-        existingPrescription={prescriptionData}
-      />
+      {/* Cart toast */}
+      {cartToast && (
+        <div style={{ position:'fixed', top:90, right:20, zIndex:9999, background:'#22c55e',
+          color:'#fff', padding:'12px 22px', borderRadius:999, fontWeight:600,
+          boxShadow:'0 4px 16px rgba(0,0,0,.2)', animation:'fadeUp .3s ease' }}>
+          ✓ Added to cart!
+        </div>
+      )}
 
-      {/* Floating WhatsApp Button */}
-      <div className="fixed bottom-8 right-8 z-50">
-        <button className="bg-green-500 text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform">
-          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" className="w-6 h-6" alt="WhatsApp" />
+      {/* WhatsApp */}
+      <div style={{ position:'fixed', bottom:32, right:32, zIndex:50 }}>
+        <button style={{ background:'#25D366', color:'#fff', width:52, height:52, borderRadius:'50%',
+          border:'none', cursor:'pointer', display:'flex', alignItems:'center', justifyContent:'center',
+          boxShadow:'0 4px 20px rgba(0,0,0,.25)', transition:'transform .2s' }}
+          onMouseEnter={e => e.currentTarget.style.transform='scale(1.12)'}
+          onMouseLeave={e => e.currentTarget.style.transform='scale(1)'}>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" width="26" height="26" alt="WhatsApp" />
         </button>
       </div>
 
-      <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes float {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(30px, -30px) scale(1.1); }
-          66% { transform: translate(-20px, 20px) scale(0.9); }
+      <PrescriptionModal show={showRx} onClose={() => setShowRx(false)} onSave={setRxData} existing={rxData} />
+
+      <style>{`
+        @keyframes spin    { to { transform:rotate(360deg) } }
+        @keyframes fadeUp  { from { opacity:0;transform:translateY(10px) } to { opacity:1;transform:translateY(0) } }
+        @media(max-width:768px){
+          div[style*="grid-template-columns: 1fr 1fr"] {
+            grid-template-columns:1fr !important;
+          }
         }
-        @keyframes floatDelayed {
-          0%, 100% { transform: translate(0, 0) scale(1); }
-          33% { transform: translate(-30px, 30px) scale(1.1); }
-          66% { transform: translate(20px, -20px) scale(0.9); }
-        }
-        @keyframes fadeSlideUp {
-          from { opacity: 0; transform: translateY(40px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        .animate-float { animation: float 20s ease-in-out infinite; }
-        .animate-float-delayed { animation: floatDelayed 25s ease-in-out infinite; }
-        .animate-slide-up { animation: fadeSlideUp 0.3s ease-out forwards; }
-        .animate-fade-in { animation: fadeIn 0.2s ease-out forwards; }
-        .scrollbar-hide::-webkit-scrollbar { display: none; }
-        .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-      ` }} />
+      `}</style>
     </div>
   );
-};
-
-export default ProductDetail;
+}

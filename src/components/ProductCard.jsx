@@ -1,12 +1,61 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+// productcard
 
-// ─────────────────────────────────────────────────────────────────────────────
-// SMART IMAGE NORMALIZER
-// Analyses image pixels via offscreen canvas → finds actual eyewear bounds →
-// returns {scale, translateX%, translateY%} so every frame fills the card
-// consistently regardless of original whitespace / padding / position.
-// ─────────────────────────────────────────────────────────────────────────────
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+// ── same mapping as ProductDetail.jsx ─────────────────────────────────────────
+const CODE_TO_FRAME = {
+  "T04917":"/glass1.png","K01":"/glass2.png","D403054S":"/glass3.png",
+  "20237":"/glass4.png","RB4455F":"/glass5.png","5013":"/glass6.png",
+  "S2160":"/glass7.png","3377":"/glass8.png","28044":"/glass9.png",
+  "99032":"/glass10.png","T1798":"/glass11.png","28118":"/glass12.png",
+  "IPB":"/glass13.png","F0493":"/glass14.png","BL0985":"/glass15.png",
+  "D7481":"/glass16.png","H077048":"/glass17.png","9702":"/glass18.png",
+  "JV5816":"/glass19.png","D8822":"/glass20.png","PS8035":"/glass21.png",
+  "D8815":"/glass22.png","9362":"/glass23.png","D8953":"/glass24.png",
+  "TR1020":"/glass25.png","BV6522":"/glass26.png","D9108":"/glass27.png",
+  "9368":"/glass28.png","K88212":"/glass29.png","B7195":"/glass30.png",
+  "D1256":"/glass31.png","P3002":"/glass32.png","2011":"/glass33.png",
+  "AR2005":"/glass34.png","P210":"/glass35.png","D8954":"/glass36.png",
+  "K58083":"/glass37.png","LFL228":"/glass38.png","OF8651":"/glass39.png",
+  "OF8506":"/glass40.png","1122":"/glass41.png","R1013":"/glass42.png",
+};
+
+const getFrameId = (product) =>
+  (product?.code && CODE_TO_FRAME[product.code]) || "/glass1.png";
+
+// ── SMART IMAGE NORMALIZER ─────────────────────────────────────────────────────
 const useImageNormalization = (src, targetFill = 0.82) => {
   const [style, setStyle] = useState({
     transform: 'scale(1.12)',
@@ -36,7 +85,6 @@ const useImageNormalization = (src, targetFill = 0.82) => {
         const H = img.naturalHeight;
         if (!W || !H) return;
 
-        // Draw to offscreen canvas at reduced resolution for speed
         const SAMPLE = 320;
         const sw = SAMPLE;
         const sh = Math.round((H / W) * SAMPLE);
@@ -49,11 +97,9 @@ const useImageNormalization = (src, targetFill = 0.82) => {
 
         const { data } = ctx.getImageData(0, 0, sw, sh);
 
-        // Classify a pixel as "content" if it's not near-white and not transparent
         const isContent = (i) => {
           const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
           if (a < 30) return false;
-          // near-white check (handles #f8f8f6 background too)
           if (r > 235 && g > 235 && b > 235) return false;
           return true;
         };
@@ -76,7 +122,6 @@ const useImageNormalization = (src, targetFill = 0.82) => {
 
         if (!found || cancelled) return;
 
-        // Add small padding to avoid clipping thin temple tips
         const pad = 4;
         minX = Math.max(0, minX - pad);
         minY = Math.max(0, minY - pad);
@@ -85,16 +130,13 @@ const useImageNormalization = (src, targetFill = 0.82) => {
 
         const contentW = maxX - minX;
         const contentH = maxY - minY;
-        const contentCX = (minX + maxX) / 2 / sw;  // 0..1
-        const contentCY = (minY + maxY) / 2 / sh;  // 0..1
+        const contentCX = (minX + maxX) / 2 / sw;
+        const contentCY = (minY + maxY) / 2 / sh;
 
-        // Scale: how much to zoom so content fills targetFill of container
         const scaleX = (targetFill * sw) / contentW;
         const scaleY = (targetFill * sh) / contentH;
-        const scale = Math.min(scaleX, scaleY, 2.2); // cap at 2.2× to avoid over-zoom
+        const scale = Math.min(scaleX, scaleY, 2.2);
 
-        // Translate: shift content center to container center (50%, 50%)
-        // CSS transform-origin is center, so we work in % of element size
         const txPct = (0.5 - contentCX) * 100;
         const tyPct = (0.5 - contentCY) * 100;
 
@@ -108,7 +150,6 @@ const useImageNormalization = (src, targetFill = 0.82) => {
           setReady(true);
         }
       } catch {
-        // Fallback: just apply a safe default zoom
         if (!cancelled) {
           setStyle({
             transform: 'scale(1.1)',
@@ -127,17 +168,11 @@ const useImageNormalization = (src, targetFill = 0.82) => {
   return { normalizedStyle: style, ready };
 };
 
-
-// ─────────────────────────────────────────────────────────────────────────────
-// NORMALISED IMAGE WRAPPER
-// ─────────────────────────────────────────────────────────────────────────────
+// ── NORMALISED IMAGE WRAPPER ───────────────────────────────────────────────────
 const NormalizedImage = ({ src, alt, hovered }) => {
   const { normalizedStyle, ready } = useImageNormalization(src, 0.84);
-
   const hoverBoost = hovered ? 1.055 : 1;
 
-  // Merge normalization transform with hover scale
-  // We wrap in a second div so hover scale doesn't fight the offset translate
   return (
     <div style={{
       width: '100%', height: '100%',
@@ -145,7 +180,6 @@ const NormalizedImage = ({ src, alt, hovered }) => {
       overflow: 'hidden',
       background: '#ffffff',
     }}>
-      {/* Outer: applies the normalization translate + scale */}
       <div style={{
         width: '100%', height: '100%',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
@@ -164,7 +198,6 @@ const NormalizedImage = ({ src, alt, hovered }) => {
             display: 'block',
             imageRendering: 'high-quality',
             ...normalizedStyle,
-            // Layer hover boost on top of normalization
             transform: normalizedStyle.transform
               ? normalizedStyle.transform.replace(
                   /scale\(([^)]+)\)/,
@@ -175,7 +208,6 @@ const NormalizedImage = ({ src, alt, hovered }) => {
         />
       </div>
 
-      {/* Skeleton shimmer while analysing */}
       {!ready && (
         <div style={{
           position: 'absolute', inset: 0,
@@ -188,26 +220,23 @@ const NormalizedImage = ({ src, alt, hovered }) => {
   );
 };
 
-
-// ─────────────────────────────────────────────────────────────────────────────
-// PRODUCT CARD
-// ─────────────────────────────────────────────────────────────────────────────
-const ProductCard = ({ product, onTryOn }) => {
+// ── MAIN PRODUCT CARD ─────────────────────────────────────────────────────────
+const ProductCard = ({ product }) => {
   const navigate = useNavigate();
   const [selectedVariant, setSelectedVariant] = useState(product.variants?.[0] || null);
   const [hovered, setHovered] = useState(false);
 
+  // ── FIXED TRY ON HANDLER (same as ProductDetail) ────────────────────────────
   const handleTryOn = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (onTryOn) {
-      onTryOn(product);
-    } else {
-      const firstImage = selectedVariant?.images?.[0] || '';
-      navigate(
-        `/tryon?productId=${product.id}&productName=${encodeURIComponent(product.name)}&image=${encodeURIComponent(firstImage)}`
-      );
-    }
+    navigate('/tryon', {
+      state: {
+        frameId: getFrameId(product),
+        productName: product.name,
+        productId: product.id,
+      }
+    });
   };
 
   const displayPrice = product.discountPrice || product.originalPrice;
@@ -215,18 +244,17 @@ const ProductCard = ({ product, onTryOn }) => {
   const imageSrc = selectedVariant?.images?.[0] || '/placeholder-image.jpg';
 
   const getCategoryDisplay = (cat) => ({
-    'men sunglass': 'Men Sunglass',
-    'men eyeglass': 'Men Eyeglass',
-    'woman sunglass': 'Women Sunglass',
-    'women eyeglass': 'Women Eyeglass',
-    'kid sunglass': 'Kids Sunglass',
-    'kids eyeglass': 'Kids Eyeglass',
-    'contactless': 'Contactless',
+    'men sunglass':    'Men Sunglass',
+    'men eyeglass':    'Men Eyeglass',
+    'woman sunglass':  'Women Sunglass',
+    'women eyeglass':  'Women Eyeglass',
+    'kid sunglass':    'Kids Sunglass',
+    'kids eyeglass':   'Kids Eyeglass',
+    'contactless':     'Contactless',
   }[cat] || cat);
 
   return (
     <>
-      {/* Shimmer keyframe — injected once */}
       <style>{`
         @keyframes shimmer {
           0%   { background-position: -200% 0; }
@@ -253,9 +281,9 @@ const ProductCard = ({ product, onTryOn }) => {
           fontFamily: "'Outfit', sans-serif",
         }}
       >
-        <Link
-          to={`/product/${product.id}`}
-          style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', flex: 1 }}
+        <div
+          onClick={() => navigate(`/product/${product.id}`)}
+          style={{ textDecoration: 'none', color: 'inherit', display: 'flex', flexDirection: 'column', flex: 1, cursor: 'pointer' }}
         >
           {/* ── IMAGE AREA ── */}
           <div style={{
@@ -265,8 +293,6 @@ const ProductCard = ({ product, onTryOn }) => {
             background: '#ffffff',
             overflow: 'hidden',
           }}>
-
-
             {/* ── BADGES — top left ── */}
             <div style={{
               position: 'absolute', top: 12, left: 12, zIndex: 10,
@@ -296,33 +322,38 @@ const ProductCard = ({ product, onTryOn }) => {
               )}
             </div>
 
-            {/* ── TRY ON — top right ── */}
+            {/* ── TRY ON BUTTON (FIXED - same as ProductDetail behavior) ── */}
             <button
               onClick={handleTryOn}
               style={{
                 position: 'absolute', top: 12, right: 12, zIndex: 10,
-                display: 'flex', alignItems: 'center', gap: 5,
-                background: 'rgba(10,10,10,0.72)',
-                backdropFilter: 'blur(10px)',
-                WebkitBackdropFilter: 'blur(10px)',
+                display: 'flex', alignItems: 'center', gap: 6,
+                background: 'linear-gradient(135deg, #E87F24, #F5A623)',
                 color: '#fff',
-                border: '1px solid rgba(255,255,255,0.14)',
+                border: 'none',
                 borderRadius: 100,
-                padding: '5px 12px',
-                fontSize: 11, fontWeight: 600,
+                padding: '6px 14px',
+                fontSize: 11, fontWeight: 700,
                 fontFamily: "'Outfit', sans-serif",
-                cursor: 'pointer', letterSpacing: '0.04em',
-                transition: 'background 0.25s ease, transform 0.2s ease',
+                cursor: 'pointer', letterSpacing: '0.5px',
+                boxShadow: '0 2px 8px rgba(232,127,36,0.3)',
+                transition: 'all 0.25s ease',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(0,0,0,0.92)'; e.currentTarget.style.transform = 'scale(1.05)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(10,10,10,0.72)'; e.currentTarget.style.transform = 'scale(1)'; }}
+              onMouseEnter={e => { 
+                e.currentTarget.style.transform = 'scale(1.05)';
+                e.currentTarget.style.boxShadow = '0 4px 12px rgba(232,127,36,0.5)';
+              }}
+              onMouseLeave={e => { 
+                e.currentTarget.style.transform = 'scale(1)';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(232,127,36,0.3)';
+              }}
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="9"/>
                 <circle cx="12" cy="10" r="3"/>
                 <path d="M6.168 18.849A4 4 0 0 1 10 16h4a4 4 0 0 1 3.834 2.855"/>
               </svg>
-              Try On
+              TRY ON
             </button>
 
             {/* ── NORMALISED PRODUCT IMAGE ── */}
@@ -371,7 +402,7 @@ const ProductCard = ({ product, onTryOn }) => {
                 {product.variants.map((variant, i) => (
                   <button
                     key={i}
-                    onClick={e => { e.preventDefault(); setSelectedVariant(variant); }}
+                    onClick={e => { e.preventDefault(); e.stopPropagation(); setSelectedVariant(variant); }}
                     aria-label={`Select ${variant.colorName}`}
                     style={{
                       width: 22, height: 22, borderRadius: '50%',
@@ -473,7 +504,7 @@ const ProductCard = ({ product, onTryOn }) => {
               </p>
             )}
           </div>
-        </Link>
+        </div>
       </div>
     </>
   );

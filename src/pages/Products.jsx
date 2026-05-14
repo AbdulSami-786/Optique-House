@@ -1,556 +1,314 @@
-// Products.jsx
+// product.jsx
+
+
+
+
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useLocation, useSearchParams } from 'react-router-dom';
+import { useLocation, useSearchParams, useNavigate } from 'react-router-dom';
 import productsData from "../data/data.json";
 import ProductCard from '../components/ProductCard';
 
-const Products = () => {
-  const [products, setProducts] = useState([]);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
-  const [selectedShapes, setSelectedShapes] = useState([]);
-  const [selectedGenders, setSelectedGenders] = useState([]);
-  const [sortBy, setSortBy] = useState('default');
-  const [notification, setNotification] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [openDropdown, setOpenDropdown] = useState(null);
-  
-  // Ref for search input
-  const searchInputRef = useRef(null);
-  const location = useLocation();
+const CATEGORIES = [
+  { id:'all',            name:'All Products',     match:null },
+  { id:'men-sunglass',   name:"Men's Sunglass",   match:'men sunglass' },
+  { id:'men-eyeglass',   name:"Men's Eyeglass",   match:'men eyeglass' },
+  { id:'women-sunglass', name:"Women's Sunglass", match:'woman sunglass' },
+  { id:'women-eyeglass', name:"Women's Eyeglass", match:'women eyeglass' },
+  { id:'kids-sunglass',  name:"Kids' Sunglass",   match:'kid sunglass' },
+  { id:'kids-eyeglass',  name:"Kids' Eyeglass",   match:'kids eyeglass' },
+  { id:'contact-lens',   name:'Contact Lens',     match:'contactless' },
+];
+
+const SHAPES  = ['Square','Oval','Round','Geometric','Wayfarer','Vaffer','Eye','Other'];
+const GENDERS = ['Men','Women','Unisex','Kids'];
+
+const getPrice = (p) =>
+  parseFloat(String(p?.discountPrice || p?.originalPrice || 0).replace(/,/g,''));
+
+export default function Products() {
+  const navigate       = useNavigate();
+  const location       = useLocation();
   const [searchParams] = useSearchParams();
+  const searchRef      = useRef(null);
 
-  // Updated shape options based on your data
-  const shapeOptions = ['Square', 'Oval', 'Round', 'Geometric', 'Wayfarer', 'Vaffer', 'Eye', 'Other'];
-  const genderOptions = ['Men', 'Women', 'Unisex', 'Kids'];
+  const [products,       setProducts]       = useState([]);
+  const [filtered,       setFiltered]       = useState([]);
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [priceRange,     setPriceRange]     = useState({ min:'', max:'' });
+  const [shapes,         setShapes]         = useState([]);
+  const [genders,        setGenders]        = useState([]);
+  const [sortBy,         setSortBy]         = useState('default');
+  const [search,         setSearch]         = useState('');
+  const [openDrop,       setOpenDrop]       = useState(null);
+  const [notification,   setNotification]   = useState(null);
 
-  // Define all categories with their filters - MATCHING YOUR JSON CATEGORIES
-  const categories = [
-    { id: 'all', name: 'All Products', categoryMatch: null },
-    { id: 'men-sunglass', name: "Men's Sunglass", categoryMatch: 'men sunglass' },
-    { id: 'men-eyeglass', name: "Men's Eyeglass", categoryMatch: 'men eyeglass' },
-    { id: 'women-sunglass', name: "Women's Sunglass", categoryMatch: 'woman sunglass' },
-    { id: 'women-eyeglass', name: "Women's Eyeglass", categoryMatch: 'women eyeglass' },
-    { id: 'kids-sunglass', name: "Kids' Sunglass", categoryMatch: 'kid sunglass' },
-    { id: 'kids-eyeglass', name: "Kids' Eyeglass", categoryMatch: 'kids eyeglass' },
-    { id: 'contact-lens', name: 'Contact Lens', categoryMatch: 'contactless' }
-  ];
- useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-  // Load products
+  useEffect(() => { window.scrollTo(0, 0); }, []);
+
   useEffect(() => {
-    if (productsData && productsData.products) {
-      setProducts(productsData.products);
-      setFilteredProducts(productsData.products);
-    }
+    const all = productsData?.products || [];
+    setProducts(all);
+    setFiltered(all);
   }, []);
 
-  // Handle URL parameters on page load
   useEffect(() => {
-    const categoryParam = searchParams.get('category');
-    
-    if (categoryParam) {
-      const matchedCategory = categories.find(cat => 
-        cat.categoryMatch === categoryParam || cat.id === categoryParam
-      );
-      
-      if (matchedCategory && matchedCategory.id !== 'all') {
-        setActiveCategory(matchedCategory.id);
-      }
+    const cp = searchParams.get('category');
+    if (cp) {
+      const m = CATEGORIES.find(c => c.match === cp || c.id === cp);
+      if (m && m.id !== 'all') setActiveCategory(m.id);
     }
   }, [searchParams]);
 
-  // Auto-focus search input if navigation state contains focusSearch
   useEffect(() => {
-    if (location.state?.focusSearch && searchInputRef.current) {
-      searchInputRef.current.focus();
-      searchInputRef.current.select();
+    if (location.state?.focusSearch && searchRef.current) {
+      searchRef.current.focus();
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
 
-  // Helper function to get display price (handle string numbers)
-  const getDisplayPrice = (product) => {
-    const price = product.discountPrice || product.originalPrice;
-    if (!price) return 0;
-    // Remove commas if present and convert to number
-    return parseFloat(String(price).replace(/,/g, ''));
-  };
-
-  // Filtering logic
   useEffect(() => {
-    let result = [...products];
-
-    // Search filter
-    if (searchTerm.trim() !== '') {
-      result = result.filter(product =>
-        product.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.code?.toLowerCase().includes(searchTerm.toLowerCase())
+    let r = [...products];
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      r = r.filter(p =>
+        p.name?.toLowerCase().includes(q) || p.code?.toLowerCase().includes(q)
       );
     }
-
-    // Handle active category filtering - using your actual category values
     if (activeCategory !== 'all') {
-      const selectedCat = categories.find(cat => cat.id === activeCategory);
-      
-      if (selectedCat && selectedCat.categoryMatch) {
-        result = result.filter(product =>
-          product.category?.toLowerCase() === selectedCat.categoryMatch.toLowerCase()
-        );
-      }
+      const sel = CATEGORIES.find(c => c.id === activeCategory);
+      if (sel?.match) r = r.filter(p => p.category?.toLowerCase() === sel.match);
     }
+    if (genders.length && activeCategory === 'all')
+      r = r.filter(p => genders.some(g => p.gender?.toLowerCase().includes(g.toLowerCase())));
+    if (priceRange.min) r = r.filter(p => getPrice(p) >= parseFloat(priceRange.min));
+    if (priceRange.max) r = r.filter(p => getPrice(p) <= parseFloat(priceRange.max));
+    if (shapes.length && activeCategory === 'all')
+      r = r.filter(p => shapes.includes(p.shape));
+    if (sortBy === 'priceLowHigh')  r.sort((a, b) => getPrice(a) - getPrice(b));
+    else if (sortBy === 'priceHighLow') r.sort((a, b) => getPrice(b) - getPrice(a));
+    else if (sortBy === 'nameAZ')   r.sort((a, b) => (a.name||'').localeCompare(b.name||''));
+    else if (sortBy === 'nameZA')   r.sort((a, b) => (b.name||'').localeCompare(a.name||''));
+    setFiltered(r);
+  }, [activeCategory, priceRange, shapes, genders, sortBy, products, search]);
 
-    // Gender filter (only when 'all' is selected)
-    if (selectedGenders.length > 0 && activeCategory === 'all') {
-      result = result.filter(product => {
-        const productGender = product.gender?.toLowerCase();
-        return selectedGenders.some(gender => 
-          productGender?.includes(gender.toLowerCase())
-        );
-      });
-    }
-
-    // Price range filter
-    if (priceRange.min) {
-      result = result.filter(product => {
-        const price = getDisplayPrice(product);
-        return price >= parseFloat(priceRange.min);
-      });
-    }
-    if (priceRange.max) {
-      result = result.filter(product => {
-        const price = getDisplayPrice(product);
-        return price <= parseFloat(priceRange.max);
-      });
-    }
-
-    // Shape filter
-    if (selectedShapes.length > 0 && activeCategory === 'all') {
-      result = result.filter(product =>
-        product.shape && selectedShapes.includes(product.shape)
-      );
-    }
-
-    // Sorting
-    if (sortBy === 'priceLowHigh') {
-      result.sort((a, b) => getDisplayPrice(a) - getDisplayPrice(b));
-    } else if (sortBy === 'priceHighLow') {
-      result.sort((a, b) => getDisplayPrice(b) - getDisplayPrice(a));
-    } else if (sortBy === 'nameAZ') {
-      result.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-    } else if (sortBy === 'nameZA') {
-      result.sort((a, b) => (b.name || '').localeCompare(a.name || ''));
-    }
-
-    setFilteredProducts(result);
-  }, [activeCategory, priceRange, selectedShapes, selectedGenders, sortBy, products, searchTerm]);
-
-  const toggleShape = (shape) => {
-    setSelectedShapes(prev =>
-      prev.includes(shape) ? prev.filter(s => s !== shape) : [...prev, shape]
-    );
-  };
-
-  const toggleGender = (gender) => {
-    setSelectedGenders(prev =>
-      prev.includes(gender) ? prev.filter(g => g !== gender) : [...prev, gender]
-    );
-  };
+  const toggleShape  = s => setShapes(p  => p.includes(s) ? p.filter(x => x !== s) : [...p, s]);
+  const toggleGender = g => setGenders(p => p.includes(g) ? p.filter(x => x !== g) : [...p, g]);
+  const toggleDrop   = n => setOpenDrop(o => o === n ? null : n);
 
   const clearFilters = () => {
-    setActiveCategory('all');
-    setPriceRange({ min: '', max: '' });
-    setSelectedShapes([]);
-    setSelectedGenders([]);
-    setSortBy('default');
-    setSearchTerm('');
-    setOpenDropdown(null);
+    setActiveCategory('all'); setPriceRange({ min:'', max:'' }); setShapes([]);
+    setGenders([]); setSortBy('default'); setSearch(''); setOpenDrop(null);
   };
 
-  const toggleDropdown = (name) => {
-    setOpenDropdown(openDropdown === name ? null : name);
+  const handleCategoryChange = id => {
+    setActiveCategory(id);
+    if (id !== 'all') setGenders([]);
+    setOpenDrop(null);
   };
 
-  const handleCategoryChange = (categoryId) => {
-    setActiveCategory(categoryId);
-    // Clear gender filters when selecting a specific category
-    if (categoryId !== 'all') {
-      setSelectedGenders([]);
-    }
-  };
-
-  const addToCart = (product, selectedVariantIndex = 0) => {
-    const saved = JSON.parse(localStorage.getItem("cart")) || [];
-    const exists = saved.find(i => i.id === product.id);
-    if (exists) {
-      exists.quantity = (exists.quantity || 1) + 1;
-    } else {
-      saved.push({ ...product, quantity: 1, selectedVariant: selectedVariantIndex });
-    }
-    localStorage.setItem("cart", JSON.stringify(saved));
+  const handleAddToCart = (product) => {
+    const cart   = JSON.parse(localStorage.getItem('cart')) || [];
+    const exists = cart.find(i => i.id === product.id);
+    if (exists) exists.quantity = (exists.quantity || 1) + 1;
+    else cart.push({ ...product, quantity: 1 });
+    localStorage.setItem('cart', JSON.stringify(cart));
+    window.dispatchEvent(new Event('cartUpdated'));
     setNotification(`${product.name} added to cart!`);
     setTimeout(() => setNotification(null), 3000);
   };
 
+  const SortSelect = () => (
+    <select className="sort-minimal" value={sortBy} onChange={e => setSortBy(e.target.value)}>
+      <option value="default">Sort: Featured</option>
+      <option value="priceLowHigh">Price: Low → High</option>
+      <option value="priceHighLow">Price: High → Low</option>
+      <option value="nameAZ">Name: A → Z</option>
+      <option value="nameZA">Name: Z → A</option>
+    </select>
+  );
+
   return (
-    <div className="products-page">
-      {notification && <div className="notification">{notification}</div>}
-      
+    <div className="pp">
+      {notification && <div className="notif">{notification}</div>}
+
       <div className="container">
         <h1 className="page-title">Our Products</h1>
-        <p className="page-subtitle">Discover premium eyewear for every style and need</p>
+        <p className="page-sub">Discover premium eyewear for every style and need</p>
 
-        {/* Category Tabs - 7 Categories */}
-        <div className="category-tabs">
-          {categories.map(cat => (
+        {/* Category Tabs */}
+        <div className="cat-tabs">
+          {CATEGORIES.map(c => (
             <button
-              key={cat.id}
-              className={`category-tab ${activeCategory === cat.id ? 'active' : ''}`}
-              onClick={() => handleCategoryChange(cat.id)}
+              key={c.id}
+              className={`cat-tab${activeCategory === c.id ? ' active' : ''}`}
+              onClick={() => handleCategoryChange(c.id)}
             >
-              {cat.name}
+              {c.name}
             </button>
           ))}
         </div>
 
-        {/* Horizontal Filter Bar - Only show when 'All Products' is selected */}
+        {/* Filter Bar — only for 'all' */}
         {activeCategory === 'all' && (
           <div className="filter-bar">
-            <div className="filter-dropdown-group">
-              {/* Shape Dropdown */}
-              <div className="dropdown-container">
-                <button className={`dropdown-btn ${selectedShapes.length > 0 ? 'highlight' : ''}`} onClick={() => toggleDropdown('shape')}>
-                  Shape <span className={`arrow ${openDropdown === 'shape' ? 'up' : 'down'}`}></span>
+            <div className="drop-group">
+              {/* Shape */}
+              <div className="drop-wrap">
+                <button className={`drop-btn${shapes.length ? ' hl' : ''}`} onClick={() => toggleDrop('shape')}>
+                  Shape <span className={`arr ${openDrop === 'shape' ? 'up' : 'dn'}`} />
                 </button>
-                {openDropdown === 'shape' && (
-                  <div className="dropdown-menu">
-                    {shapeOptions.map(shape => (
-                      <label key={shape} className="dropdown-item">
-                        <input type="checkbox" checked={selectedShapes.includes(shape)} onChange={() => toggleShape(shape)} />
-                        {shape}
+                {openDrop === 'shape' && (
+                  <div className="drop-menu">
+                    {SHAPES.map(s => (
+                      <label key={s} className="drop-item">
+                        <input type="checkbox" checked={shapes.includes(s)} onChange={() => toggleShape(s)} /> {s}
                       </label>
                     ))}
                   </div>
                 )}
               </div>
 
-              {/* Gender Dropdown */}
-              <div className="dropdown-container">
-                <button className={`dropdown-btn ${selectedGenders.length > 0 ? 'highlight' : ''}`} onClick={() => toggleDropdown('gender')}>
-                  Gender <span className={`arrow ${openDropdown === 'gender' ? 'up' : 'down'}`}></span>
+              {/* Gender */}
+              <div className="drop-wrap">
+                <button className={`drop-btn${genders.length ? ' hl' : ''}`} onClick={() => toggleDrop('gender')}>
+                  Gender <span className={`arr ${openDrop === 'gender' ? 'up' : 'dn'}`} />
                 </button>
-                {openDropdown === 'gender' && (
-                  <div className="dropdown-menu">
-                    {genderOptions.map(gender => (
-                      <label key={gender} className="dropdown-item">
-                        <input type="checkbox" checked={selectedGenders.includes(gender)} onChange={() => toggleGender(gender)} />
-                        {gender}
+                {openDrop === 'gender' && (
+                  <div className="drop-menu">
+                    {GENDERS.map(g => (
+                      <label key={g} className="drop-item">
+                        <input type="checkbox" checked={genders.includes(g)} onChange={() => toggleGender(g)} /> {g}
                       </label>
                     ))}
                   </div>
                 )}
               </div>
 
-              {/* Price Dropdown */}
-              <div className="dropdown-container">
-                <button className={`dropdown-btn ${priceRange.min || priceRange.max ? 'highlight' : ''}`} onClick={() => toggleDropdown('price')}>
-                  Price <span className={`arrow ${openDropdown === 'price' ? 'up' : 'down'}`}></span>
+              {/* Price */}
+              <div className="drop-wrap">
+                <button className={`drop-btn${priceRange.min || priceRange.max ? ' hl' : ''}`} onClick={() => toggleDrop('price')}>
+                  Price <span className={`arr ${openDrop === 'price' ? 'up' : 'dn'}`} />
                 </button>
-                {openDropdown === 'price' && (
-                  <div className="dropdown-menu price-menu">
-                    <input type="number" placeholder="Min PKR" value={priceRange.min} onChange={(e) => setPriceRange({ ...priceRange, min: e.target.value })} />
-                    <input type="number" placeholder="Max PKR" value={priceRange.max} onChange={(e) => setPriceRange({ ...priceRange, max: e.target.value })} />
+                {openDrop === 'price' && (
+                  <div className="drop-menu price-menu">
+                    <input type="number" placeholder="Min PKR" value={priceRange.min}
+                      onChange={e => setPriceRange({ ...priceRange, min: e.target.value })} />
+                    <input type="number" placeholder="Max PKR" value={priceRange.max}
+                      onChange={e => setPriceRange({ ...priceRange, max: e.target.value })} />
                   </div>
                 )}
               </div>
 
-              <button className="text-clear-btn" onClick={clearFilters}>Reset All</button>
+              <button className="clear-btn" onClick={clearFilters}>Reset All</button>
             </div>
-
-            <div className="sort-section">
-              <select className="sort-minimal" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                <option value="default">Sort: Featured</option>
-                <option value="priceLowHigh">Price: Low to High</option>
-                <option value="priceHighLow">Price: High to Low</option>
-                <option value="nameAZ">Name: A to Z</option>
-              </select>
-            </div>
+            <SortSelect />
           </div>
         )}
 
-        {/* Show sort only for non-all categories */}
         {activeCategory !== 'all' && (
-          <div className="simple-sort-bar">
-            <div className="sort-section">
-              <select className="sort-minimal" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-                <option value="default">Sort: Featured</option>
-                <option value="priceLowHigh">Price: Low to High</option>
-                <option value="priceHighLow">Price: High to Low</option>
-                <option value="nameAZ">Name: A to Z</option>
-              </select>
-            </div>
-          </div>
+          <div className="simple-sort"><SortSelect /></div>
         )}
 
-        {/* Main Products Area */}
-        <main className="products-main">
-          <div className="search-row">
-            <input 
-              type="text" 
-              ref={searchInputRef}
-              className="minimal-search" 
-              placeholder="Search by name or code..." 
-              value={searchTerm} 
-              onChange={(e) => setSearchTerm(e.target.value)} 
-            />
-            <p className="count-text">{filteredProducts.length} items found</p>
-          </div>
+        {/* Search + Count */}
+        <div className="search-row">
+          <input
+            ref={searchRef}
+            type="text"
+            className="search-inp"
+            placeholder="Search by name or code..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+          <p className="count-txt">{filtered.length} items found</p>
+        </div>
 
-          {filteredProducts.length === 0 ? (
-            <div className="no-products">
-              <p>No products found in this category.</p>
-              <button onClick={clearFilters}>Browse All Products</button>
-            </div>
-          ) : (
-            <div className="products-grid">
-              {filteredProducts.map(product => (
-                <div key={product.id} className="product-card-wrapper">
-                  <ProductCard product={product} onTryOn={() => {}} />
-                </div>
-              ))}
-            </div>
-          )}
-        </main>
+        {/* Grid - Now ProductCard has its own working TryOn button */}
+        {filtered.length === 0 ? (
+          <div className="no-prod">
+            <p>No products found.</p>
+            <button onClick={clearFilters}>Browse All</button>
+          </div>
+        ) : (
+          <div className="prod-grid">
+            {filtered.map(product => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={handleAddToCart}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
-      <style jsx>{`
-        .products-page {
-          font-family: 'Inter', sans-serif;
-          background: #fff;
-          padding: 40px 0;
-        }
+      <style>{`
+        .pp{font-family:'Inter',sans-serif;background:#fff;padding:40px 0;}
+        .container{max-width:1300px;margin:0 auto;padding:0 20px;}
+        .page-title{text-align:center;font-size:2rem;margin-bottom:8px;font-weight:700;}
+        .page-sub{text-align:center;color:#777;margin-bottom:40px;}
 
-        .container { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
+        .cat-tabs{display:flex;justify-content:center;gap:10px;margin-bottom:30px;
+          flex-wrap:wrap;position:sticky;top:70px;background:#fff;
+          padding:10px 0;z-index:50;border-bottom:1px solid #f0f0f0;}
+        .cat-tab{padding:9px 20px;border:1px solid #ddd;background:#fff;cursor:pointer;
+          border-radius:30px;transition:.25s;font-weight:500;font-size:13px;white-space:nowrap;}
+        .cat-tab:hover{background:#f5f5f5;border-color:#999;}
+        .cat-tab.active{background:#000;color:#fff;border-color:#000;}
 
-        .page-title { text-align: center; font-size: 2rem; margin-bottom: 8px; font-weight: 700; }
-        .page-subtitle { text-align: center; color: #777; margin-bottom: 40px; }
+        .filter-bar{display:flex;justify-content:space-between;align-items:center;
+          border-top:1px solid #eee;border-bottom:1px solid #eee;padding:14px 0;margin-bottom:20px;}
+        .simple-sort{display:flex;justify-content:flex-end;padding:10px 0;margin-bottom:10px;}
+        .drop-group{display:flex;gap:24px;align-items:center;flex-wrap:wrap;}
+        .drop-wrap{position:relative;}
+        .drop-btn{background:none;border:none;font-size:.95rem;cursor:pointer;
+          font-weight:500;display:flex;align-items:center;gap:6px;padding:7px 0;}
+        .drop-btn.hl{color:#d9534f;}
+        .drop-menu{position:absolute;top:calc(100% + 8px);left:0;background:#fff;
+          border:1px solid #eee;box-shadow:0 10px 20px rgba(0,0,0,.1);padding:14px;
+          min-width:170px;display:flex;flex-direction:column;gap:9px;
+          border-radius:10px;z-index:200;}
+        .drop-item{display:flex;align-items:center;gap:8px;font-size:.88rem;cursor:pointer;}
+        .price-menu{flex-direction:row;gap:10px;width:220px;}
+        .price-menu input{width:50%;padding:7px;border:1px solid #ddd;border-radius:6px;font-size:.85rem;}
+        .price-menu input:focus{outline:none;border-color:#000;}
+        .clear-btn{background:none;border:none;color:#888;text-decoration:underline;
+          cursor:pointer;font-size:.88rem;}
+        .clear-btn:hover{color:#000;}
+        .arr{border:solid #333;border-width:0 1.5px 1.5px 0;display:inline-block;padding:3px;transition:.2s;}
+        .dn{transform:rotate(45deg);}
+        .up{transform:rotate(-135deg);}
+        .sort-minimal{border:1px solid #ddd;border-radius:20px;padding:7px 14px;
+          font-size:.88rem;cursor:pointer;background:#fff;}
 
-        /* Category Tabs - Scrollable on mobile */
-        .category-tabs { 
-          display: flex; 
-          justify-content: center; 
-          gap: 12px; 
-          margin-bottom: 30px; 
-          flex-wrap: wrap;
-          position: sticky;
-          top: 70px;
-          background: #fff;
-          padding: 10px 0;
-          z-index: 50;
-          border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .category-tab { 
-          padding: 10px 24px; 
-          border: 1px solid #ddd; 
-          background: #fff; 
-          cursor: pointer; 
-          border-radius: 30px; 
-          transition: 0.3s; 
-          font-weight: 500;
-          font-size: 14px;
-          white-space: nowrap;
-        }
-        
-        .category-tab:hover { 
-          background: #f5f5f5; 
-          border-color: #999;
-        }
-        
-        .category-tab.active { 
-          background: #000; 
-          color: #fff; 
-          border-color: #000; 
-        }
+        .search-row{display:flex;justify-content:space-between;align-items:center;
+          margin-bottom:28px;flex-wrap:wrap;gap:14px;}
+        .search-inp{border:none;border-bottom:2px solid #eee;padding:9px 0;
+          width:280px;outline:none;font-size:14px;transition:.3s;}
+        .search-inp:focus{border-bottom-color:#000;}
+        .count-txt{color:#888;font-size:.88rem;font-weight:500;}
 
-        /* Filter Bar Styles */
-        .filter-bar, .simple-sort-bar { 
-          display: flex; 
-          justify-content: space-between; 
-          align-items: center; 
-          border-top: 1px solid #eee; 
-          border-bottom: 1px solid #eee; 
-          padding: 15px 0; 
-          margin-bottom: 20px;
-        }
-        
-        .simple-sort-bar {
-          justify-content: flex-end;
-          border-top: none;
-        }
-        
-        .filter-dropdown-group { display: flex; gap: 25px; align-items: center; flex-wrap: wrap; }
-        
-        .dropdown-container { position: relative; }
-        .dropdown-btn { 
-          background: none; 
-          border: none; 
-          font-size: 1rem; 
-          cursor: pointer; 
-          font-weight: 500;
-          display: flex; 
-          align-items: center; 
-          gap: 8px;
-          padding: 8px 0;
-        }
-        .dropdown-btn.highlight { color: #d9534f; }
+        .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:28px;}
 
-        .dropdown-menu { 
-          position: absolute; 
-          top: 100%; 
-          left: 0; 
-          background: #fff; 
-          border: 1px solid #eee; 
-          box-shadow: 0 10px 20px rgba(0,0,0,0.1); 
-          padding: 15px; 
-          min-width: 180px; 
-          display: flex; 
-          flex-direction: column; 
-          gap: 10px;
-          margin-top: 10px; 
-          border-radius: 8px; 
-          z-index: 100;
-        }
-        .dropdown-item { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; cursor: pointer; }
-        .price-menu { width: 220px; flex-direction: row; gap: 10px; }
-        .price-menu input { 
-          width: 50%; 
-          padding: 8px; 
-          border: 1px solid #ddd; 
-          border-radius: 4px; 
-        }
-        .price-menu input:focus { outline: none; border-color: #000; }
+        .no-prod{text-align:center;padding:80px 20px;background:#fafafa;border-radius:12px;}
+        .no-prod p{font-size:17px;color:#666;margin-bottom:18px;}
+        .no-prod button{padding:11px 26px;background:#000;color:#fff;border:none;
+          cursor:pointer;border-radius:30px;font-size:13px;font-weight:500;transition:.3s;}
+        .no-prod button:hover{background:#333;}
 
-        .text-clear-btn { 
-          background: none; 
-          border: none; 
-          color: #888; 
-          text-decoration: underline; 
-          cursor: pointer; 
-          font-size: 0.9rem; 
-        }
-        .text-clear-btn:hover { color: #000; }
+        .notif{position:fixed;top:20px;right:20px;background:#28a745;color:#fff;
+          padding:12px 22px;border-radius:8px;z-index:9999;font-weight:500;
+          box-shadow:0 4px 12px rgba(0,0,0,.15);animation:slideIn .3s ease;}
 
-        .arrow { border: solid black; border-width: 0 1.5px 1.5px 0; display: inline-block; padding: 3px; transition: 0.2s; }
-        .down { transform: rotate(45deg); }
-        .up { transform: rotate(-135deg); }
+        @keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
 
-        /* Search & Grid */
-        .search-row { 
-          display: flex; 
-          justify-content: space-between; 
-          align-items: center; 
-          margin-bottom: 30px; 
-          flex-wrap: wrap; 
-          gap: 15px; 
-        }
-        .minimal-search { 
-          border: none; 
-          border-bottom: 2px solid #eee; 
-          padding: 10px 0; 
-          width: 280px; 
-          outline: none; 
-          font-size: 15px;
-          transition: 0.3s;
-        }
-        .minimal-search:focus { border-bottom-color: #000; }
-        .count-text { color: #888; font-size: 0.9rem; font-weight: 500; }
-
-        .products-grid { 
-          display: grid; 
-          grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-          gap: 30px; 
-        }
-
-        .product-card-wrapper {
-          transition: transform 0.3s ease;
-        }
-
-        .product-card-wrapper:hover {
-          transform: translateY(-5px);
-        }
-
-        .notification {
-          position: fixed; 
-          top: 20px; 
-          right: 20px; 
-          background: #28a745; 
-          color: #fff; 
-          padding: 12px 24px; 
-          border-radius: 8px; 
-          z-index: 1000; 
-          animation: slideIn 0.3s ease;
-          font-weight: 500;
-          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-        }
-
-        .no-products { 
-          text-align: center; 
-          padding: 80px 20px; 
-          background: #fafafa;
-          border-radius: 12px;
-        }
-        .no-products p { font-size: 18px; color: #666; margin-bottom: 20px; }
-        .no-products button { 
-          padding: 12px 28px; 
-          background: #000; 
-          color: #fff; 
-          border: none; 
-          cursor: pointer; 
-          border-radius: 30px;
-          font-size: 14px;
-          font-weight: 500;
-          transition: 0.3s;
-        }
-        .no-products button:hover { background: #333; transform: translateY(-2px); }
-
-        @keyframes slideIn {
-          from { transform: translateX(100%); opacity: 0; }
-          to { transform: translateX(0); opacity: 1; }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-          .category-tabs {
-            gap: 8px;
-            overflow-x: auto;
-            justify-content: flex-start;
-            padding-bottom: 8px;
-            scrollbar-width: thin;
-          }
-          
-          .category-tab { 
-            padding: 8px 18px; 
-            font-size: 12px;
-            white-space: nowrap;
-          }
-          
-          .filter-bar { 
-            flex-direction: column; 
-            gap: 15px; 
-            align-items: flex-start; 
-          }
-          
-          .filter-dropdown-group { gap: 15px; }
-          .products-grid { gap: 20px; }
-          
-          .minimal-search { width: 100%; }
+        @media(max-width:768px){
+          .cat-tabs{gap:7px;overflow-x:auto;justify-content:flex-start;padding-bottom:6px;}
+          .cat-tab{padding:7px 15px;font-size:12px;}
+          .filter-bar{flex-direction:column;gap:14px;align-items:flex-start;}
+          .drop-group{gap:14px;}
+          .prod-grid{gap:18px;}
+          .search-inp{width:100%;}
         }
       `}</style>
     </div>
   );
-};
-
-export default Products;
+}
