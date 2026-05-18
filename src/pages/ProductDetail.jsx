@@ -778,9 +778,9 @@ const ColorVariantSelector = ({ variants, selectedVariant, setSelectedVariant })
 
 // ── Prescription helpers ───────────────────────────────────────────────────────
 const LENS_OPTIONS = [
-  { id:'standard',     name:'Standard Lenses',     price:850,  desc:'Clear vision with anti-reflective coating' },
-  { id:'blueCut',      name:'Blue Cut Lenses',      price:1850, desc:'Protects against harmful blue light' },
-  { id:'photochromic', name:'UV',  price:4500, desc:'Auto-darken in sunlight' },
+  { id:'standard',     name:'Standard Lenses',     price:850,  desc:'Just Vision' },
+  { id:'blueCut',      name:'Anti Reflection',      price:1850, desc:'Clear vision with anti-reflective coating' },
+  { id:'photochromic', name:'UV',  price:4500, desc:'Protects against harmful blue light' },
 ];
 
 const emptyEye = () => ({ sphere:'', cylinder:'', axis:'', addition:'' });
